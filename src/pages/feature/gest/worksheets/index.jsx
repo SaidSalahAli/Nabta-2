@@ -1,0 +1,289 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Typography,
+  Container,
+  Grid,
+  Fade,
+  CircularProgress,
+  Button,
+  Skeleton,
+  Chip,
+  Pagination,
+  Stack
+} from '@mui/material';
+import { DocumentDownload, Document } from 'iconsax-react';
+import { useGetWorksheets } from 'api/worksheets';
+
+// ==============================|| WORKSHEET CARD ||============================== //
+
+function WorksheetCard({ worksheet, index, isAnimating }) {
+  const [imgError, setImgError] = useState(false);
+  const title = worksheet.TitleAr || worksheet.titleAr || '';
+  const thumbnail = worksheet.ThumbnailImage || worksheet.thumbnailImage || '';
+  const fileUrl = worksheet.FileUrl || worksheet.fileUrl || '';
+  const fileType = (worksheet.FileType || worksheet.fileType || 'pdf').toLowerCase();
+
+  const handleDownload = () => {
+    if (!fileUrl) return;
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.target = '_blank';
+    link.download = `${title || 'worksheet'}.${fileType}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+    <Fade in={isAnimating} timeout={400 + index * 80}>
+      <Box
+        sx={{
+          borderRadius: '16px',
+          overflow: 'hidden',
+          border: '1px solid',
+          borderColor: 'divider',
+          backgroundColor: '#fff',
+          display: 'flex',
+          flexDirection: 'column',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer',
+          '&:hover': {
+            boxShadow: '0 16px 40px rgba(0,0,0,0.1)',
+            transform: 'translateY(-4px)',
+            borderColor: '#FFD666'
+          }
+        }}
+      >
+        {/* Thumbnail */}
+        <Box
+          sx={{
+            position: 'relative',
+            paddingTop: '130%', // Portrait ratio (like A4)
+            backgroundColor: '#f5f5f5',
+            overflow: 'hidden'
+          }}
+        >
+          {thumbnail && !imgError ? (
+            <Box
+              component="img"
+              src={thumbnail}
+              alt={title}
+              onError={() => setImgError(true)}
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+            />
+          ) : (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#fef9ec'
+              }}
+            >
+              <Document size={48} color="#FFD666" variant="Bold" />
+            </Box>
+          )}
+
+          {/* File type badge */}
+          <Chip
+            label={fileType.toUpperCase()}
+            size="small"
+            sx={{
+              position: 'absolute',
+              top: 8,
+              left: 8,
+              backgroundColor: fileType === 'pdf' ? '#e74c3c' : '#3498db',
+              color: '#fff',
+              fontWeight: 700,
+              fontSize: 10,
+              height: 22,
+              borderRadius: '6px'
+            }}
+          />
+        </Box>
+
+        {/* Card Footer */}
+        <Box
+          sx={{
+            p: 1.5,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            flexGrow: 1
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 700,
+              color: '#2E2A39',
+              fontSize: '0.8rem',
+              lineHeight: 1.4,
+              textAlign: 'center',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical'
+            }}
+          >
+            {title}
+          </Typography>
+
+          <Button
+            variant="contained"
+            fullWidth
+            size="small"
+            onClick={handleDownload}
+            startIcon={<DocumentDownload size={16} />}
+            sx={{
+              borderRadius: '10px',
+              fontWeight: 700,
+              fontSize: '0.78rem',
+              py: 0.8,
+              backgroundColor: '#FFD666',
+              color: '#2E2A39',
+              boxShadow: '0 4px 12px rgba(255,214,102,0.3)',
+              '&:hover': {
+                backgroundColor: '#ffcf4d',
+                boxShadow: '0 6px 18px rgba(255,214,102,0.45)'
+              }
+            }}
+          >
+            تحميل
+          </Button>
+        </Box>
+      </Box>
+    </Fade>
+  );
+}
+
+// ==============================|| LOADING SKELETON GRID ||============================== //
+
+function WorksheetSkeleton() {
+  return (
+    <Box sx={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
+      <Skeleton variant="rectangular" sx={{ paddingTop: '130%', height: 0 }} />
+      <Box sx={{ p: 1.5 }}>
+        <Skeleton variant="text" width="80%" sx={{ mx: 'auto', mb: 1 }} />
+        <Skeleton variant="rounded" height={32} sx={{ borderRadius: '10px' }} />
+      </Box>
+    </Box>
+  );
+}
+
+// ==============================|| WORKSHEETS GUEST PAGE ||============================== //
+
+const ITEMS_PER_PAGE = 8; // 4 per row × 2 rows
+
+export default function WorksheetsPage() {
+  const [checked, setChecked] = useState(false);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    setChecked(true);
+  }, []);
+
+  const { worksheets = [], worksheetsLoading } = useGetWorksheets();
+
+  // Filter only active worksheets
+  const activeWorksheets = worksheets.filter((w) => w.IsActive !== false);
+
+  const totalPages = Math.ceil(activeWorksheets.length / ITEMS_PER_PAGE);
+  const paginatedWorksheets = activeWorksheets.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  return (
+    <Fade in={checked} timeout={800}>
+      <Box sx={{ py: 8, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
+        <Container maxWidth="lg">
+          {/* Header */}
+          <Box sx={{ mb: 6, textAlign: 'center' }}>
+            <Typography
+              variant="h1"
+              sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.2rem', md: '3rem' } }}
+            >
+              أوراق عمل
+            </Typography>
+            <Box sx={{ width: '80px', height: '4px', backgroundColor: '#FFD666', mx: 'auto', borderRadius: '2px', mb: 2 }} />
+            <Typography variant="h6" sx={{ color: 'text.secondary', fontWeight: 400, maxWidth: 600, mx: 'auto', lineHeight: 1.8 }}>
+              اطبع أوراق مذاكرة وتلوين، واجعل طفلك يتفاعل بنفسه مع الورقة والقلم والألوان لتنمّي قدراته الحركية ومهاراته الإبداعية
+            </Typography>
+          </Box>
+
+          {/* Grid */}
+          {worksheetsLoading ? (
+            <Grid container spacing={2.5}>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <Grid item xs={6} sm={4} md={3} key={i}>
+                  <WorksheetSkeleton />
+                </Grid>
+              ))}
+            </Grid>
+          ) : activeWorksheets.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 10 }}>
+              <Document size={64} color="#ccc" />
+              <Typography variant="h6" sx={{ color: 'text.secondary', mt: 2 }}>
+                لا توجد أوراق عمل متاحة حالياً
+              </Typography>
+            </Box>
+          ) : (
+            <>
+              <Grid container spacing={2.5}>
+                {paginatedWorksheets.map((worksheet, index) => (
+                  <Grid item xs={6} sm={4} md={3} key={worksheet.Id || worksheet.id || index}>
+                    <WorksheetCard worksheet={worksheet} index={index} isAnimating={checked} />
+                  </Grid>
+                ))}
+              </Grid>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <Stack spacing={2} sx={{ mt: 6, alignItems: 'center' }}>
+                  <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={(_, val) => {
+                      setPage(val);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    variant="outlined"
+                    shape="rounded"
+                    size="large"
+                    sx={{
+                      '& .MuiPaginationItem-root': {
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        borderRadius: '8px',
+                        border: '1px solid #E0E0E0',
+                        backgroundColor: '#fff',
+                        '&.Mui-selected': {
+                          backgroundColor: '#FFD666',
+                          borderColor: '#FFD666',
+                          color: '#2E2A39',
+                          '&:hover': { backgroundColor: '#ffcf4d' }
+                        },
+                        '&:hover': { backgroundColor: '#f5f5f5' }
+                      }
+                    }}
+                  />
+                </Stack>
+              )}
+            </>
+          )}
+        </Container>
+      </Box>
+    </Fade>
+  );
+}
