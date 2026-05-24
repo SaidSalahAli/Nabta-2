@@ -15,11 +15,11 @@ export default function Applications({ shouldAnimate = false }) {
   }, [shouldAnimate]);
 
   const episodes = [
-    { id: 1, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 2, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 3, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 4, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 5, title: 'عنوان التطبيق', image: img, watch: 'تحميل' }
+    { id: 1, title: 'عنوان التطبيق', image: img, watch: 'حمّله الآن' },
+    { id: 2, title: 'عنوان التطبيق', image: img, watch: 'حمّله الآن' },
+    { id: 3, title: 'عنوان التطبيق', image: img, watch: 'حمّله الآن' },
+    { id: 4, title: 'عنوان التطبيق', image: img, watch: 'حمّله الآن' },
+    { id: 5, title: 'عنوان التطبيق', image: img, watch: 'حمّله الآن' }
   ];
 
   return (
@@ -37,10 +37,10 @@ export default function Applications({ shouldAnimate = false }) {
         <Container maxWidth="lg">
           {/* Title Section */}
           <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 700, color: 'black', mb: 1 }}>
+            <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
               التطبيقات
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '18px' }}>
+            <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
               حلقات متخصصة لأولياء الأمور والمعلمين والآباء والأمهات
             </Typography>
           </Box>
@@ -63,7 +63,7 @@ export default function Applications({ shouldAnimate = false }) {
               sx={{
                 px: 2,
                 py: 1,
-                borderRadius: '18px',
+                borderRadius: '10px',
                 fontSize: { xs: '18px', md: '15px' },
                 fontWeight: 700,
                 backgroundColor: '#FFD666',
@@ -74,7 +74,7 @@ export default function Applications({ shouldAnimate = false }) {
                 }
               }}
             >
-              المزيد ...
+              المزيد
             </Button>
           </Box>
         </Container>

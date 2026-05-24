@@ -19,15 +19,14 @@ export default function Home() {
     <Box sx={{ width: '100%' }}>
       <Hero shouldAnimate={true} />
       <Episodes shouldAnimate={true} />
-      <Characters shouldAnimate={true} />
       <Worksheets shouldAnimate={true} />
-      <WhyNabta shouldAnimate={true} />
-      <GoalsPrinciples shouldAnimate={true} />
-
-      <NabtaNumbers shouldAnimate={true} />
       <Applications shouldAnimate={true} />
       <AboutNabta shouldAnimate={true} />
+      <Characters shouldAnimate={true} />
       <PartnersReviews shouldAnimate={true} />
+      <GoalsPrinciples shouldAnimate={true} />
+      <WhyNabta shouldAnimate={true} />
+      <NabtaNumbers shouldAnimate={true} />
       <Partners shouldAnimate={true} />
       <Team shouldAnimate={true} />
     </Box>

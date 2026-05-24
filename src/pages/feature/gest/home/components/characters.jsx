@@ -40,14 +40,7 @@ export default function Characters({ shouldAnimate = false }) {
         }}
       >
         <Container maxWidth="lg">
-          <Typography
-            variant="h1"
-            sx={{
-              fontWeight: 700,
-              textAlign: 'center',
-              mb: 1
-            }}
-          >
+          <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1, textAlign: 'center' }}>
             شخصيات نبتة
           </Typography>
 
@@ -60,19 +53,12 @@ export default function Characters({ shouldAnimate = false }) {
             }}
           >
             {characters.map((character, index) => (
-              <Fade
-                key={character.id}
-                in={checked}
-                timeout={800}
-                style={{ transitionDelay: checked ? `${index * 200}ms` : '0ms' }}
-              >
+              <Fade key={character.id} in={checked} timeout={800} style={{ transitionDelay: checked ? `${index * 200}ms` : '0ms' }}>
                 <Box
                   sx={{
                     flex: 1,
                     display: 'flex',
-                    flexDirection: character.reverse
-                      ? { xs: 'column', md: 'row-reverse' }
-                      : { xs: 'column', md: 'row' },
+                    flexDirection: character.reverse ? { xs: 'column', md: 'row-reverse' } : { xs: 'column', md: 'row' },
                     alignItems: 'stretch',
                     gap: 2,
                     minWidth: 0

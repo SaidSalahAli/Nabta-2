@@ -14,9 +14,10 @@ export default function Worksheets({ shouldAnimate = false }) {
     <Fade in={checked} timeout={800}>
       <Box
         sx={{
-          py: { xs: 7, md: 10 },
+          py: { xs: 1, md: 1 },
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          backgroundColor: '#fcfcfc'
         }}
       >
         <Container maxWidth="lg">
@@ -30,22 +31,15 @@ export default function Worksheets({ shouldAnimate = false }) {
           >
             {/* LEFT CONTENT */}
             <Box sx={{ textAlign: { xs: 'center', md: 'start' } }}>
+              <Box sx={{ display: 'flex', justifyContent: 'start' }}>
+                <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
+                  أوراق عمل
+                </Typography>
+              </Box>
               <Typography
                 sx={{
-                  fontSize: { xs: '34px', md: '52px' },
-                  fontWeight: 800,
-                  color: '#2E2A39',
-                  mb: 2,
-                  lineHeight: 1.2
-                }}
-              >
-                أوراق عمل
-              </Typography>
-
-              <Typography
-                sx={{
-                  fontSize: { xs: '18px', md: '24px' },
-                  color: '#5F5A6B',
+                  fontSize: { xs: '18px', md: '18px' },
+                  color: '#000',
                   lineHeight: 2,
                   maxWidth: { xs: '100%', md: '700px' },
                   mx: { xs: 'auto', md: 0 },
@@ -66,10 +60,10 @@ export default function Worksheets({ shouldAnimate = false }) {
                   variant="contained"
                   onClick={() => navigate('/worksheets')}
                   sx={{
-                    px: 5,
+                    px: 10,
                     py: 1.6,
-                    borderRadius: '18px',
-                    fontSize: { xs: '18px', md: '22px' },
+                    borderRadius: '10px',
+                    fontSize: { xs: '18px', md: '18px' },
                     fontWeight: 700,
                     backgroundColor: '#FFD666',
                     color: '#2E2A39',
@@ -79,14 +73,14 @@ export default function Worksheets({ shouldAnimate = false }) {
                     }
                   }}
                 >
-                  حمّل الآن مجانًا
+                  حمِّل الآن مجاني
                 </Button>
               </Box>
 
               <Typography
                 sx={{
-                  fontSize: { xs: '15px', md: '18px' },
-                  color: '#7A7388',
+                  fontSize: { xs: '18px', md: '18px' },
+                  color: '#000',
                   lineHeight: 2,
                   maxWidth: { xs: '100%', md: '650px' },
                   mx: { xs: 'auto', md: 0 }

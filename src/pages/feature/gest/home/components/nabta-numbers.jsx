@@ -58,8 +58,8 @@ export default function NabtaNumbers({ shouldAnimate = false }) {
             <Typography
               variant="h2"
               sx={{
-                fontWeight: 800,
-                color: '#3d3d3d',
+                fontWeight: 700,
+                color: 'primary.main',
                 fontSize: { xs: '28px', sm: '34px', md: '42px' }
               }}
             >

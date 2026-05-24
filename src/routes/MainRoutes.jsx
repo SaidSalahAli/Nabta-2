@@ -31,7 +31,7 @@ const EpisodesList = Loadable(lazy(() => import('pages/feature/control-panel/epi
 const CreateEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/create')));
 const EditEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/edit')));
 const ViewEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/view')));
-
+const FAQ = Loadable(lazy(() => import('pages/feature/gest/FAQ')));
 // render - episode categories
 const EpisodeCategories = Loadable(lazy(() => import('pages/feature/control-panel/episode-categories')));
 
@@ -84,7 +84,12 @@ const MainRoutes = {
         {
           path: '/worksheets',
           element: <WorksheetsGuest />
+        },
+        {
+          path: '/faq',
+          element: <FAQ />
         }
+
       ]
     },
     {

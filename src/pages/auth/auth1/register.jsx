@@ -30,34 +30,9 @@ export default function Register() {
         <Grid sx={{ textAlign: 'center' }} size={12}>
           <Logo />
         </Grid>
-        <Grid size={12}>
-          <Grid container spacing={1}>
-            <Grid size={12}>
-              <AuthSocButton>
-                <CardMedia component="img" src={imgGoogle} alt="Facebook" sx={{ my: 0, mx: 1.25, width: 'auto' }} /> Sign In with Google
-              </AuthSocButton>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid size={12}>
-          <AuthDivider>
-            <Typography variant="body1">OR</Typography>
-          </AuthDivider>
-        </Grid>
-        <Grid size={12}>
-          <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'baseline', mb: { xs: -0.5, sm: 0.5 } }}>
-            <Typography variant="h3">Sign up</Typography>
-            <Typography
-              component={Link}
-              to={isLoggedIn ? '/auth/login' : '/auth/login'}
-              variant="body1"
-              sx={{ textDecoration: 'none' }}
-              color="primary"
-            >
-              Already have an account?
-            </Typography>
-          </Stack>
-        </Grid>
+
+  
+
         <Grid size={12}>
           <FirebaseRegister />
         </Grid>

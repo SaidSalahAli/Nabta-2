@@ -17,12 +17,13 @@ export default function Episodes({ shouldAnimate = false }) {
 
   const { episodes: apiEpisodes, episodesLoading } = useGetEpisodes();
 
-  const episodes = apiEpisodes?.slice(0, 5).map(ep => ({
-    id: ep.Id,
-    title: ep.TitleAr,
-    image: ep.CoverImage || ep.CoverImage || img,
-    watch: 'شاهد'
-  })) || [];
+  const episodes =
+    apiEpisodes?.slice(0, 5).map((ep) => ({
+      id: ep.Id,
+      title: ep.TitleAr,
+      image: ep.CoverImage || ep.CoverImage || img,
+      watch: 'شاهد'
+    })) || [];
 
   if (episodesLoading) {
     return (
@@ -38,10 +39,10 @@ export default function Episodes({ shouldAnimate = false }) {
         <Container maxWidth="lg">
           {/* Title Section */}
           <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 700, color: 'text.primary', mb: 1 }}>
+            <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
               الحلقات
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '18px' }}>
+            <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
               حلقات متخصصة لأولياء الأمور والمعلمين والآباء والأمهات
             </Typography>
           </Box>
@@ -62,7 +63,7 @@ export default function Episodes({ shouldAnimate = false }) {
               sx={{
                 px: 2,
                 py: 1,
-                borderRadius: '18px',
+                borderRadius: '10px',
                 fontSize: { xs: '18px', md: '15px' },
                 fontWeight: 700,
                 backgroundColor: '#FFD666',
@@ -73,7 +74,7 @@ export default function Episodes({ shouldAnimate = false }) {
                 }
               }}
             >
-              المزيد ...
+              المزيد
             </Button>
           </Box>
         </Container>

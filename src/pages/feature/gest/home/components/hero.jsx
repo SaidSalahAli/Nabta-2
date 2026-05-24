@@ -57,7 +57,7 @@ export default function Hero({ shouldAnimate = false }) {
           pagination={{ clickable: true }}
           autoplay={{ delay: 5000, disableOnInteraction: false }}
           modules={[Pagination, Navigation, Autoplay]}
-          style={{ width: '100%', borderRadius: '8px', overflow: 'hidden' }}
+          style={{ width: '100%', borderRadius: '0px', overflow: 'hidden' }}
         >
           {heroSlides.map((slide, index) => (
             <SwiperSlide key={index}>

@@ -4,7 +4,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { FreeMode } from 'swiper/modules';
 import { ArrowLeft, ArrowRight } from 'iconsax-react';
-import img from 'assets/images/test2.jpeg';
+import img1 from 'assets/Home/ahmed.jpg';
+import img2 from 'assets/Home/hamdy.jpg';
+import img3 from 'assets/Home/magdy.png';
 
 export default function Team({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
@@ -23,32 +25,21 @@ export default function Team({ shouldAnimate = false }) {
       id: 1,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: img
+      image: img1
     },
     {
       id: 2,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: img
+      image: img2
     },
     {
       id: 3,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: img
-    },
-    {
-      id: 4,
-      name: 'اسم العضو',
-      role: 'الدور الوظيفي',
-      image: img
-    },
-    {
-      id: 5,
-      name: 'اسم العضو',
-      role: 'الدور الوظيفي',
-      image: img
+      image: img3
     }
+
   ];
 
   const handleSlideChange = () => {
@@ -80,11 +71,10 @@ export default function Team({ shouldAnimate = false }) {
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center', mb: 5 }}>
             <Typography
-              variant="h2"
+              variant="h1"
               sx={{
-                fontWeight: 800,
-                fontSize: { xs: '28px', md: '40px' },
-                color: '#1f1f1f',
+                fontWeight: 700,
+                color: 'primary.main',
                 mb: 2
               }}
             >
@@ -95,8 +85,8 @@ export default function Team({ shouldAnimate = false }) {
               sx={{
                 maxWidth: '900px',
                 mx: 'auto',
-                color: '#6b7280',
-                fontSize: { xs: '15px', md: '18px' },
+                color: '#000',
+                fontSize: { xs: '18px', md: '18px' },
                 lineHeight: 1.9
               }}
             >

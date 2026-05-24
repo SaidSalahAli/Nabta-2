@@ -16,11 +16,10 @@ export default function GoalsPrinciples({ shouldAnimate = false }) {
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 } }}>
             <Typography
+              variant="h1"
               sx={{
-                fontSize: { xs: '22px', md: '28px' },
-                fontWeight: 800,
-                lineHeight: 1.5,
-                color: '#2F2B3D'
+                fontWeight: 700,
+                color: 'primary.main'
               }}
             >
               ملتزمون بأهداف طموحة ومبادئ أساسية
@@ -36,7 +35,7 @@ export default function GoalsPrinciples({ shouldAnimate = false }) {
             }}
           >
             {/* 1 - Goals */}
-            <CardBox sx={{ order: { xs: 1, md: 1 } }}>
+            <CardBox sx={{ order: { xs: 1, md: 2 } }}>
               <Typography sx={titleStyle}>الأهداف والطموحات:</Typography>
 
               <Typography sx={textStyle}>• ترسيخ مفهوم أن التربية تعلم والتعليم يربي.</Typography>
@@ -45,10 +44,10 @@ export default function GoalsPrinciples({ shouldAnimate = false }) {
             </CardBox>
 
             {/* 2 - Image */}
-            <ImageBox src={img} sx={{ order: { xs: 2, md: 2 } }} />
+            <ImageBox src={img} sx={{ order: { xs: 2, md: 1 } }} />
 
             {/* 3 - Principles */}
-            <CardBox sx={{ order: { xs: 3, md: 4 } }}>
+            <CardBox sx={{ order: { xs: 3, md: 3 } }}>
               <Typography sx={titleStyle}>المبادئ الأساسية:</Typography>
 
               <Typography sx={textStyle}>الغرس: نغرس بذور المعرفة السليمة داخل أطفالنا.</Typography>
@@ -59,7 +58,7 @@ export default function GoalsPrinciples({ shouldAnimate = false }) {
             </CardBox>
 
             {/* 4 - Image */}
-            <ImageBox src={img} sx={{ order: { xs: 4, md: 3 } }} />
+            <ImageBox src={img} sx={{ order: { xs: 4, md: 4 } }} />
           </Box>
         </Container>
       </Box>

@@ -16,20 +16,20 @@ export default function WhyNabta({ shouldAnimate = false }) {
   const reasons = [
     {
       id: 1,
-      title: 'العلم',
+      title: 'sassad',
       description: 'الاستناد إلى أحدث الأبحاث والدراسات في التربية والتعليم.',
       img: KnowledgeImg
     },
     {
       id: 2,
       title: 'العمل',
-      description: 'تجارب عملية واقعية، ونتائج مجرّبة ومؤثرة.',
+      description: 'تجارب عملية واقعية، ونتائج ملموسة ومؤثرة.',
       img: workImg
     },
     {
       id: 3,
       title: 'الخبرة',
-      description: 'فهم احتياجات الأطفال وأولياء الأمور والمعلمين.',
+      description: 'فهم احتياجات الأطفال، وأولياء الأمور والمعلمين.',
       img: ExperienceImg
     }
   ];
@@ -49,10 +49,8 @@ export default function WhyNabta({ shouldAnimate = false }) {
             <Typography
               variant="h1"
               sx={{
-                fontWeight: 800,
-                color: 'text.primary',
-                mb: 3,
-                fontSize: { xs: '30px', sm: '36px', md: '42px' }
+                fontWeight: 700,
+                color: 'primary.main'
               }}
             >
               لماذا تختار نبتة؟

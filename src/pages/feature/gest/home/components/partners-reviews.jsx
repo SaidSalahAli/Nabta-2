@@ -35,10 +35,10 @@ export default function PartnersReviews({ shouldAnimate = false }) {
         <Container maxWidth="lg">
           {/* Title Section */}
           <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 700, color: 'black', mb: 1 }}>
+            <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
               ماذا قالوا عنا؟
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '18px' }}>
+            <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
               أراء بعض من شركاؤنا الاستراتيجيين من عمًلئنا الكرام في أعمالنا ومنتجاتنا اإلبداعية والتي نفخر بها{' '}
             </Typography>
           </Box>
@@ -60,7 +60,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
               sx={{
                 px: 2,
                 py: 1,
-                borderRadius: '18px',
+                borderRadius: '10px',
                 fontSize: { xs: '18px', md: '15px' },
                 fontWeight: 700,
                 backgroundColor: '#FFD666',
@@ -71,7 +71,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                 }
               }}
             >
-              المزيد ...
+              المزيد
             </Button>
           </Box>
         </Container>

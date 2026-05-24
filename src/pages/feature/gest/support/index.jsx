@@ -1,6 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Container, Grid, Paper, Fade, Button } from '@mui/material';
-import { Bank, CardPos, Mobile, Coffee, Global, Heart } from 'iconsax-react';
+import vodafoneImg from 'assets/Home/vodafone.png';
+import instaImg from 'assets/Home/insta.png';
+import paypalImg from 'assets/Home/paypal.png';
+import qnb_bankImg from 'assets/Home/qnb-bank.png';
+import coffeeImg from 'assets/Home/coffee.png';
+
+function CopyButton({ text }) {
+  const [copied, setCopied] = useState(false);
+  const handle = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <Button
+      onClick={handle}
+      size="small"
+      variant="outlined"
+      sx={{
+        mt: 1,
+        borderRadius: '8px',
+        borderColor: copied ? 'success.main' : '#FFD666',
+        color: copied ? 'success.main' : '#2E2A39',
+        fontSize: '12px',
+        fontWeight: 600,
+        px: 2,
+        '&:hover': { borderColor: '#FFD666', backgroundColor: 'rgba(255,214,102,0.08)' }
+      }}
+    >
+      {copied ? '✓ تم النسخ' : 'نسخ'}
+    </Button>
+  );
+}
 
 export default function Support() {
   const [checked, setChecked] = useState(false);
@@ -9,25 +41,42 @@ export default function Support() {
     setChecked(true);
   }, []);
 
-  // Support methods data
+  const linkButton = (label, href) => (
+    <Button
+      variant="contained"
+      href={href}
+      target="_blank"
+      sx={{
+        px: 4,
+        py: 1,
+        borderRadius: '12px',
+        backgroundColor: '#FFD666',
+        color: '#2E2A39',
+        fontWeight: 700,
+        boxShadow: '0 8px 20px rgba(255, 214, 102, 0.3)',
+        '&:hover': { backgroundColor: '#ffcf4d' }
+      }}
+    >
+      {label}
+    </Button>
+  );
+
   const supportMethods = [
     {
       id: 'qnb',
       title: 'حساب بنكي',
-      icon: <Bank size="40" color="#FFD666" variant="Bold" />,
       content: (
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h4" sx={{ fontWeight: 800, mb: 2, color: '#2E2A39' }}>
-            QNB
-          </Typography>
+        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box component="img" src={qnb_bankImg} alt="QNB Bank" sx={{ height: 64, mb: 1.5, objectFit: 'contain' }} />
           <Typography variant="body1" sx={{ fontWeight: 700, mb: 1 }}>
             حمدي محمود عشري عثمان
           </Typography>
-          <Typography variant="h6" sx={{ letterSpacing: '1px', mb: 1, dir: 'ltr' }}>
+          <Typography variant="h6" sx={{ letterSpacing: '1px', mb: 0.5, direction: 'ltr' }}>
             1020518304835
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            فرع ش شامبليون، وسط البلد، قصر النيل
+          <CopyButton text="1020518304835" />
+          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+            فرع ش شامبليون، وسط القاهرة، قصر النيل
           </Typography>
         </Box>
       )
@@ -35,35 +84,37 @@ export default function Support() {
     {
       id: 'instapay',
       title: 'إنستاباي Instapay',
-      icon: <CardPos size="40" color="#FFD666" variant="Bold" />,
       content: (
-        <Box sx={{ textAlign: 'center', mt: 2 }}>
-          <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
+        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 1 }}>
+          <Box component="img" src={instaImg} alt="InstaPay" sx={{ height: 64, mb: 1.5, objectFit: 'contain' }} />
+          <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
             اسم المستخدم:
           </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#0088CC', dir: 'ltr' }}>
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#0088CC', direction: 'ltr' }}>
             qnb-hamdy
           </Typography>
+          <CopyButton text="qnb-hamdy" />
         </Box>
       )
     },
     {
       id: 'wallets',
       title: 'المحافظ الإلكترونية',
-      icon: <Mobile size="40" color="#FFD666" variant="Bold" />,
       content: (
-        <Box sx={{ textAlign: 'center', mt: 1 }}>
+        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 1 }}>
+          <Box component="img" src={vodafoneImg} alt="المحافظ الإلكترونية" sx={{ height: 64, mb: 1, objectFit: 'contain' }} />
           <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
             (فودافون كاش، أورانج، وي، اتصالات)
           </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
             رقم التحويل:
           </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2, letterSpacing: '1px', dir: 'ltr' }}>
+          <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, letterSpacing: '1px', direction: 'ltr' }}>
             01067007977
           </Typography>
-          <Typography variant="caption" sx={{ color: 'error.main', fontWeight: 600, display: 'block' }}>
-            الرقم خاص بالدعم فقط وليس للاتصال منعاً للإحراج
+          <CopyButton text="01067007977" />
+          <Typography variant="caption" sx={{ color: 'error.main', fontWeight: 600, display: 'block', mt: 1 }}>
+            الرقم خاص بالدعم فقط وليس للاتصال منعاً للإحراج — داخل مصر
           </Typography>
         </Box>
       )
@@ -71,78 +122,29 @@ export default function Support() {
     {
       id: 'bmc',
       title: 'Buy Me a Coffee',
-      icon: <Coffee size="40" color="#FFD666" variant="Bold" />,
       content: (
-        <Box sx={{ textAlign: 'center', mt: 2 }}>
-          <Button
-            variant="contained"
-            href="#"
-            target="_blank"
-            sx={{
-              px: 4,
-              py: 1,
-              borderRadius: '12px',
-              backgroundColor: '#FFD666',
-              color: '#2E2A39',
-              fontWeight: 700,
-              boxShadow: '0 8px 20px rgba(255, 214, 102, 0.3)',
-              '&:hover': { backgroundColor: '#ffcf4d' }
-            }}
-          >
-            هنا
-          </Button>
+        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mt: 1 }}>
+          <Box component="img" src={coffeeImg} alt="Buy Me a Coffee" sx={{ height: 64, objectFit: 'contain' }} />
+          {linkButton('هنا', 'https://www.buymeacoffee.com/HamdyMahmoud')}
         </Box>
       )
     },
     {
       id: 'patreon',
       title: 'باتريون Patreon',
-      icon: <Heart size="40" color="#FFD666" variant="Bold" />,
       content: (
-        <Box sx={{ textAlign: 'center', mt: 2 }}>
-          <Button
-            variant="contained"
-            href="#"
-            target="_blank"
-            sx={{
-              px: 4,
-              py: 1,
-              borderRadius: '12px',
-              backgroundColor: '#FFD666',
-              color: '#2E2A39',
-              fontWeight: 700,
-              boxShadow: '0 8px 20px rgba(255, 214, 102, 0.3)',
-              '&:hover': { backgroundColor: '#ffcf4d' }
-            }}
-          >
-            هنا
-          </Button>
+        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
+          {linkButton('هنا', 'https://www.patreon.com/NabtaStudio')}
         </Box>
       )
     },
     {
       id: 'paypal',
       title: 'باي بال PayPal',
-      icon: <Global size="40" color="#FFD666" variant="Bold" />,
       content: (
-        <Box sx={{ textAlign: 'center', mt: 2 }}>
-          <Button
-            variant="contained"
-            href="#"
-            target="_blank"
-            sx={{
-              px: 4,
-              py: 1,
-              borderRadius: '12px',
-              backgroundColor: '#FFD666',
-              color: '#2E2A39',
-              fontWeight: 700,
-              boxShadow: '0 8px 20px rgba(255, 214, 102, 0.3)',
-              '&:hover': { backgroundColor: '#ffcf4d' }
-            }}
-          >
-            هنا
-          </Button>
+        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mt: 1 }}>
+          <Box component="img" src={paypalImg} alt="PayPal" sx={{ height: 64, objectFit: 'contain' }} />
+          {linkButton('هنا', 'https://paypal.me/HamdyMahmoudAshry')}
         </Box>
       )
     }
@@ -201,8 +203,7 @@ export default function Support() {
               <Typography variant="body1" sx={{ fontWeight: 600, color: '#0088CC', mb: 4, fontSize: '18px' }}>
                 الرأي والمشورة - مشاركة المحتوى - الدعم المادي - الدعاء
               </Typography>
-
-              <Box sx={{ p: 3, backgroundColor: '#fff4e5', borderRadius: '16px', borderLeft: '4px solid #FFD666' }}>
+              <Box sx={{ p: 3, backgroundColor: '#fff4e5', borderRadius: '16px', borderRight: '4px solid #FFD666' }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 800, color: '#b27b00', mb: 1 }}>
                   ملاحظة !
                 </Typography>
@@ -237,11 +238,10 @@ export default function Support() {
                     }
                   }}
                 >
-                  <Box sx={{ mb: 2 }}>{method.icon}</Box>
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#2E2A39', mb: 3, textAlign: 'center' }}>
+                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#2E2A39', mb: 2, textAlign: 'center' }}>
                     {method.title}
                   </Typography>
-                  <Box sx={{ mt: 'auto', width: '100%' }}>{method.content}</Box>
+                  <Box sx={{ width: '100%' }}>{method.content}</Box>
                 </Paper>
               </Grid>
             ))}

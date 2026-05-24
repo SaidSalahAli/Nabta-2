@@ -21,25 +21,11 @@ export default function AboutNabta({ shouldAnimate = false }) {
         <Container maxWidth="lg">
           {/* Heading */}
           <Box sx={{ textAlign: 'center', mb: { xs: 6, md: 8 } }}>
-            <Typography
-              variant="h1"
-              sx={{
-                fontWeight: 800,
-                lineHeight: 1.4
-              }}
-            >
+            <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
               نبته
             </Typography>
 
-            <Typography
-              variant="body1"
-              sx={{
-                fontWeight: 600,
-                lineHeight: 1.9,
-                maxWidth: '1000px',
-                mx: 'auto'
-              }}
-            >
+            <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
               منصة صناعة محتوى تربوي تعليمي للأطفال، ودعم الأمهات والآباء
               <br />
               تربية تتعلّم... وتعليم يربّي

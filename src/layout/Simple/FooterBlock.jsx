@@ -39,7 +39,7 @@ export default function FooterBlock({ isFull }) {
   const col1 = [
     { label: 'الرئيسية', to: '/' },
     { label: 'قصتنا', to: '#' },
-    { label: 'الأسئلة الشائعة', to: '#' },
+    { label: 'الأسئلة الشائعة', to: '/faq' },
     { label: 'تواصل معنا', to: '/contact' }
   ];
 
