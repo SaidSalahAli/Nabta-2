@@ -18,7 +18,10 @@ export default function Partners({ shouldAnimate = false }) {
     }
   }, [shouldAnimate]);
 
-  const partners = [{ id: 1, name: 'الشريك الأول', logo: img1 }, { id: 2, name: 'الشريك الثاني', logo: img2 }];
+  const partners = [
+    { id: 1, name: 'الشريك الأول', logo: img1 },
+    { id: 2, name: 'دار رتل', logo: img2 }
+  ];
 
   const handleSlideChange = () => {
     if (!swiperRef.current) return;
@@ -123,6 +126,17 @@ export default function Partners({ shouldAnimate = false }) {
                       />
                     </Box>
                   </Fade>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      mt: 1,
+                      textAlign: 'center',
+                      color: '#000',
+                      fontSize: '18px'
+                    }}
+                  >
+                    {partner.name}
+                  </Typography>
                 </SwiperSlide>
               ))}
             </Swiper>

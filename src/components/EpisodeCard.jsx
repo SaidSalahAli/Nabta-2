@@ -63,28 +63,30 @@ export default function EpisodeCard({ episode, isAnimating, index, onClick }) {
             >
               {episode.title}
             </Typography>
-            <Typography
-              variant="subtitle2"
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'end',
-                fontSize: '18px',
-                fontWeight: 600,
-                width: '100%',
-                color: 'white',
-                textAlign: 'center',
-                width: 'fit-content',
-                px: 2,
-                backgroundColor: 'primary.main',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                '&:hover': { color: '#006699' }
-              }}
-            >
-              {episode.watch}
-            </Typography>
+            {episode.watch && (
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'end',
+                  fontSize: '18px',
+                  fontWeight: 600,
+                  width: '100%',
+                  color: 'white',
+                  textAlign: 'center',
+                  width: 'fit-content',
+                  px: 2,
+                  backgroundColor: 'primary.main',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  '&:hover': { color: '#006699' }
+                }}
+              >
+                {episode.watch}
+              </Typography>
+            )}
           </Box>
         </CardContent>
       </Card>
