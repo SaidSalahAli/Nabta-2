@@ -58,7 +58,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
             <Button
               variant="contained"
               sx={{
-                px: 2,
+                px: 5,
                 py: 1,
                 borderRadius: '10px',
                 fontSize: { xs: '18px', md: '15px' },

@@ -45,8 +45,8 @@ export default function FooterBlock({ isFull }) {
 
   const col2 = [
     { label: 'المتجر', href: '#' },
-    { label: 'كيف تدعمنا؟', href: '#' },
-    { label: 'ورش عمل ومناسبات', href: '#' }
+    { label: 'كيف تدعمنا؟', href: '/support' }
+    // { label: 'ورش عمل ومناسبات', href: '#' }
   ];
 
   return (

@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
-import {
-  Box,
-  Typography,
-  Container,
-  Breadcrumbs,
-  Link,
-  Button,
-  Paper,
-  Fade
-} from '@mui/material';
+import { Box, Typography, Container, Breadcrumbs, Link, Button, Paper, Fade } from '@mui/material';
 import { ArrowLeft2, Play } from 'iconsax-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -20,10 +11,11 @@ import 'swiper/css/navigation';
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 
 import mockImage1 from 'assets/images/test.jpeg';
+import mockImage2 from 'assets/images/App1.png';
 
 const mockScreenshots = [
   { id: 1, image: mockImage1, caption: 'واجهة التطبيق التفاعلية' },
-  { id: 2, image: mockImage1, caption: 'ألعاب تعليمية ممتعة' },
+  { id: 2, image: mockImage2, caption: 'ألعاب تعليمية ممتعة' },
   { id: 3, image: mockImage1, caption: 'تتبع الحروف ونطقها' },
   { id: 4, image: mockImage1, caption: 'مراحل متعددة تناسب الأعمار' }
 ];
@@ -55,16 +47,9 @@ export default function ViewApplication() {
         }}
       >
         <Container maxWidth="lg">
-
           {/* Breadcrumbs */}
           <Breadcrumbs
-            separator={
-              <ArrowLeft2
-                size="14"
-                color="#2E2A39"
-                style={{ transform: 'rotate(180deg)' }}
-              />
-            }
+            separator={<ArrowLeft2 size="14" color="#2E2A39" style={{ transform: 'rotate(180deg)' }} />}
             aria-label="breadcrumb"
             sx={{
               mb: { xs: 3, md: 4 },
@@ -101,14 +86,9 @@ export default function ViewApplication() {
           <Typography
             variant="h1"
             sx={{
-              fontWeight: 800,
+              fontWeight: 700,
               mb: { xs: 4, md: 6 },
-              color: '#2E2A39',
-              fontSize: {
-                xs: '1.9rem',
-                sm: '2.4rem',
-                md: '3rem'
-              },
+              color: 'primary.main',
               lineHeight: 1.4,
               textAlign: 'center'
             }}
@@ -177,8 +157,7 @@ export default function ViewApplication() {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        background:
-                          'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
                         p: { xs: 1.5, md: 2 },
                         pt: { xs: 3, md: 4 }
                       }}
@@ -217,13 +196,7 @@ export default function ViewApplication() {
               href={application.downloadUrl}
               target="_blank"
               fullWidth={false}
-              startIcon={
-                <Play
-                  size="22"
-                  color="#2E2A39"
-                  variant="Bold"
-                />
-              }
+              startIcon={<Play size="22" color="#2E2A39" variant="Bold" />}
               sx={{
                 width: {
                   xs: '100%',
@@ -243,13 +216,11 @@ export default function ViewApplication() {
                   xs: '16px',
                   md: '18px'
                 },
-                boxShadow:
-                  '0 10px 25px rgba(255, 214, 102, 0.4)',
+                boxShadow: '0 10px 25px rgba(255, 214, 102, 0.4)',
                 '&:hover': {
                   backgroundColor: '#ffcf4d',
                   transform: 'translateY(-2px)',
-                  boxShadow:
-                    '0 15px 35px rgba(255, 214, 102, 0.5)'
+                  boxShadow: '0 15px 35px rgba(255, 214, 102, 0.5)'
                 },
                 transition: 'all 0.3s ease'
               }}
@@ -261,16 +232,12 @@ export default function ViewApplication() {
           {/* About */}
           <Box sx={{ mb: { xs: 6, md: 8 } }}>
             <Typography
-              variant="h3"
+              variant="h1"
               sx={{
                 fontWeight: 800,
-                color: '#2E2A39',
+                color: '#000',
                 mb: 3,
-                fontSize: {
-                  xs: '1.8rem',
-                  sm: '2.2rem',
-                  md: '3rem'
-                },
+
                 display: 'inline-block',
                 position: 'relative',
                 '&::after': {
@@ -278,7 +245,7 @@ export default function ViewApplication() {
                   position: 'absolute',
                   bottom: '-8px',
                   right: 0,
-                  width: '50%',
+                  width: '100%',
                   height: '4px',
                   backgroundColor: '#0088CC',
                   borderRadius: '2px'
@@ -301,14 +268,13 @@ export default function ViewApplication() {
                   md: '24px'
                 },
                 backgroundColor: '#fff',
-                boxShadow:
-                  '0 10px 40px rgba(0,0,0,0.03)'
+                boxShadow: '0 10px 40px rgba(0,0,0,0.03)'
               }}
             >
               <Typography
                 variant="body1"
                 sx={{
-                  color: 'text.secondary',
+                  color: '#000',
                   fontSize: {
                     xs: '15px',
                     sm: '16px',
@@ -355,25 +321,20 @@ export default function ViewApplication() {
                 overflow: 'hidden',
                 backgroundColor: '#000',
                 position: 'relative',
-                boxShadow:
-                  '0 20px 50px rgba(0,0,0,0.1)',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.1)',
                 transition: 'all 0.3s ease',
                 '&:hover': {
                   transform: {
                     md: 'translateY(-5px)'
                   },
-                  boxShadow:
-                    '0 30px 60px rgba(0,0,0,0.15)'
+                  boxShadow: '0 30px 60px rgba(0,0,0,0.15)'
                 }
               }}
             >
               <iframe
                 width="100%"
                 height="100%"
-                src={application.videoUrl.replace(
-                  'watch?v=',
-                  'embed/'
-                )}
+                src={application.videoUrl.replace('watch?v=', 'embed/')}
                 title={application.title}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -381,7 +342,6 @@ export default function ViewApplication() {
               />
             </Paper>
           </Box>
-
         </Container>
       </Box>
     </Fade>

@@ -68,7 +68,14 @@ function TopBar({ primaryColor, onClose, isVisible }) {
         <Typography sx={{ fontWeight: 600, fontSize: { xs: 13, md: 20 }, color: 'text.primary', lineHeight: 1.3, textAlign: 'center' }}>
           تم إطلاق تطبيق لغتي العربية , ابدأ مع طفلك اليوم وحمّله الآن
         </Typography>
-        <img src={GooglePlay} alt="Google Play" style={{ height: '28px', width: 'auto', flexShrink: 0 }} />
+        <Button
+          component="a"
+          href="https://play.google.com/store/apps/details?id=air.ARABICMYLANGUAGE"
+          target="_blank"
+          sx={{ p: 0, minWidth: 0, ':hover': { color: '#000' } }}
+        >
+          <img src={GooglePlay} alt="Google Play" style={{ height: '40px', width: 'auto', flexShrink: 0 }} />
+        </Button>
       </Box>
 
       <Box sx={{ width: 40, flexShrink: 0 }} />
@@ -135,7 +142,7 @@ const navLinks = [
   { label: 'حلقات', path: '/episodes' },
   { label: 'تطبيقات', path: '/applications' },
   { label: 'أوراق عمل', path: '/worksheets' },
-  { label: 'تواصل معنا', path: '/contact' }
+  { label: 'قصتنا', path: '/about' }
 ];
 
 const LOGO_WIDTH = 110;
@@ -155,6 +162,7 @@ function BottomBar({ primaryColor }) {
       sx={{
         px: { xs: 1.5, md: 3 },
         display: 'flex',
+        height: 90,
         alignItems: 'center',
         justifyContent: 'space-between',
         '&::-webkit-scrollbar': { height: '4px' },
@@ -202,8 +210,8 @@ function BottomBar({ primaryColor }) {
                 position: 'absolute',
                 bottom: 8,
                 left: '50%',
-                width: '60%',
-                height: '3px',
+                width: '70%',
+                height: '4px',
                 backgroundColor: '#FFD666',
                 borderRadius: '20px',
                 transform: activeTab === i ? 'translateX(-50%) scaleX(1)' : 'translateX(-50%) scaleX(0)',
@@ -229,17 +237,17 @@ function BottomBar({ primaryColor }) {
             key={btn.label}
             component={btn.path !== '#' ? Link : 'button'}
             to={btn.path !== '#' ? btn.path : undefined}
-            variant="outlined"
+            variant="text"
             sx={{
               fontSize: 13,
               fontWeight: 500,
-              borderColor: 'white',
               color: 'white',
               borderRadius: 1,
+              border: '1px solid white',
               px: 1.75,
               py: 0.75,
-              textTransform: 'none',
-              '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' }
+              ':hover': { color: '#000' },
+              textTransform: 'none'
             }}
           >
             {btn.label}
@@ -264,7 +272,8 @@ function BottomBar({ primaryColor }) {
                 border: '1px solid white',
                 px: 1.75,
                 py: 0.75,
-                textTransform: 'none'
+                textTransform: 'none',
+                ':hover': { color: '#000' }
               }}
             >
               دخول
@@ -393,9 +402,21 @@ function MobileDrawer({ open, onClose, primaryColor }) {
   );
 }
 
+// ==============================|| HEADER HEIGHT HOOK ||============================== //
+
+/**
+ * استخدم الـ hook ده في الـ Layout عشان تحسب ارتفاع الهيدر ديناميكياً
+ * وتضيف paddingTop على المحتوى:
+ *
+ * const { headerRef, headerHeight } = useHeaderHeight();
+ * ...
+ * <Header ref={headerRef} />
+ * <Box sx={{ pt: `${headerHeight}px` }}>...</Box>
+ */
+
 // ==============================|| MAIN HEADER EXPORT ||============================== //
 
-const LOGO_OVERFLOW = 30; // المقدار اللي اللوجو هينزل بيه فوق الـ Hero
+const LOGO_OVERFLOW = 30;
 
 export default function Header() {
   const theme = useTheme();
@@ -403,20 +424,42 @@ export default function Header() {
   const [isTopBarVisible, setIsTopBarVisible] = useState(true);
   const primaryColor = theme.palette.primary.main;
 
+  // حساب ارتفاع الهيدر ديناميكياً عشان نحط padding مناسب على المحتوى
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const headerRef = useState(null);
+
+  useEffect(() => {
+    const el = document.getElementById('main-header');
+    if (!el) return;
+
+    const observer = new ResizeObserver(() => {
+      setHeaderHeight(el.offsetHeight);
+    });
+
+    observer.observe(el);
+    setHeaderHeight(el.offsetHeight);
+
+    return () => observer.disconnect();
+  }, [isTopBarVisible]);
+
+  // نحط الـ paddingTop على أول عنصر بعد الهيدر عن طريق CSS variable
+  useEffect(() => {
+    document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+  }, [headerHeight]);
+
   return (
     /*
-     * ← الـ wrapper الخارجي بيحتوي AppBar + اللوجو الطافي
-     *   position: relative عشان اللوجو يتحدد موقعه منه
+     * الـ wrapper الخارجي — position: relative عشان اللوجو الطافي يتحدد موقعه منه
+     * لكن الـ AppBar نفسه fixed عشان يتثبت عند السكرول
      */
-    <Box sx={{ position: 'relative', zIndex: 1100 }}>
+    <Box id="main-header" sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1100 }}>
       <AppBar
-        position="sticky"
+        position="static"   // ← static هنا لأن الـ Box الأب هو اللي بيعمل fixed
         elevation={0}
         sx={{
           bgcolor: primaryColor,
           boxShadow: 'none',
-          color: 'text.primary',
-          position: 'relative' // ← relative مش sticky عشان اللوجو يتحدد منه
+          color: 'text.primary'
         }}
       >
         {/* Desktop */}
@@ -431,8 +474,7 @@ export default function Header() {
           <Container disableGutters>
             <Toolbar sx={{ justifyContent: 'space-between' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, height: 24 }}>
-                {/* <img src={logo1} alt=" " style={{ width: 60 }} /> */}
-                <Logo width={60} to="/" /> {/* استخدم مكون اللوجو الجديد */}
+                <Logo width={60} to="/" />
               </Box>
               <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'white', flex: 1, textAlign: 'center' }}>لغتي العربية</Typography>
               <IconButton size="large" color="inherit" onClick={() => setDrawerOpen(true)} sx={{ flexShrink: 0 }}>
@@ -444,25 +486,29 @@ export default function Header() {
         </Box>
       </AppBar>
 
+      {/* اللوجو الطافي — desktop فقط */}
       <Box
         sx={{
           display: { xs: 'none', md: 'flex' },
           position: 'absolute',
-          bottom: '-33px',
+          bottom: '-20px',
           left: { md: 24, lg: 32 },
           zIndex: 1200,
           alignItems: 'flex-start'
         }}
       >
         <Box
+          component={Link}
+          to="/"
           sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            cursor: 'pointer',
             width: LOGO_WIDTH
           }}
         >
-          <img src={logo1} alt="لغتي العربية" style={{ width: 90, display: 'block' }} />
+          <img src={logo1} alt="لغتي العربية" style={{ width: 110, display: 'block' }} />
         </Box>
       </Box>
     </Box>

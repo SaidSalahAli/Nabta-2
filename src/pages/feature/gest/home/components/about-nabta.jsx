@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Container, Fade, Typography } from '@mui/material';
+import mobileImg from 'assets/Home/storyMop.svg';
+import bcImg from 'assets/Home/storyComp.svg';
 
 export default function AboutNabta({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
@@ -24,7 +26,6 @@ export default function AboutNabta({ shouldAnimate = false }) {
             <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
               نبته
             </Typography>
-
             <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
               منصة صناعة محتوى تربوي تعليمي للأطفال، ودعم الأمهات والآباء
               <br />
@@ -32,177 +33,49 @@ export default function AboutNabta({ shouldAnimate = false }) {
             </Typography>
           </Box>
 
-          {/* Main layout */}
+          {/* Desktop Image */}
           <Box
             sx={{
-              position: 'relative',
-              minHeight: { xs: 'auto', md: 556 }
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
           >
-            {/* Mobile layout */}
             <Box
+              component="img"
+              src={bcImg}
+              alt="نبته - نسخة الكمبيوتر"
               sx={{
-                display: { xs: 'flex', md: 'none' },
-                flexDirection: 'column',
-                gap: 3
+                width: '100%',
+                // maxWidth: '900px',
+                height: 'auto',
+                objectFit: 'contain'
               }}
-            >
-              <InfoBox
-                title="من نحن:"
-                content="نبته: منصة رائدة في صناعة محتوى الأطفال التربوي والتعليمي، ودعم الأمهات والآباء من خلال: نصائح تربوية، تطبيقات تعليمية، فيديوهات توعوية، أوراق مذاكرة وتلوين، ورش عمل، أنشطة وألعاب تفاعلية."
-              />
+            />
+          </Box>
 
-              <InfoBox
-                title="المهمة الأساسية:"
-                content="مهمتنا الأساسية نابعة من شعارنا.. اغرس بذرة.. تنبت نبته.. تحصد ثمرة. نحن نغرس بذور المعرفة الصافية داخل أطفالنا، ونسقيها بالحب والمتابعة لتصبح نبتة جميلة وراسخة، وتنتج يانعة بما نأمله."
-              />
-
-              <InfoBox
-                title="لماذا اسم نبته؟"
-                content="لأننا نؤمن بأن الأطفال مثل النباتات، كلما اعتنيت بهم وسقيتهم المعرفة السليمة، أثمروا وأزهروا نبتة طيبة ونافعة."
-              />
-
-              <InfoBox
-                title="الرؤية المستقبلية:"
-                content="أن نُصبح مركزًا إقليميًا موثوقًا به ينافس في مجال صناعة المحتوى التربوي التعليمي للأطفال، ودعم الأمهات والآباء بمنهجية علمية وأساليب متطورة."
-              />
-            </Box>
-
-            {/* Desktop layout */}
-            <Box sx={{ display: { xs: 'none', md: 'block' }, position: 'relative', minHeight: 556 }}>
-              {/* top left */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '38%',
-                  zIndex: 2
-                }}
-              >
-                <InfoBox
-                  title="من نحن:"
-                  content="نبته: منصة رائدة في صناعة محتوى الأطفال التربوي والتعليمي، ودعم الأمهات والآباء من خلال: نصائح تربوية، تطبيقات تعليمية، فيديوهات توعوية، أوراق مذاكرة وتلوين، ورش عمل، أنشطة وألعاب تفاعلية."
-                />
-              </Box>
-              {/* top right */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '38%',
-                  zIndex: 2
-                }}
-              >
-                <InfoBox
-                  title="الرؤية المستقبلية:"
-                  content="أن نُصبح مركزًا إقليميًا موثوقًا به ينافس في مجال صناعة المحتوى التربوي التعليمي للأطفال، ودعم الأمهات والآباء بمنهجية علمية وأساليب متطورة."
-                />
-              </Box>
-              {/* bottom left */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  width: '38%',
-                  zIndex: 2
-                }}
-              >
-                <InfoBox
-                  title="المهمة الأساسية:"
-                  content="مهمتنا الأساسية نابعة من شعارنا.. اغرس بذرة.. تنبت نبته.. تحصد ثمرة. نحن نغرس بذور المعرفة الصافية داخل أطفالنا، ونسقيها بالحب والمتابعة لتصبح نبتة جميلة وراسخة، وتنتج يانعة بما نأمله."
-                />
-              </Box>
-              {/* bottom right */}
-              <Box
-                sx={{
-                  position: 'absolute',
-                  bottom: 0,
-                  right: 0,
-                  width: '38%',
-                  zIndex: 2
-                }}
-              >
-                <InfoBox
-                  title="لماذا اسم نبته؟"
-                  content="لأننا نؤمن بأن الأطفال مثل النباتات، كلما اعتنيت بهم وسقيتهم المعرفة السليمة، أثمروا وأزهروا نبتة طيبة ونافعة."
-                />
-              </Box>
-            </Box>
+          {/* Mobile Image */}
+          <Box
+            sx={{
+              display: { xs: 'flex', md: 'none' },
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Box
+              component="img"
+              src={mobileImg}
+              alt="نبته - نسخة الموبايل"
+              sx={{
+                width: '100%',
+                maxWidth: '420px',
+                height: 'auto',
+                objectFit: 'contain'
+              }}
+            />
           </Box>
         </Container>
       </Box>
     </Fade>
-  );
-}
-
-function InfoBox({ title, content }) {
-  return (
-    <Box
-      sx={{
-        backgroundColor: 'rgba(255,255,255,0.72)',
-        border: '2px solid #0088CC',
-        borderRadius: '28px',
-        p: { xs: 3, md: 4 },
-        minHeight: { xs: 'auto', md: 250 },
-        backdropFilter: 'blur(2px)'
-      }}
-    >
-      <Typography
-        sx={{
-          fontSize: { xs: '15px', md: '20px' },
-          fontWeight: 800,
-          color: '#3A3246',
-          mb: 2,
-          lineHeight: 1.6
-        }}
-      >
-        {title}
-      </Typography>
-
-      <Typography
-        sx={{
-          fontSize: { xs: '14px', md: '16px' },
-          color: '#5B5368',
-          lineHeight: 2
-        }}
-      >
-        {content}
-      </Typography>
-    </Box>
-  );
-}
-
-function CenterCircle() {
-  return (
-    <Box sx={{ position: 'relative', width: { xs: 180, md: 150 }, height: { xs: 180, md: 150 } }}>
-      {/* circle */}
-      <Box
-        sx={{
-          width: '100%',
-          height: '100%',
-          borderRadius: '50%',
-          border: '8px solid #beebfe',
-          background: '#098bc9',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column'
-        }}
-      >
-        <Typography
-          sx={{
-            fontSize: { xs: '32px', md: '30px' },
-            fontWeight: 800,
-            color: 'white',
-            lineHeight: 1
-          }}
-        >
-          قصتنا
-        </Typography>
-      </Box>
-    </Box>
   );
 }

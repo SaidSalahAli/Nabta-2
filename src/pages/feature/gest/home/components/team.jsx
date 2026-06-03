@@ -25,21 +25,21 @@ export default function Team({ shouldAnimate = false }) {
       id: 1,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: img1
+      image: img2
     },
     {
       id: 2,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
-      image: img2
+      image: img1
     },
+
     {
       id: 3,
       name: 'اسم العضو',
       role: 'الدور الوظيفي',
       image: img3
     }
-
   ];
 
   const handleSlideChange = () => {

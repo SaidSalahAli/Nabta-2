@@ -8,12 +8,13 @@ import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import slider1 from 'assets/Home/slider_1.svg';
 import slider2 from 'assets/Home/slider_2.svg';
 import slider3 from 'assets/Home/slider_3.svg';
+import slider4 from 'assets/Home/slider_4.jpg';
 
 export default function Hero({ shouldAnimate = false }) {
   const theme = useTheme();
   const [checked, setChecked] = useState(false);
 
-  const heroSlides = [slider1, slider2, slider3];
+  const heroSlides = [slider1, slider2, slider3, slider4];
 
   useEffect(() => {
     if (shouldAnimate) setChecked(true);

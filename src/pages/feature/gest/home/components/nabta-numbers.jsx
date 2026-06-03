@@ -117,10 +117,10 @@ export default function NabtaNumbers({ shouldAnimate = false }) {
 
                   {/* Number */}
                   <Typography
+                    variant="h1"
                     sx={{
-                      fontWeight: 800,
-                      color: '#444',
-                      fontSize: { xs: '28px', md: item.id === 4 ? '26px' : '38px' },
+                      fontWeight: 700,
+                      color: '#000',
                       mb: 1
                     }}
                   >
@@ -130,10 +130,8 @@ export default function NabtaNumbers({ shouldAnimate = false }) {
                   {/* Subtitle */}
                   <Typography
                     sx={{
-                      color: '#666',
-                      fontWeight: item.id === 4 ? 500 : 600,
-                      fontSize: { xs: '16px', md: item.id === 4 ? '18px' : '24px' },
-                      lineHeight: 1.8,
+                      color: '#000',
+                      fontSize: '18px',
                       maxWidth: item.id === 4 ? '280px' : '200px'
                     }}
                   >

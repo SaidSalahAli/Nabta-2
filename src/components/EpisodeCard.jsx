@@ -53,7 +53,7 @@ export default function EpisodeCard({ episode, isAnimating, index, onClick }) {
               variant="subtitle2"
               sx={{
                 fontWeight: 600,
-                color: '#000',
+                color: 'primary.main',
                 lineHeight: 1.4,
                 minHeight: '40px',
                 fontSize: '18px',
@@ -72,7 +72,6 @@ export default function EpisodeCard({ episode, isAnimating, index, onClick }) {
                   justifyContent: 'end',
                   fontSize: '18px',
                   fontWeight: 600,
-                  width: '100%',
                   color: 'white',
                   textAlign: 'center',
                   width: 'fit-content',
@@ -81,7 +80,7 @@ export default function EpisodeCard({ episode, isAnimating, index, onClick }) {
                   borderRadius: '10px',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
-                  '&:hover': { color: '#006699' }
+                  // '&:hover': { color: '#006699' }
                 }}
               >
                 {episode.watch}

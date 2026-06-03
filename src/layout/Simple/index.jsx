@@ -5,18 +5,19 @@ import { Outlet } from 'react-router-dom';
 // project-imports
 import Loader from 'components/Loader';
 import { SimpleLayoutType } from 'config';
+import Box from '@mui/material/Box';
 
 const Header = lazy(() => import('./Header'));
 const FooterBlock = lazy(() => import('./FooterBlock'));
-
-// ==============================|| LAYOUT - SIMPLE / LANDING ||============================== //
 
 export default function SimpleLayout({ layout = SimpleLayoutType.SIMPLE }) {
   return (
     <Suspense fallback={<Loader />}>
       <Header />
-      <Outlet />
-      <FooterBlock isFull={layout === SimpleLayoutType.LANDING} />
+      <Box sx={{ pt: 'var(--header-height)' }}>
+        <Outlet />
+        <FooterBlock isFull={layout === SimpleLayoutType.LANDING} />
+      </Box>
     </Suspense>
   );
 }

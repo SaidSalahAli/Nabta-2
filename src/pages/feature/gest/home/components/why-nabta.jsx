@@ -16,7 +16,7 @@ export default function WhyNabta({ shouldAnimate = false }) {
   const reasons = [
     {
       id: 1,
-      title: 'sassad',
+      title: 'العلم',
       description: 'الاستناد إلى أحدث الأبحاث والدراسات في التربية والتعليم.',
       img: KnowledgeImg
     },
@@ -132,11 +132,10 @@ export default function WhyNabta({ shouldAnimate = false }) {
 
                       {/* Title */}
                       <Typography
-                        variant="h5"
+                        variant="h1"
                         sx={{
                           fontWeight: 700,
-                          color: '#4a4a4a',
-                          fontSize: { xs: '28px', md: '36px' },
+                          color: '#000',
                           mb: 1
                         }}
                       >
@@ -147,8 +146,8 @@ export default function WhyNabta({ shouldAnimate = false }) {
                       <Typography
                         variant="body1"
                         sx={{
-                          color: '#5f5f5f',
-                          fontSize: { xs: '17px', md: '22px' },
+                          color: '#000',
+                          fontSize: { xs: '18px', md: '18px' },
                           lineHeight: 1.9,
                           fontWeight: 400,
                           maxWidth: '290px'

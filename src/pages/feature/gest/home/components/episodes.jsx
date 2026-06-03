@@ -61,7 +61,7 @@ export default function Episodes({ shouldAnimate = false }) {
               variant="contained"
               onClick={() => navigate('/episodes')}
               sx={{
-                px: 2,
+                px: 5,
                 py: 1,
                 borderRadius: '10px',
                 fontSize: { xs: '18px', md: '15px' },
