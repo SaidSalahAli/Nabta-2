@@ -32,6 +32,8 @@ const CreateEpisode = Loadable(lazy(() => import('pages/feature/control-panel/ep
 const EditEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/edit')));
 const ViewEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/view')));
 const FAQ = Loadable(lazy(() => import('pages/feature/gest/FAQ')));
+const Terms = Loadable(lazy(() => import('pages/feature/gest/terms')));
+const Privacy = Loadable(lazy(() => import('pages/feature/gest/privacy')));
 // render - episode categories
 const EpisodeCategories = Loadable(lazy(() => import('pages/feature/control-panel/episode-categories')));
 
@@ -91,6 +93,14 @@ const MainRoutes = {
         {
           path: '/faq',
           element: <FAQ />
+        },
+        {
+          path: '/terms',
+          element: <Terms />
+        },
+        {
+          path: '/privacy',
+          element: <Privacy />
         }
 
       ]

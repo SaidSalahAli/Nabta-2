@@ -20,16 +20,6 @@ export default function AllApplications() {
   const applications = [
     { id: 1, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
     { id: 2, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 3, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 4, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 5, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 6, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 7, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 8, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 9, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 10, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 11, title: 'عنوان التطبيق', image: img, watch: 'تحميل' },
-    { id: 12, title: 'عنوان التطبيق', image: img, watch: 'تحميل' }
   ];
 
   return (
@@ -41,7 +31,6 @@ export default function AllApplications() {
             <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
               التطبيقات
             </Typography>
-            <Box sx={{ width: '80px', height: '4px', backgroundColor: '#FFD666', mx: 'auto', borderRadius: '2px' }} />
           </Box>
 
           {/* Apps Info Section */}

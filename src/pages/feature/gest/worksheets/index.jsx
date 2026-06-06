@@ -10,9 +10,12 @@ import {
   Skeleton,
   Chip,
   Pagination,
-  Stack
+  Stack,
+  TextField,
+  InputAdornment,
+  IconButton
 } from '@mui/material';
-import { DocumentDownload, Document } from 'iconsax-react';
+import { DocumentDownload, Document, SearchNormal, ArrowLeft2, ArrowRight2 } from 'iconsax-react';
 import { useGetWorksheets } from 'api/worksheets';
 
 // ==============================|| WORKSHEET CARD ||============================== //
@@ -59,7 +62,7 @@ function WorksheetCard({ worksheet, index, isAnimating }) {
         <Box
           sx={{
             position: 'relative',
-            paddingTop: '130%', // Portrait ratio (like A4)
+            paddingTop: '141.4%', // A4 ratio (210 × 297 mm)
             backgroundColor: '#f5f5f5',
             overflow: 'hidden'
           }}
@@ -145,20 +148,20 @@ function WorksheetCard({ worksheet, index, isAnimating }) {
           <Button
             variant="contained"
             fullWidth
-            size="small"
+            size="medium"
             onClick={handleDownload}
-            startIcon={<DocumentDownload size={16} />}
+            startIcon={<DocumentDownload size={18} />}
             sx={{
               borderRadius: '10px',
               fontWeight: 700,
-              fontSize: '0.78rem',
-              py: 0.8,
-              backgroundColor: '#FFD666',
-              color: '#2E2A39',
-              boxShadow: '0 4px 12px rgba(255,214,102,0.3)',
+              fontSize: '1rem',
+              py: 1,
+              backgroundColor: 'primary.main',
+              color: '#fff',
+              boxShadow: '0 4px 12px rgba(212,165,116,0.3)',
               '&:hover': {
-                backgroundColor: '#ffcf4d',
-                boxShadow: '0 6px 18px rgba(255,214,102,0.45)'
+                backgroundColor: '#c49464',
+                boxShadow: '0 6px 18px rgba(212,165,116,0.45)'
               }
             }}
           >
@@ -191,18 +194,46 @@ const ITEMS_PER_PAGE = 8; // 4 per row × 2 rows
 export default function WorksheetsPage() {
   const [checked, setChecked] = useState(false);
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [useArrowPagination, setUseArrowPagination] = useState(window.innerWidth < 600);
 
   useEffect(() => {
     setChecked(true);
+
+    const handleResize = () => {
+      setUseArrowPagination(window.innerWidth < 600);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const { worksheets = [], worksheetsLoading } = useGetWorksheets();
 
   // Filter only active worksheets
-  const activeWorksheets = worksheets.filter((w) => w.IsActive !== false);
+  let activeWorksheets = worksheets.filter((w) => w.IsActive !== false);
+
+  // Apply search filter
+  if (searchTerm.trim()) {
+    activeWorksheets = activeWorksheets.filter((w) => (w.TitleAr || w.titleAr || '').toLowerCase().includes(searchTerm.toLowerCase()));
+  }
 
   const totalPages = Math.ceil(activeWorksheets.length / ITEMS_PER_PAGE);
   const paginatedWorksheets = activeWorksheets.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <Fade in={checked} timeout={800}>
@@ -210,16 +241,53 @@ export default function WorksheetsPage() {
         <Container maxWidth="lg">
           {/* Header */}
           <Box sx={{ mb: 6, textAlign: 'center' }}>
-            <Typography
-              variant="h1"
-              sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.2rem', md: '3rem' } }}
-            >
+            <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.2rem', md: '3rem' } }}>
               أوراق عمل
             </Typography>
-            <Box sx={{ width: '80px', height: '4px', backgroundColor: '#FFD666', mx: 'auto', borderRadius: '2px', mb: 2 }} />
             <Typography variant="h6" sx={{ color: 'text.secondary', fontWeight: 400, maxWidth: 600, mx: 'auto', lineHeight: 1.8 }}>
               اطبع أوراق مذاكرة وتلوين، واجعل طفلك يتفاعل بنفسه مع الورقة والقلم والألوان لتنمّي قدراته الحركية ومهاراته الإبداعية
             </Typography>
+          </Box>
+
+          {/* Search Bar */}
+          <Box sx={{ mb: 4, maxWidth: 500, mx: 'auto' }}>
+            <TextField
+              fullWidth
+              placeholder="ابحث عن أوراق عمل..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setPage(1); // Reset to first page when searching
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchNormal size={20} color="#999" />
+                  </InputAdornment>
+                )
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  backgroundColor: '#fff',
+                  fontSize: '1rem',
+                  '& fieldset': {
+                    borderColor: '#E0E0E0'
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#FFD666'
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#FFD666',
+                    borderWidth: 2
+                  }
+                },
+                '& .MuiOutlinedInput-input::placeholder': {
+                  opacity: 0.7,
+                  color: '#999'
+                }
+              }}
+            />
           </Box>
 
           {/* Grid */}
@@ -235,7 +303,7 @@ export default function WorksheetsPage() {
             <Box sx={{ textAlign: 'center', py: 10 }}>
               <Document size={64} color="#ccc" />
               <Typography variant="h6" sx={{ color: 'text.secondary', mt: 2 }}>
-                لا توجد أوراق عمل متاحة حالياً
+                {searchTerm ? 'لم يتم العثور على نتائج' : 'لا توجد أوراق عمل متاحة حالياً'}
               </Typography>
             </Box>
           ) : (
@@ -251,33 +319,83 @@ export default function WorksheetsPage() {
               {/* Pagination */}
               {totalPages > 1 && (
                 <Stack spacing={2} sx={{ mt: 6, alignItems: 'center' }}>
-                  <Pagination
-                    count={totalPages}
-                    page={page}
-                    onChange={(_, val) => {
-                      setPage(val);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    variant="outlined"
-                    shape="rounded"
-                    size="large"
-                    sx={{
-                      '& .MuiPaginationItem-root': {
-                        fontSize: '1rem',
-                        fontWeight: 600,
-                        borderRadius: '8px',
-                        border: '1px solid #E0E0E0',
-                        backgroundColor: '#fff',
-                        '&.Mui-selected': {
-                          backgroundColor: '#FFD666',
-                          borderColor: '#FFD666',
-                          color: '#2E2A39',
-                          '&:hover': { backgroundColor: '#ffcf4d' }
-                        },
-                        '&:hover': { backgroundColor: '#f5f5f5' }
-                      }
-                    }}
-                  />
+                  {useArrowPagination ? (
+                    // Arrow Pagination for Mobile
+                    <Stack direction="row" spacing={2} alignItems="center">
+                      <IconButton
+                        onClick={handlePreviousPage}
+                        disabled={page === 1}
+                        sx={{
+                          backgroundColor: page === 1 ? '#f0f0f0' : '#FFD666',
+                          color: page === 1 ? '#ccc' : '#2E2A39',
+                          borderRadius: '10px',
+                          padding: '12px',
+                          '&:hover': {
+                            backgroundColor: page === 1 ? '#f0f0f0' : '#ffcf4d'
+                          }
+                        }}
+                      >
+                        <ArrowRight2 size={24} />
+                      </IconButton>
+
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: '1.1rem',
+                          minWidth: '60px',
+                          textAlign: 'center',
+                          color: '#2E2A39'
+                        }}
+                      >
+                        {page} / {totalPages}
+                      </Typography>
+
+                      <IconButton
+                        onClick={handleNextPage}
+                        disabled={page === totalPages}
+                        sx={{
+                          backgroundColor: page === totalPages ? '#f0f0f0' : '#FFD666',
+                          color: page === totalPages ? '#ccc' : '#2E2A39',
+                          borderRadius: '10px',
+                          padding: '12px',
+                          '&:hover': {
+                            backgroundColor: page === totalPages ? '#f0f0f0' : '#ffcf4d'
+                          }
+                        }}
+                      >
+                        <ArrowLeft2 size={24} />
+                      </IconButton>
+                    </Stack>
+                  ) : (
+                    // Number Pagination for Desktop
+                    <Pagination
+                      count={totalPages}
+                      page={page}
+                      onChange={(_, val) => {
+                        setPage(val);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      variant="outlined"
+                      shape="rounded"
+                      size="large"
+                      sx={{
+                        '& .MuiPaginationItem-root': {
+                          fontSize: '1rem',
+                          fontWeight: 600,
+                          borderRadius: '8px',
+                          border: '1px solid #E0E0E0',
+                          backgroundColor: '#fff',
+                          '&.Mui-selected': {
+                            backgroundColor: '#FFD666',
+                            borderColor: '#FFD666',
+                            color: '#2E2A39',
+                            '&:hover': { backgroundColor: '#ffcf4d' }
+                          },
+                          '&:hover': { backgroundColor: '#f5f5f5' }
+                        }
+                      }}
+                    />
+                  )}
                 </Stack>
               )}
             </>

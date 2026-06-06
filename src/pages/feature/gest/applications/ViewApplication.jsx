@@ -247,12 +247,12 @@ export default function ViewApplication() {
                   right: 0,
                   width: '100%',
                   height: '4px',
-                  backgroundColor: '#0088CC',
+                  // backgroundColor: '#0088CC',
                   borderRadius: '2px'
                 }
               }}
             >
-              نبذة
+              نبذة عن التطبيقات
             </Typography>
 
             <Paper

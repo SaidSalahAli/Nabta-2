@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Container, Grid, Paper, Fade, Button } from '@mui/material';
-import vodafoneImg from 'assets/Home/vodafone.png';
-import instaImg from 'assets/Home/insta.png';
-import paypalImg from 'assets/Home/paypal.png';
-import qnb_bankImg from 'assets/Home/qnb-bank.png';
-import coffeeImg from 'assets/Home/coffee.png';
+import vodafoneImg from 'assets/Home/vodafone (1).png';
+import instaImg from 'assets/Home/insta (1).png';
+import paypalImg from 'assets/Home/paypal (1).png';
+import qnb_bankImg from 'assets/Home/qnb-bank (1).png';
+import patreonImg from 'assets/Home/patreon (1).png';
+import coffeeImg from 'assets/Home/coffee (1).png';
 
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
@@ -64,67 +65,44 @@ export default function Support() {
   const supportMethods = [
     {
       id: 'qnb',
-      title: 'حساب بنكي',
+      image: qnb_bankImg,
       content: (
         <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Box component="img" src={qnb_bankImg} alt="QNB Bank" sx={{ height: 64, mb: 1.5, objectFit: 'contain' }} />
-          <Typography variant="body1" sx={{ fontWeight: 700, mb: 1 }}>
-            حمدي محمود عشري عثمان
-          </Typography>
-          <Typography variant="h6" sx={{ letterSpacing: '1px', mb: 0.5, direction: 'ltr' }}>
-            1020518304835
-          </Typography>
+          <Typography variant="body1" sx={{ fontWeight: 700, mb: 0.5 }}>حمدي محمود عشري عثمان</Typography>
+          <Typography variant="h6" sx={{ letterSpacing: '1px', mb: 0.5, direction: 'ltr' }}>1020518304835</Typography>
           <CopyButton text="1020518304835" />
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            فرع ش شامبليون، وسط القاهرة، قصر النيل
-          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>فرع ش شامبليون، وسط القاهرة، قصر النيل</Typography>
         </Box>
       )
     },
     {
       id: 'instapay',
-      title: 'إنستاباي Instapay',
+      image: instaImg,
       content: (
-        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 1 }}>
-          <Box component="img" src={instaImg} alt="InstaPay" sx={{ height: 64, mb: 1.5, objectFit: 'contain' }} />
-          <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
-            اسم المستخدم:
-          </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 700, color: '#0088CC', direction: 'ltr' }}>
-            qnb-hamdy
-          </Typography>
+        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>اسم المستخدم: qnb-hamdy</Typography>
           <CopyButton text="qnb-hamdy" />
         </Box>
       )
     },
     {
       id: 'wallets',
-      title: 'المحافظ الإلكترونية',
+      // title: 'المحافظ الإلكترونية',
+      image: vodafoneImg,
       content: (
-        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 1 }}>
-          <Box component="img" src={vodafoneImg} alt="المحافظ الإلكترونية" sx={{ height: 64, mb: 1, objectFit: 'contain' }} />
-          <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
-            (فودافون كاش، أورانج، وي، اتصالات)
-          </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
-            رقم التحويل:
-          </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, letterSpacing: '1px', direction: 'ltr' }}>
-            01067007977
-          </Typography>
+        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>رقم التحويل: 01067007977</Typography>
           <CopyButton text="01067007977" />
-          <Typography variant="caption" sx={{ color: 'error.main', fontWeight: 600, display: 'block', mt: 1 }}>
-            الرقم خاص بالدعم فقط وليس للاتصال منعاً للإحراج — داخل مصر
-          </Typography>
+          <Typography variant="caption" sx={{ color: 'error.main', fontWeight: 600, display: 'block', mt: 1 }}>الرقم خاص بالدعم فقط — داخل مصر</Typography>
         </Box>
       )
     },
     {
       id: 'bmc',
       title: 'Buy Me a Coffee',
+      image: coffeeImg,
       content: (
-        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mt: 1 }}>
-          <Box component="img" src={coffeeImg} alt="Buy Me a Coffee" sx={{ height: 64, objectFit: 'contain' }} />
+        <Box sx={{ textAlign: 'center' }}>
           {linkButton('هنا', 'https://www.buymeacoffee.com/HamdyMahmoud')}
         </Box>
       )
@@ -132,8 +110,9 @@ export default function Support() {
     {
       id: 'patreon',
       title: 'باتريون Patreon',
+      image: patreonImg,
       content: (
-        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
+        <Box sx={{ textAlign: 'center' }}>
           {linkButton('هنا', 'https://www.patreon.com/NabtaStudio')}
         </Box>
       )
@@ -141,9 +120,9 @@ export default function Support() {
     {
       id: 'paypal',
       title: 'باي بال PayPal',
+      image: paypalImg,
       content: (
-        <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mt: 1 }}>
-          <Box component="img" src={paypalImg} alt="PayPal" sx={{ height: 64, objectFit: 'contain' }} />
+        <Box sx={{ textAlign: 'center' }}>
           {linkButton('هنا', 'https://paypal.me/HamdyMahmoudAshry')}
         </Box>
       )
@@ -159,33 +138,11 @@ export default function Support() {
             <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
               كيف تدعمنا؟
             </Typography>
-            <Box sx={{ width: '80px', height: '4px', backgroundColor: '#FFD666', mx: 'auto', borderRadius: '2px' }} />
           </Box>
 
           {/* Description Block */}
           <Box sx={{ mb: 8 }}>
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 800,
-                color: '#2E2A39',
-                mb: 3,
-                display: 'inline-block',
-                position: 'relative',
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: '-8px',
-                  right: 0,
-                  width: '50%',
-                  height: '4px',
-                  backgroundColor: '#0088CC',
-                  borderRadius: '2px'
-                }
-              }}
-            >
-              نبذة
-            </Typography>
+
             <Paper
               elevation={0}
               sx={{
@@ -216,32 +173,56 @@ export default function Support() {
           </Box>
 
           {/* Support Methods Grid */}
-          <Grid container spacing={4}>
+          <Grid container spacing={3}>
             {supportMethods.map((method) => (
               <Grid item xs={12} sm={6} md={4} key={method.id}>
                 <Paper
                   elevation={0}
                   sx={{
-                    p: 4,
                     height: '100%',
-                    borderRadius: '24px',
+                    borderRadius: '10px',
                     border: '1px solid',
                     borderColor: 'divider',
+                    overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
                     transition: 'all 0.3s ease',
                     '&:hover': {
-                      boxShadow: '0 20px 40px rgba(0,0,0,0.08)',
+                      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
                       transform: 'translateY(-5px)',
                       borderColor: '#FFD666'
                     }
                   }}
                 >
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#2E2A39', mb: 2, textAlign: 'center' }}>
-                    {method.title}
-                  </Typography>
-                  <Box sx={{ width: '100%' }}>{method.content}</Box>
+                  {/* Image — top full width */}
+                  <Box
+                    sx={{
+                      width: '100%',
+
+                      backgroundColor: '#f8f8f8',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderBottom: '1px solid',
+                      borderColor: 'divider',
+                      // p: 2
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={method.image}
+                      alt={method.title}
+                      sx={{ maxWidth: '100%', objectFit: 'contain' }}
+                    />
+                  </Box>
+
+                  {/* Content — bottom */}
+                  <Box sx={{ p: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#2E2A39', mb: 2, textAlign: 'center' }}>
+                      {method.title}
+                    </Typography>
+                    {method.content}
+                  </Box>
                 </Paper>
               </Grid>
             ))}

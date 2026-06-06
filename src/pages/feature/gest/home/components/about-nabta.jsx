@@ -13,6 +13,7 @@ export default function AboutNabta({ shouldAnimate = false }) {
   return (
     <Fade in={checked} timeout={800}>
       <Box
+        id="about-nabta"
         sx={{
           py: { xs: 8, md: 6 },
           position: 'relative',

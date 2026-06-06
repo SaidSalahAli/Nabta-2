@@ -37,7 +37,6 @@ export default function AllEpisodes() {
             <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
               الحلقات
             </Typography>
-            <Box sx={{ width: '80px', height: '4px', backgroundColor: '#FFD666', mx: 'auto', borderRadius: '2px' }} />
           </Box>
 
           {/* Series Info Section (Optional/Conditional) */}

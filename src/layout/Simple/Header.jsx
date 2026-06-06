@@ -142,20 +142,38 @@ const navLinks = [
   { label: 'حلقات', path: '/episodes' },
   { label: 'تطبيقات', path: '/applications' },
   { label: 'أوراق عمل', path: '/worksheets' },
-  { label: 'قصتنا', path: '/about' }
+  { label: 'قصتنا', path: '/', scrollTo: 'about-nabta' }
 ];
 
 const LOGO_WIDTH = 110;
 
 function BottomBar({ primaryColor }) {
+  const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(false);
   const { isLoggedIn, user, logout } = useAuth();
 
   useEffect(() => {
-    const currentIndex = navLinks.findIndex((link) => link.path !== '#' && location.pathname === link.path);
+    const currentIndex = navLinks.findIndex((link) => !link.scrollTo && link.path !== '#' && location.pathname === link.path);
     setActiveTab(currentIndex !== -1 ? currentIndex : false);
   }, [location]);
+
+  const handleNavClick = (link, index) => {
+    if (link.scrollTo) {
+      setActiveTab(index);
+      if (location.pathname !== '/') {
+        navigate('/');
+        // ننتظر الصفحة تتحمل ثم نعمل scroll
+        setTimeout(() => {
+          const el = document.getElementById(link.scrollTo);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      } else {
+        const el = document.getElementById(link.scrollTo);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
 
   return (
     <Box
@@ -190,8 +208,9 @@ function BottomBar({ primaryColor }) {
           <Tab
             key={link.label}
             label={link.label}
-            component={link.path !== '#' ? Link : 'div'}
-            to={link.path !== '#' ? link.path : undefined}
+            component={link.scrollTo ? 'div' : (link.path !== '#' ? Link : 'div')}
+            to={!link.scrollTo && link.path !== '#' ? link.path : undefined}
+            onClick={link.scrollTo ? () => handleNavClick(link, i) : undefined}
             disableRipple
             sx={{
               position: 'relative',
@@ -203,6 +222,7 @@ function BottomBar({ primaryColor }) {
               px: { xs: 1.5, md: 2 },
               textTransform: 'none',
               minWidth: 'auto',
+              cursor: 'pointer',
               backgroundColor: 'transparent !important',
               '&::after': {
                 content: '""',
