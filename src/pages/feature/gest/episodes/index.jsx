@@ -4,6 +4,8 @@ import { Box, Typography, Container, Grid, Pagination, Stack, Fade, CircularProg
 import EpisodeCard from 'components/EpisodeCard';
 import img from 'assets/images/test.jpeg';
 import { useGetEpisodes } from 'api/episodes';
+import SEO from 'components/SEO';
+
 
 export default function AllEpisodes() {
   const navigate = useNavigate();
@@ -31,9 +33,16 @@ export default function AllEpisodes() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
+        <SEO 
+          title="الحلقات الكرتونية" 
+          description="شاهد حلقات كرتون أستوديو نبتة التعليمية والتربوية الهادفة للأطفال. محتوى آمن، ممتع، ومبتكر يسهم في بناء وعي طفلك وتنمية مهاراته."
+          keywords="أفلام كرتون أطفال, حلقات كرتون تعليمية, قصص كرتون هادفة, كرتون نبتة, مسلسلات أطفال تربوية"
+          url="/episodes"
+        />
         <Container maxWidth="lg">
           {/* Main Title */}
           <Box sx={{ mb: 6, textAlign: 'center' }}>
+
             <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
               الحلقات
             </Typography>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Container, Fade, Typography, Divider, Link } from '@mui/material';
+import SEO from 'components/SEO';
+
 
 /* ── Shared styles (must be before sections array) ── */
 const bodyStyle = {
@@ -184,12 +186,19 @@ export default function Terms() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: 8, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
+        <SEO 
+          title="الشروط والأحكام" 
+          description="اتفاقية شروط الاستخدام والأحكام الخاصة بمنصة أستوديو نبتة للأطفال لدعم الأمهات والآباء وصناعة المحتوى التربوي."
+          keywords="شروط الاستخدام نبتة, الأحكام والشروط, اتفاقية نبتة"
+          url="/terms"
+        />
         <Container maxWidth="md">
           {/* Header */}
           <Box sx={{ mb: 8, textAlign: 'center' }}>
             <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.2rem', md: '3rem' } }}>
               الشروط والأحكام
             </Typography>
+
             <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: 15 }}>
               آخر تحديث: {new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
             </Typography>

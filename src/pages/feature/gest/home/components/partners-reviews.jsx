@@ -181,8 +181,6 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                   <Fade in={checked} timeout={800} style={{ transitionDelay: checked ? `${index * 100}ms` : '0ms' }}>
                     <Card
                       // onClick={onClick}
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}
                       sx={{
                         borderRadius: '0',
                         overflow: 'hidden',
@@ -202,7 +200,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                         <CardMedia
                           component="img"
                           image={episode.image}
-                          alt={episode.title}
+                          alt={episode.title || `رأي وتجربة شريك النجاح ${episode.id}`}
                           sx={{
                             width: '100%',
                             height: '100%',

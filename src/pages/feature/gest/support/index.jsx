@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Container, Grid, Paper, Fade, Button } from '@mui/material';
+import SEO from 'components/SEO';
 import vodafoneImg from 'assets/Home/vodafone (1).png';
 import instaImg from 'assets/Home/insta (1).png';
 import paypalImg from 'assets/Home/paypal (1).png';
@@ -132,6 +133,12 @@ export default function Support() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
+        <SEO 
+          title="كيف تدعمنا" 
+          description="ساهم ودعم استمرار منصة أستوديو نبتة لتقديم محتوى تعليمي وتربوي قيم وآمن للأطفال. تعرف على طرق الدعم المتنوعة المتاحة."
+          keywords="دعم أستوديو نبتة, التبرع للتعليم, منصات تعليم الأطفال, تمويل محتوى تربوي"
+          url="/support"
+        />
         <Container maxWidth="lg">
           {/* Main Title */}
           <Box sx={{ mb: 6, textAlign: 'center' }}>

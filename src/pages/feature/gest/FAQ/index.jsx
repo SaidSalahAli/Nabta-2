@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Container, Fade, Divider, Collapse, IconButton } from '@mui/material';
 import { ArrowDown2 } from 'iconsax-react';
+import SEO from 'components/SEO';
+
 
 const faqs = [
   {
@@ -306,6 +308,12 @@ export default function FAQ() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
+        <SEO 
+          title="الأسئلة الشائعة" 
+          description="إجابات على الأسئلة الشائعة حول منصة أستوديو نبتة وتطبيق لغتي العربية والاشتراكات وطرق التحميل والاستخدام الآمن للأطفال."
+          keywords="الأسئلة الشائعة نبتة, استفسارات نبتة, كيفية الاشتراك في نبتة"
+          url="/faq"
+        />
         <Container maxWidth="lg">
           {/* Main Title */}
           <Box sx={{ mb: 6, textAlign: 'center' }}>
@@ -313,6 +321,7 @@ export default function FAQ() {
               الأسئلة الشائعة
             </Typography>
           </Box>
+
 
           {/* FAQ List */}
           <Box

@@ -3,6 +3,8 @@ import { useParams, Link as RouterLink } from 'react-router-dom';
 import { Box, Typography, Container, Breadcrumbs, Link, Button, Paper, Fade } from '@mui/material';
 import { ArrowLeft2, Play } from 'iconsax-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import SEO from 'components/SEO';
+
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -46,7 +48,14 @@ export default function ViewApplication() {
           minHeight: '100vh'
         }}
       >
+        <SEO 
+          title={application.title} 
+          description={application.description?.slice(0, 160)} 
+          image={mockScreenshots[0]?.image}
+          url={`/applications/${id}`}
+        />
         <Container maxWidth="lg">
+
           {/* Breadcrumbs */}
           <Breadcrumbs
             separator={<ArrowLeft2 size="14" color="#2E2A39" style={{ transform: 'rotate(180deg)' }} />}

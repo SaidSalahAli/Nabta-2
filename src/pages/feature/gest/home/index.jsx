@@ -13,10 +13,18 @@ import Partners from './components/partners';
 import Team from './components/team';
 import GoalsPrinciples from './components/goals-Principles';
 import Episodes from './components/episodes';
+import SEO from 'components/SEO';
 
 export default function Home() {
   return (
     <Box sx={{ width: '100%' }}>
+      <SEO 
+        title="الرئيسية" 
+        description="منصة أستوديو نبتة لصناعة المحتوى التربوي والتعليمي المبتكر للأطفال، ودعم الأمهات والآباء بأدوات وأساليب تربوية إبداعية."
+        keywords="أستوديو نبتة, نبتة, الصفحة الرئيسية, تعليم أطفال, أفلام كرتون تربوية, أوراق عمل للأطفال"
+        url="/"
+      />
+
       <Hero shouldAnimate={true} />
       <Episodes shouldAnimate={true} />
       <Applications shouldAnimate={true} />

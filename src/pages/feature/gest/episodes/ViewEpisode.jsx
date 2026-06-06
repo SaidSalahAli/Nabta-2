@@ -19,6 +19,8 @@ import {
 
 import { useGetEpisode } from 'api/episodes';
 import { ArrowLeft2, Share, Calendar, Profile, DocumentText } from 'iconsax-react';
+import SEO from 'components/SEO';
+
 
 // ─── Share Button Component ───────────────────────────────────────────────────
 function ShareButton({ episode }) {
@@ -185,9 +187,16 @@ export default function ViewEpisode() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: { xs: 3, sm: 4, md: 6 }, backgroundColor: '#fcfcfc', minHeight: '100vh' }}>
+        <SEO 
+          title={episode.TitleAr} 
+          description={episode.DescriptionAr?.slice(0, 160)} 
+          image={episode.thumbnail_image || episode.cover_image}
+          url={`/episodes/${id}`}
+        />
         <Container maxWidth="lg">
           {/* Breadcrumbs */}
           <Breadcrumbs
+
             separator={<ArrowLeft2 size="14" color="#2E2A39" style={{ transform: 'rotate(180deg)' }} />}
             aria-label="breadcrumb"
             sx={{ mb: { xs: 2, md: 4 }, flexWrap: 'wrap' }}

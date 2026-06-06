@@ -19,6 +19,7 @@ import { createContactMessage } from 'api/contactMessages';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Link from '@mui/material/Link';
+import SEO from 'components/SEO';
 
 // Social icons (SVG inline)
 const TikTokIcon = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.28a8.18 8.18 0 004.78 1.52V7.35a4.85 4.85 0 01-1.01-.66z"/></svg>);
@@ -149,6 +150,12 @@ export default function Contact() {
     <>
       <Fade in={checked} timeout={800}>
         <Box sx={{ py: 8, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
+          <SEO 
+            title="تواصل معنا" 
+            description="تواصل مع فريق أستوديو نبتة. يسعدنا استقبال استفساراتكم واقتراحاتكم لتطوير محتوى الأطفال ودعم أولياء الأمور."
+            keywords="تواصل معنا نبتة, رقم نبتة, البريد الإلكتروني لنبتة, اقتراحات شكاوى"
+            url="/contact"
+          />
           <Container maxWidth="lg">
             {/* Header */}
             <Box sx={{ mb: 8, textAlign: 'center' }}>
