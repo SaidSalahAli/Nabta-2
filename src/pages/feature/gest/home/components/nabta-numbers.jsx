@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Container, Typography, Fade } from '@mui/material';
 
-// ✅ iconsax-react
+//iconsax-react
 import { Global, DocumentText, Activity, Mobile } from 'iconsax-react';
-import stateImg from 'assets/Home/state.svg';
-import papersImg from 'assets/Home/papers.svg';
-import activityImg from 'assets/Home/activity.svg';
-import beneficiaryImg from 'assets/Home/beneficiary.svg';
+import stateImg from 'assets/Home/state.png';
+import papersImg from 'assets/Home/papers.png';
+import activityImg from 'assets/Home/activity.png';
+import beneficiaryImg from 'assets/Home/beneficiary.png';
 export default function NabtaNumbers({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
 
@@ -19,27 +19,27 @@ export default function NabtaNumbers({ shouldAnimate = false }) {
   const stats = [
     {
       id: 1,
-      title: '197',
-      subtitle: 'دولة',
-      icon: stateImg
+      title: 'أكثر من 1,180,000',
+      subtitle: 'طفل مُتعلم حول العالم استفاد من تطبيق لغتي العربية، ومحتوانا.',
+      icon: beneficiaryImg
     },
     {
       id: 2,
-      title: '420',
-      subtitle: 'ورقة مذاكرة وتلوين',
-      icon: papersImg
-    },
-    {
-      id: 3,
       title: '420',
       subtitle: 'نشاط تفاعلي',
       icon: activityImg
     },
     {
+      id: 3,
+      title: '420',
+      subtitle: 'ورقة مذاكرة وتلوين',
+      icon: papersImg
+    },
+    {
       id: 4,
-      title: 'أكثر من 1,180,000',
-      subtitle: 'طفل حول العالم استفاد من تطبيق لغتي العربية وموسوعاتنا.',
-      icon: beneficiaryImg
+      title: '197',
+      subtitle: 'دولة',
+      icon: stateImg
     }
   ];
 

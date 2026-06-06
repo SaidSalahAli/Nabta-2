@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Container, Typography, Card, CardContent, Fade, Grid } from '@mui/material';
-import workImg from 'assets/Home/Work.svg';
-import KnowledgeImg from 'assets/Home/Knowledge.svg';
-import ExperienceImg from 'assets/Home/Experience.svg';
+import workImg from 'assets/Home/Work.png';
+import KnowledgeImg from 'assets/Home/Knowledge.png';
+import ExperienceImg from 'assets/Home/Experience.png';
 
 export default function WhyNabta({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);

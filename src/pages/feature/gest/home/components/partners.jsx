@@ -19,7 +19,7 @@ export default function Partners({ shouldAnimate = false }) {
   }, [shouldAnimate]);
 
   const partners = [
-    { id: 1, name: 'الشريك الأول', logo: img1 },
+    { id: 1, name: 'دار حراء', logo: img1 },
     { id: 2, name: 'دار رتل', logo: img2 }
   ];
 
@@ -71,7 +71,7 @@ export default function Partners({ shouldAnimate = false }) {
                 lineHeight: 1.9
               }}
             >
-              نفخر في نبتة بشراكاتنا التي تساهم في دعم رسالتنا وتوسيع أثرنا في تعليم الأطفال.
+              نحن في نبتة نسير معًا جنبًا إلى جنب مع شركاؤنا في النجاح
             </Typography>
           </Box>
 
