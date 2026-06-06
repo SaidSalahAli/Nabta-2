@@ -22,20 +22,20 @@ import { ArrowLeft2, Share, Calendar, Profile, DocumentText } from 'iconsax-reac
 
 // ─── Share Button Component ───────────────────────────────────────────────────
 function ShareButton({ episode }) {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const buttonRef = useRef(null);
 
   const shareUrl = window.location.href;
   const shareTitle = episode?.TitleAr || '';
 
-  const handleShare = async (event) => {
+  const handleShare = async () => {
     if (navigator.share) {
       try {
         await navigator.share({ title: shareTitle, url: shareUrl });
       } catch (_) {}
     } else {
-      setAnchorEl(event.currentTarget);
+      setOpen(true);
     }
   };
 
@@ -106,12 +106,13 @@ function ShareButton({ episode }) {
       </Button>
 
       <Menu
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+        anchorEl={buttonRef.current}
+        onClose={() => setOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // ← bottom مش top
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }} // ← top مش bottom
         disableScrollLock={true}
+        keepMounted
         PaperProps={{
           sx: {
             borderRadius: '16px',
@@ -137,7 +138,7 @@ function ShareButton({ episode }) {
               href={p.href}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => setAnchorEl(null)}
+              onClick={() => setOpen(false)}
               sx={{ borderRadius: '10px', color: p.color, fontWeight: 600, gap: 1.5 }}
             >
               {p.emoji} {p.label}
@@ -275,14 +276,14 @@ export default function ViewEpisode() {
                 maxWidth: { xs: '100%', sm: 'fit-content' },
                 borderRadius: '12px',
                 backgroundColor: '#FFD666',
-                color: 'white',
+                color: '#2E2A39',
                 fontWeight: 700,
                 fontSize: { xs: '14px', sm: '16px' },
                 '&:hover': { backgroundColor: '#ffcf4d' },
                 boxShadow: '0 8px 24px rgba(255, 214, 102, 0.3)'
               }}
             >
-              محتوى الحلقة مقروء
+              جميع النص داخل الفيديو
             </Button>
 
             <Collapse in={showTranscript}>

@@ -24,7 +24,7 @@ const episodes = {
     },
     {
       id: 'dashboard/episode-categories',
-      title: 'تصنيفات الحلقات',
+      title: 'سلاسل الحلقات',
       type: 'item',
       url: '/dashboard/episode-categories',
       icon: icons.categories

@@ -44,6 +44,9 @@ const ApplicationsAdmin = Loadable(lazy(() => import('pages/feature/control-pane
 // render - contact messages
 const ContactMessagesAdmin = Loadable(lazy(() => import('pages/feature/control-panel/contact-messages')));
 
+// render - categories
+const CategoriesAdmin = Loadable(lazy(() => import('pages/feature/control-panel/categories')));
+
 // ==============================|| MAIN ROUTES ||============================== //
 
 const MainRoutes = {
@@ -135,6 +138,10 @@ const MainRoutes = {
         {
           path: 'dashboard/contact-messages',
           element: <ContactMessagesAdmin />
+        },
+        {
+          path: 'dashboard/categories',
+          element: <CategoriesAdmin />
         }
       ]
     },

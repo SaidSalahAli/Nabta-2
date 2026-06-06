@@ -204,7 +204,6 @@ function BottomBar({ primaryColor }) {
               textTransform: 'none',
               minWidth: 'auto',
               backgroundColor: 'transparent !important',
-
               '&::after': {
                 content: '""',
                 position: 'absolute',
