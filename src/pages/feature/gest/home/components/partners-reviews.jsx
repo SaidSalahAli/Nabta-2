@@ -8,9 +8,9 @@ import img5 from 'assets/Home/Opinions_5.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Pagination, FreeMode } from 'swiper/modules';
+import { Pagination, FreeMode, Autoplay } from 'swiper/modules';
 import { ArrowLeft, ArrowRight } from 'iconsax-react';
-import EpisodeCard from '../../../../../components/EpisodeCard';
+// import EpisodeCard from '../../../../../components/EpisodeCard';
 // import EpisodeCard from './EpisodeCard';
 // import imgbg from 'assets/images/test2.png';
 export default function PartnersReviews({ shouldAnimate = false }) {
@@ -33,7 +33,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
   ];
 
   // Card image height + half card total height ≈ centers arrow on image area
-  const CARD_IMAGE_HEIGHT = 250;
+  const CARD_IMAGE_HEIGHT = 130;
 
   const handleSlideChange = () => {
     if (!swiperRef.current) return;
@@ -58,8 +58,8 @@ export default function PartnersReviews({ shouldAnimate = false }) {
       <Box
         sx={{
           py: 4,
-          width: '100%'
-          // backgroundColor: '#aeedd9'
+          width: '100%',
+          backgroundColor: '#a4257b'
           // backgroundImage: `url(${imgbg})`,
           //   backgroundSize: 'cover',
           //   backgroundPosition: 'center'
@@ -68,10 +68,10 @@ export default function PartnersReviews({ shouldAnimate = false }) {
         <Container maxWidth="lg">
           {/* Title Section */}
           <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
+            <Typography variant="h1" sx={{ fontWeight: 700, color: '#fff', mb: 1 }}>
               ماذا قالوا عنا؟
             </Typography>
-            <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
+            <Typography variant="body2" sx={{ color: '#fff', fontSize: '18px' }}>
               أراء بعض من شركاؤنا الاستراتيجيين من عمًلئنا الكرام في أعمالنا ومنتجاتنا اإلبداعية والتي نفخر بها{' '}
             </Typography>
           </Box>
@@ -163,6 +163,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                 swiperRef.current = swiper;
                 handleSlideChange();
               }}
+              autoplay={{ delay: 1500 }}
               onSlideChange={handleSlideChange}
               slidesPerView={1}
               spaceBetween={20}
@@ -183,7 +184,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
                       sx={{
-                        borderRadius: '12px',
+                        borderRadius: '0',
                         overflow: 'hidden',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                         transition: 'all 0.3s ease',
@@ -200,68 +201,16 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                       <Box sx={{ position: 'relative', overflow: 'hidden' }}>
                         <CardMedia
                           component="img"
-                          height="180"
                           image={episode.image}
                           alt={episode.title}
                           sx={{
-                            objectFit: 'cover',
-                            transition: 'transform 0.3s ease',
-                            '&:hover': { transform: 'scale(1.05)' }
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
                           }}
                         />
                       </Box>
-                      {/* Content Section */}
-                      {episode.title && (
-                        <CardContent
-                          sx={{
-                            flex: 1,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                            p: 2
-                          }}
-                        >
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography
-                              variant="subtitle2"
-                              sx={{
-                                fontWeight: 600,
-                                color: 'primary.main',
-                                lineHeight: 1.4,
-                                minHeight: '40px',
-                                fontSize: '18px',
-                                display: 'flex',
-                                alignItems: 'center'
-                              }}
-                            >
-                              {episode.title}
-                            </Typography>
-                            {episode.watch && (
-                              <Typography
-                                variant="subtitle2"
-                                sx={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'end',
-                                  fontSize: '18px',
-                                  fontWeight: 600,
-                                  color: 'white',
-                                  textAlign: 'center',
-                                  width: 'fit-content',
-                                  px: 2,
-                                  backgroundColor: 'primary.main',
-                                  borderRadius: '10px',
-                                  cursor: 'pointer',
-                                  transition: 'all 0.3s ease'
-                                  // '&:hover': { color: '#006699' }
-                                }}
-                              >
-                                {episode.watch}
-                              </Typography>
-                            )}
-                          </Box>
-                        </CardContent>
-                      )}
+
                     </Card>
                   </Fade>{' '}
                 </SwiperSlide>

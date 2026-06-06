@@ -1,8 +1,8 @@
 import { Box, Container, Typography } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { Fade } from '@mui/material';
-import character_1 from 'assets/Home/Moslem Animation.svg';
-import character_2 from 'assets/Home/Moslema Animation.svg';
+import character_1 from 'assets/Home/moslem.svg';
+import character_2 from 'assets/Home/moslema.svg';
 
 export default function Characters({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
@@ -36,11 +36,11 @@ export default function Characters({ shouldAnimate = false }) {
         sx={{
           py: 6,
           width: '100%',
-          backgroundColor: '#ffd6003b'
+          backgroundColor: '#a4257b'
         }}
       >
         <Container maxWidth="lg">
-          <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1, textAlign: 'center' }}>
+          <Typography variant="h1" sx={{ fontWeight: 700, color: '#fff', mb: 1, textAlign: 'center' }}>
             شخصيات نبتة
           </Typography>
 
@@ -102,11 +102,10 @@ export default function Characters({ shouldAnimate = false }) {
                       sx={{
                         position: 'absolute',
                         top: 0,
-                        ...(character.reverse ? { right: 16 } : { left: 16 }),
                         zIndex: 2,
                         backgroundColor: 'background.paper',
                         border: '2px solid',
-                        borderColor: '#0088CC',
+                        borderColor: '#fff',
                         borderRadius: '20px',
                         px: 2,
                         py: 0.5
@@ -116,7 +115,7 @@ export default function Characters({ shouldAnimate = false }) {
                         sx={{
                           fontWeight: 700,
                           fontSize: '20px',
-                          color: '#0088CC'
+                          color: '#000'
                         }}
                       >
                         {character.name}
@@ -127,7 +126,7 @@ export default function Characters({ shouldAnimate = false }) {
                     <Box
                       sx={{
                         border: '2.5px solid',
-                        borderColor: '#0088CC',
+                        borderColor: '#fff',
                         borderRadius: '12px',
                         p: 3,
                         pt: 4,
@@ -145,10 +144,10 @@ export default function Characters({ shouldAnimate = false }) {
                       <Typography
                         variant="body1"
                         sx={{
-                          color: 'text.secondary',
+                          color: '#fff',
                           lineHeight: 1.9,
                           fontSize: '18px',
-                          textAlign: 'right'
+                          // textAlign: 'right'
                         }}
                       >
                         {character.description}

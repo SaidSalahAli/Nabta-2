@@ -29,8 +29,8 @@ export default function Applications({ shouldAnimate = false }) {
       <Box
         sx={{
           py: 4,
-          width: '100%'
-          // backgroundColor: '#aeedd9'
+          width: '100%',
+          backgroundColor: '#a4257b'
           // backgroundImage: `url(${imgbg})`,
           //   backgroundSize: 'cover',
           //   backgroundPosition: 'center'
@@ -39,10 +39,10 @@ export default function Applications({ shouldAnimate = false }) {
         <Container maxWidth="lg">
           {/* Title Section */}
           <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
+            <Typography variant="h1" sx={{ fontWeight: 700, color: '#fff', mb: 1 }}>
               التطبيقات
             </Typography>
-            <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
+            <Typography variant="body2" sx={{ color: '#fff', fontSize: '18px' }}>
               حلقات متخصصة لأولياء الأمور والمعلمين والآباء والأمهات
             </Typography>
           </Box>

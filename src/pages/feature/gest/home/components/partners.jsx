@@ -46,7 +46,7 @@ export default function Partners({ shouldAnimate = false }) {
       <Box
         sx={{
           py: { xs: 6, md: 9 },
-          backgroundColor: '#fff'
+          backgroundColor: '#a4257b'
         }}
       >
         <Container maxWidth="lg">
@@ -55,7 +55,7 @@ export default function Partners({ shouldAnimate = false }) {
               variant="h1"
               sx={{
                 fontWeight: 700,
-                color: 'primary.main',
+                color: '#fff',
                 mb: 1
               }}
             >
@@ -66,7 +66,7 @@ export default function Partners({ shouldAnimate = false }) {
               sx={{
                 maxWidth: '760px',
                 mx: 'auto',
-                color: '#000',
+                color: '#fff',
                 fontSize: { xs: '18px', md: '18px' },
                 lineHeight: 1.9
               }}
@@ -131,7 +131,7 @@ export default function Partners({ shouldAnimate = false }) {
                     sx={{
                       mt: 1,
                       textAlign: 'center',
-                      color: '#000',
+                      color: '#fff',
                       fontSize: '18px'
                     }}
                   >
