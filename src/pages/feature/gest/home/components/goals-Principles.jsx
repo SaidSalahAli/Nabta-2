@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Container, Typography, Fade } from '@mui/material';
-import img from 'assets/images/test.jpeg';
+import principlesImg from 'assets/Home/principles.png';
+import goalsImg from 'assets/Home/goals.jpg';
 
 export default function GoalsPrinciples({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
@@ -48,7 +49,7 @@ export default function GoalsPrinciples({ shouldAnimate = false }) {
             </CardBox>
 
             {/* 2 - Image */}
-            <ImageBox src={img} sx={{ order: { xs: 2, md: 1 } }} />
+            <ImageBox src={goalsImg} sx={{ order: { xs: 2, md: 1 } }} />
 
             {/* 3 - Principles */}
             <CardBox sx={{ order: { xs: 3, md: 3 } }}>
@@ -65,7 +66,7 @@ export default function GoalsPrinciples({ shouldAnimate = false }) {
             </CardBox>
 
             {/* 4 - Image */}
-            <ImageBox src={img} sx={{ order: { xs: 4, md: 4 } }} />
+            <ImageBox src={principlesImg} sx={{ order: { xs: 4, md: 4 } }} />
           </Box>
         </Container>
       </Box>
@@ -103,7 +104,7 @@ function ImageBox({ src, sx = {} }) {
       sx={{
         borderRadius: '12px',
         overflow: 'hidden',
-        height: { xs: 200, sm: 260, md: 220 },
+        height: { xs: 200, sm: 260, md: '100%' },
         backgroundColor: '#eee',
         ...sx
       }}
@@ -129,7 +130,7 @@ const titleStyle = {
   fontWeight: 800,
   fontSize: { xs: '16px', md: '18px' },
   mb: 2,
-  color: '#2F2B3D',
+  color: 'primary.main',
   lineHeight: 1.7
 };
 

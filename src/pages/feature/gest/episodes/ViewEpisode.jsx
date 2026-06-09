@@ -35,7 +35,7 @@ function ShareButton({ episode }) {
     if (navigator.share) {
       try {
         await navigator.share({ title: shareTitle, url: shareUrl });
-      } catch (_) {}
+      } catch (_) { }
     } else {
       setOpen(true);
     }
@@ -187,9 +187,9 @@ export default function ViewEpisode() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: { xs: 3, sm: 4, md: 6 }, backgroundColor: '#fcfcfc', minHeight: '100vh' }}>
-        <SEO 
-          title={episode.TitleAr} 
-          description={episode.DescriptionAr?.slice(0, 160)} 
+        <SEO
+          title={episode.TitleAr}
+          description={episode.DescriptionAr?.slice(0, 160)}
           image={episode.thumbnail_image || episode.cover_image}
           url={`/episodes/${id}`}
         />
@@ -284,11 +284,11 @@ export default function ViewEpisode() {
                 width: { xs: '100%', sm: 'auto' },
                 maxWidth: { xs: '100%', sm: 'fit-content' },
                 borderRadius: '12px',
-                backgroundColor: '#FFD666',
-                color: '#2E2A39',
+                backgroundColor: 'primary.main',
+                color: '#ffff',
                 fontWeight: 700,
                 fontSize: { xs: '14px', sm: '16px' },
-                '&:hover': { backgroundColor: '#ffcf4d' },
+                '&:hover': { backgroundColor: 'primary.light' },
                 boxShadow: '0 8px 24px rgba(255, 214, 102, 0.3)'
               }}
             >

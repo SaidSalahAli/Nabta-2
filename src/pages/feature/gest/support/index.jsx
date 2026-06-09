@@ -133,8 +133,8 @@ export default function Support() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
-        <SEO 
-          title="كيف تدعمنا" 
+        <SEO
+          title="كيف تدعمنا"
           description="ساهم ودعم استمرار منصة أستوديو نبتة لتقديم محتوى تعليمي وتربوي قيم وآمن للأطفال. تعرف على طرق الدعم المتنوعة المتاحة."
           keywords="دعم أستوديو نبتة, التبرع للتعليم, منصات تعليم الأطفال, تمويل محتوى تربوي"
           url="/support"
@@ -142,7 +142,7 @@ export default function Support() {
         <Container maxWidth="lg">
           {/* Main Title */}
           <Box sx={{ mb: 6, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
+            <Typography variant="h1" sx={{ fontWeight: 800, color: 'primary.main', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
               كيف تدعمنا؟
             </Typography>
           </Box>

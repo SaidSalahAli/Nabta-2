@@ -119,7 +119,7 @@ export default function FooterBlock({ isFull }) {
   ];
 
   const col2 = [
-    { label: 'المتجر', href: 'https://play.google.com/store/apps/developer?id=Nabta+Studio', external: true },
+    { label: 'المتجر', href: 'https://speedegy.net/', external: true },
     { label: 'كيف تدعمنا؟', href: '/support', external: false }
   ];
 

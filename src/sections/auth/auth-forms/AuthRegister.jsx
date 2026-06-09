@@ -165,7 +165,7 @@ export default function AuthRegister() {
 
             {/* First Name */}
             <Grid size={12}>
-              <Stack sx={{ gap: 1 }}>
+              <FormControl fullWidth error={Boolean(touched.firstname && errors.firstname)}>
                 <InputLabel htmlFor="firstname-signup">الاسم *</InputLabel>
                 <OutlinedInput
                   id="firstname-signup"
@@ -174,16 +174,15 @@ export default function AuthRegister() {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   placeholder="محمد"
-                  fullWidth
-                  error={Boolean(touched.firstname && errors.firstname)}
+                  label="الاسم *"
                 />
-              </Stack>
+              </FormControl>
               {touched.firstname && errors.firstname && <FormHelperText error>{errors.firstname}</FormHelperText>}
             </Grid>
 
             {/* Last Name */}
             <Grid size={12}>
-              <Stack sx={{ gap: 1 }}>
+              <FormControl fullWidth error={Boolean(touched.lastname && errors.lastname)}>
                 <InputLabel htmlFor="lastname-signup">اسم العائلة *</InputLabel>
                 <OutlinedInput
                   id="lastname-signup"
@@ -192,30 +191,24 @@ export default function AuthRegister() {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   placeholder="أحمد"
-                  fullWidth
-                  error={Boolean(touched.lastname && errors.lastname)}
+                  label="اسم العائلة *"
                 />
-              </Stack>
+              </FormControl>
               {touched.lastname && errors.lastname && <FormHelperText error>{errors.lastname}</FormHelperText>}
             </Grid>
 
             {/* Country */}
             <Grid size={12}>
-              <Stack sx={{ gap: 1 }}>
-                <InputLabel htmlFor="country-signup">اختر الدولة *</InputLabel>
+              <FormControl fullWidth error={Boolean(touched.country && errors.country)}>
+                <InputLabel id="country-signup-label">اختر الدولة *</InputLabel>
                 <Select
+                  labelId="country-signup-label"
                   id="country-signup"
                   name="country"
                   value={values.country}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  displayEmpty
-                  fullWidth
-                  error={Boolean(touched.country && errors.country)}
-                  renderValue={(selected) => {
-                    if (!selected) return <Typography sx={{ color: 'text.disabled' }}>اختر الدولة</Typography>;
-                    return countries.find((c) => c.code === selected)?.label || selected;
-                  }}
+                  label="اختر الدولة *"
                 >
                   {countries.map((c) => (
                     <MenuItem key={c.code} value={c.code}>
@@ -223,13 +216,13 @@ export default function AuthRegister() {
                     </MenuItem>
                   ))}
                 </Select>
-              </Stack>
+              </FormControl>
               {touched.country && errors.country && <FormHelperText error>{errors.country}</FormHelperText>}
             </Grid>
 
             {/* Phone */}
             <Grid size={12}>
-              <Stack sx={{ gap: 1 }}>
+              <FormControl fullWidth error={Boolean(touched.mobail && errors.mobail)}>
                 <InputLabel htmlFor="mobail-signup">رقم الهاتف *</InputLabel>
                 <OutlinedInput
                   id="mobail-signup"
@@ -239,16 +232,15 @@ export default function AuthRegister() {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   placeholder="01006300000"
-                  fullWidth
-                  error={Boolean(touched.mobail && errors.mobail)}
+                  label="رقم الهاتف *"
                 />
-              </Stack>
+              </FormControl>
               {touched.mobail && errors.mobail && <FormHelperText error>{errors.mobail}</FormHelperText>}
             </Grid>
 
             {/* Email */}
             <Grid size={12}>
-              <Stack sx={{ gap: 1 }}>
+              <FormControl fullWidth error={Boolean(touched.email && errors.email)}>
                 <InputLabel htmlFor="email-signup">البريد الإلكتروني *</InputLabel>
                 <OutlinedInput
                   id="email-signup"
@@ -258,16 +250,15 @@ export default function AuthRegister() {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   placeholder="example@email.com"
-                  fullWidth
-                  error={Boolean(touched.email && errors.email)}
+                  label="البريد الإلكتروني *"
                 />
-              </Stack>
+              </FormControl>
               {touched.email && errors.email && <FormHelperText error>{errors.email}</FormHelperText>}
             </Grid>
 
             {/* Password */}
             <Grid size={12}>
-              <Stack sx={{ gap: 1 }}>
+              <FormControl fullWidth error={Boolean(touched.password && errors.password)}>
                 <InputLabel htmlFor="password-signup">كلمة المرور *</InputLabel>
                 <OutlinedInput
                   id="password-signup"
@@ -287,10 +278,9 @@ export default function AuthRegister() {
                     </InputAdornment>
                   }
                   placeholder="******"
-                  fullWidth
-                  error={Boolean(touched.password && errors.password)}
+                  label="كلمة المرور *"
                 />
-              </Stack>
+              </FormControl>
               {touched.password && errors.password && <FormHelperText error>{errors.password}</FormHelperText>}
               <FormControl fullWidth sx={{ mt: 2 }}>
                 <Grid container spacing={2} sx={{ alignItems: 'center' }}>
@@ -308,7 +298,7 @@ export default function AuthRegister() {
 
             {/* Confirm Password */}
             <Grid size={12}>
-              <Stack sx={{ gap: 1 }}>
+              <FormControl fullWidth error={Boolean(touched.confirmPassword && errors.confirmPassword)}>
                 <InputLabel htmlFor="confirm-password-signup">تأكيد كلمة المرور *</InputLabel>
                 <OutlinedInput
                   id="confirm-password-signup"
@@ -330,10 +320,9 @@ export default function AuthRegister() {
                     </InputAdornment>
                   }
                   placeholder="******"
-                  fullWidth
-                  error={Boolean(touched.confirmPassword && errors.confirmPassword)}
+                  label="تأكيد كلمة المرور *"
                 />
-              </Stack>
+              </FormControl>
               {touched.confirmPassword && errors.confirmPassword && <FormHelperText error>{errors.confirmPassword}</FormHelperText>}
             </Grid>
 

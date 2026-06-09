@@ -6,6 +6,7 @@ import { preload } from 'swr';
 // material-ui
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid2';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -97,7 +98,7 @@ export default function AuthLogin({ forgot }) {
           <Grid container spacing={3}>
             {/* Email */}
             <Grid size={12}>
-              <Stack sx={{ gap: 1 }}>
+              <FormControl fullWidth error={Boolean(touched.email && errors.email)}>
                 <InputLabel htmlFor="email-login">البريد الإلكتروني</InputLabel>
                 <OutlinedInput
                   id="email-login"
@@ -107,16 +108,15 @@ export default function AuthLogin({ forgot }) {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   placeholder="example@email.com"
-                  fullWidth
-                  error={Boolean(touched.email && errors.email)}
+                  label="البريد الإلكتروني"
                 />
-              </Stack>
+              </FormControl>
               {touched.email && errors.email && <FormHelperText error>{errors.email}</FormHelperText>}
             </Grid>
 
             {/* Password */}
             <Grid size={12}>
-              <Stack sx={{ gap: 1 }}>
+              <FormControl fullWidth error={Boolean(touched.password && errors.password)}>
                 <InputLabel htmlFor="password-login">كلمة المرور</InputLabel>
                 <OutlinedInput
                   id="password-login"
@@ -133,10 +133,9 @@ export default function AuthLogin({ forgot }) {
                     </InputAdornment>
                   }
                   placeholder="******"
-                  fullWidth
-                  error={Boolean(touched.password && errors.password)}
+                  label="كلمة المرور"
                 />
-              </Stack>
+              </FormControl>
               {touched.password && errors.password && <FormHelperText error>{errors.password}</FormHelperText>}
             </Grid>
 
@@ -192,7 +191,7 @@ export default function AuthLogin({ forgot }) {
             <Grid size={12}>
               <Typography variant="body2" align="center">
                 ليس لديك حساب؟&nbsp;
-                <Link variant="subtitle2" component={RouterLink} to="/register">
+                <Link variant="subtitle2" component={RouterLink} to="/auth/register">
                   تسجيل عضو جديد
                 </Link>
               </Typography>

@@ -197,18 +197,14 @@ export default function WorksheetsPage() {
   const [checked, setChecked] = useState(false);
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [useArrowPagination, setUseArrowPagination] = useState(window.innerWidth < 600);
 
   useEffect(() => {
     setChecked(true);
-
-    const handleResize = () => {
-      setUseArrowPagination(window.innerWidth < 600);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleChange = (event, value) => {
+    setPage(1);
+  };
 
   const { worksheets = [], worksheetsLoading } = useGetWorksheets();
 
@@ -220,22 +216,7 @@ export default function WorksheetsPage() {
     activeWorksheets = activeWorksheets.filter((w) => (w.TitleAr || w.titleAr || '').toLowerCase().includes(searchTerm.toLowerCase()));
   }
 
-  const totalPages = Math.ceil(activeWorksheets.length / ITEMS_PER_PAGE);
   const paginatedWorksheets = activeWorksheets.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
-
-  const handlePreviousPage = () => {
-    if (page > 1) {
-      setPage(page - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleNextPage = () => {
-    if (page < totalPages) {
-      setPage(page + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
 
   return (
     <Fade in={checked} timeout={800}>
@@ -326,87 +307,38 @@ export default function WorksheetsPage() {
               </Grid>
 
               {/* Pagination */}
-              {totalPages > 1 && (
-                <Stack spacing={2} sx={{ mt: 6, alignItems: 'center' }}>
-                  {useArrowPagination ? (
-                    // Arrow Pagination for Mobile
-                    <Stack direction="row" spacing={2} alignItems="center">
-                      <IconButton
-                        onClick={handlePreviousPage}
-                        disabled={page === 1}
-                        sx={{
-                          backgroundColor: page === 1 ? '#f0f0f0' : '#FFD666',
-                          color: page === 1 ? '#ccc' : '#2E2A39',
-                          borderRadius: '10px',
-                          padding: '12px',
-                          '&:hover': {
-                            backgroundColor: page === 1 ? '#f0f0f0' : '#ffcf4d'
-                          }
-                        }}
-                      >
-                        <ArrowRight2 size={24} />
-                      </IconButton>
-
-                      <Typography
-                        sx={{
-                          fontWeight: 700,
-                          fontSize: '1.1rem',
-                          minWidth: '60px',
-                          textAlign: 'center',
-                          color: '#2E2A39'
-                        }}
-                      >
-                        {page} / {totalPages}
-                      </Typography>
-
-                      <IconButton
-                        onClick={handleNextPage}
-                        disabled={page === totalPages}
-                        sx={{
-                          backgroundColor: page === totalPages ? '#f0f0f0' : '#FFD666',
-                          color: page === totalPages ? '#ccc' : '#2E2A39',
-                          borderRadius: '10px',
-                          padding: '12px',
-                          '&:hover': {
-                            backgroundColor: page === totalPages ? '#f0f0f0' : '#ffcf4d'
-                          }
-                        }}
-                      >
-                        <ArrowLeft2 size={24} />
-                      </IconButton>
-                    </Stack>
-                  ) : (
-                    // Number Pagination for Desktop
-                    <Pagination
-                      count={totalPages}
-                      page={page}
-                      onChange={(_, val) => {
-                        setPage(val);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      variant="outlined"
-                      shape="rounded"
-                      size="large"
-                      sx={{
-                        '& .MuiPaginationItem-root': {
-                          fontSize: '1rem',
-                          fontWeight: 600,
-                          borderRadius: '8px',
-                          border: '1px solid #E0E0E0',
-                          backgroundColor: '#fff',
-                          '&.Mui-selected': {
-                            backgroundColor: '#FFD666',
-                            borderColor: '#FFD666',
-                            color: '#2E2A39',
-                            '&:hover': { backgroundColor: '#ffcf4d' }
-                          },
-                          '&:hover': { backgroundColor: '#f5f5f5' }
+              <Stack spacing={2} sx={{ mt: 8, alignItems: 'center' }}>
+                <Pagination
+                  count={1}
+                  page={page}
+                  onChange={handleChange}
+                  variant="outlined"
+                  shape="rounded"
+                  color="primary"
+                  size="large"
+                  sx={{
+                    '& .MuiPaginationItem-root': {
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                      borderRadius: '8px',
+                      border: '1px solid #E0E0E0',
+                      backgroundColor: '#fff',
+                      '&.Mui-selected': {
+                        backgroundColor: '#FFD666',
+                        borderColor: '#FFD666',
+                        color: '#2E2A39',
+                        '&:hover': {
+                          backgroundColor: '#ffcf4d',
+                          borderColor: '#ffcf4d'
                         }
-                      }}
-                    />
-                  )}
-                </Stack>
-              )}
+                      },
+                      '&:hover': {
+                        backgroundColor: '#f5f5f5'
+                      }
+                    }
+                  }}
+                />
+              </Stack>
             </>
           )}
         </Container>

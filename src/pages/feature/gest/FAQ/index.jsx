@@ -308,8 +308,8 @@ export default function FAQ() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
-        <SEO 
-          title="الأسئلة الشائعة" 
+        <SEO
+          title="الأسئلة الشائعة"
           description="إجابات على الأسئلة الشائعة حول منصة أستوديو نبتة وتطبيق لغتي العربية والاشتراكات وطرق التحميل والاستخدام الآمن للأطفال."
           keywords="الأسئلة الشائعة نبتة, استفسارات نبتة, كيفية الاشتراك في نبتة"
           url="/faq"

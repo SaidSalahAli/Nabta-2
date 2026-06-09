@@ -36,7 +36,7 @@ export default function ViewApplication() {
     description: `هل تبحث عن تطبيق تعليمي ممتع وسهل الاستخدام لمساعدة طفلك الصغير على تعلم الحروف العربية؟ إليك ما تبحث عنه: تطبيق لغتي العربية.
 "لغتي العربية" هو تطبيق يناسب الأطفال في سن ما قبل المدرسة وحتى مرحلة الروضة. يحتوي التطبيق على سلسلة من الألعاب والأنشطة التفاعلية المختلفة مثل تتبع الحروف والضغط عليها مع تمييز أصواتها، وكل ذلك صُمم بأسلوب الطريقة الصوتية لتعلم الحروف العربية لأنها هي الطريقة الأصح في تعلم اللغة العربية.`,
     videoUrl: 'https://www.youtube.com/watch?v=lYs7UOXoXjY',
-    downloadUrl: '#'
+    downloadUrl: 'https://play.google.com/store/apps/developer?id=Nabta+Studio'
   };
 
   return (
@@ -48,9 +48,9 @@ export default function ViewApplication() {
           minHeight: '100vh'
         }}
       >
-        <SEO 
-          title={application.title} 
-          description={application.description?.slice(0, 160)} 
+        <SEO
+          title={application.title}
+          description={application.description?.slice(0, 160)}
           image={mockScreenshots[0]?.image}
           url={`/applications/${id}`}
         />
@@ -205,7 +205,7 @@ export default function ViewApplication() {
               href={application.downloadUrl}
               target="_blank"
               fullWidth={false}
-              startIcon={<Play size="22" color="#2E2A39" variant="Bold" />}
+              endIcon={<Play size="22" color="#2E2A39" variant="Bold" />}
               sx={{
                 width: {
                   xs: '100%',
@@ -238,121 +238,121 @@ export default function ViewApplication() {
             </Button>
           </Box>
 
-          {/* About */}
-          <Box sx={{ mb: { xs: 6, md: 8 } }}>
-            <Typography
-              variant="h1"
-              sx={{
-                fontWeight: 800,
-                color: '#000',
-                mb: 3,
+      {/* About */}
+      <Box sx={{ mb: { xs: 6, md: 8 } }}>
+        <Typography
+          variant="h1"
+          sx={{
+            fontWeight: 800,
+            color: '#000',
+            mb: 3,
 
-                display: 'inline-block',
-                position: 'relative',
-                '&::after': {
-                  content: '""',
-                  position: 'absolute',
-                  bottom: '-8px',
-                  right: 0,
-                  width: '100%',
-                  height: '4px',
-                  // backgroundColor: '#0088CC',
-                  borderRadius: '2px'
-                }
-              }}
-            >
-              نبذة عن التطبيقات
-            </Typography>
+            display: 'inline-block',
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: '-8px',
+              right: 0,
+              width: '100%',
+              height: '4px',
+              // backgroundColor: '#0088CC',
+              borderRadius: '2px'
+            }
+          }}
+        >
+          نبذة عن التطبيقات
+        </Typography>
 
-            <Paper
-              elevation={0}
-              sx={{
-                p: {
-                  xs: 2.5,
-                  sm: 3,
-                  md: 4
-                },
-                borderRadius: {
-                  xs: '18px',
-                  md: '24px'
-                },
-                backgroundColor: '#fff',
-                boxShadow: '0 10px 40px rgba(0,0,0,0.03)'
-              }}
-            >
-              <Typography
-                variant="body1"
-                sx={{
-                  color: '#000',
-                  fontSize: {
-                    xs: '15px',
-                    sm: '16px',
-                    md: '18px'
-                  },
-                  lineHeight: 2,
-                  whiteSpace: 'pre-line'
-                }}
-              >
-                {application.description}
-              </Typography>
-            </Paper>
-          </Box>
-
-          {/* Video */}
-          <Box sx={{ mb: 4 }}>
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 800,
-                color: '#2E2A39',
-                mb: 3,
-                textAlign: 'center',
-                fontSize: {
-                  xs: '1.8rem',
-                  sm: '2.2rem',
-                  md: '3rem'
-                }
-              }}
-            >
-              فيديو عن التطبيق
-            </Typography>
-
-            <Paper
-              elevation={0}
-              sx={{
-                width: '100%',
-                aspectRatio: '16/9',
-                borderRadius: {
-                  xs: '14px',
-                  sm: '18px',
-                  md: '24px'
-                },
-                overflow: 'hidden',
-                backgroundColor: '#000',
-                position: 'relative',
-                boxShadow: '0 20px 50px rgba(0,0,0,0.1)',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  transform: {
-                    md: 'translateY(-5px)'
-                  },
-                  boxShadow: '0 30px 60px rgba(0,0,0,0.15)'
-                }
-              }}
-            >
-              <iframe
-                width="100%"
-                height="100%"
-                src={application.videoUrl.replace('watch?v=', 'embed/')}
-                title={application.title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </Paper>
-          </Box>
-        </Container>
+        <Paper
+          elevation={0}
+          sx={{
+            p: {
+              xs: 2.5,
+              sm: 3,
+              md: 4
+            },
+            borderRadius: {
+              xs: '18px',
+              md: '24px'
+            },
+            backgroundColor: '#fff',
+            boxShadow: '0 10px 40px rgba(0,0,0,0.03)'
+          }}
+        >
+          <Typography
+            variant="body1"
+            sx={{
+              color: '#000',
+              fontSize: {
+                xs: '15px',
+                sm: '16px',
+                md: '18px'
+              },
+              lineHeight: 2,
+              whiteSpace: 'pre-line'
+            }}
+          >
+            {application.description}
+          </Typography>
+        </Paper>
       </Box>
-    </Fade>
+
+      {/* Video */}
+      <Box sx={{ mb: 4 }}>
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: 800,
+            color: '#2E2A39',
+            mb: 3,
+            textAlign: 'center',
+            fontSize: {
+              xs: '1.8rem',
+              sm: '2.2rem',
+              md: '3rem'
+            }
+          }}
+        >
+          فيديو عن التطبيق
+        </Typography>
+
+        <Paper
+          elevation={0}
+          sx={{
+            width: '100%',
+            aspectRatio: '16/9',
+            borderRadius: {
+              xs: '14px',
+              sm: '18px',
+              md: '24px'
+            },
+            overflow: 'hidden',
+            backgroundColor: '#000',
+            position: 'relative',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.1)',
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: {
+                md: 'translateY(-5px)'
+              },
+              boxShadow: '0 30px 60px rgba(0,0,0,0.15)'
+            }
+          }}
+        >
+          <iframe
+            width="100%"
+            height="100%"
+            src={application.videoUrl.replace('watch?v=', 'embed/')}
+            title={application.title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </Paper>
+      </Box>
+    </Container>
+      </Box >
+    </Fade >
   );
 }
