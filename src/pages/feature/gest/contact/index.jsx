@@ -42,16 +42,11 @@ const contactInfo = [
     value: '+20 100 756 0466',
     href: 'https://wa.me/201007560466'
   },
-  {
-    icon: <Call size={28} color="#0088CC" variant="Bold" />,
-    label: 'تليجرام',
-    value: '+20 100 756 0466',
-    href: 'https://t.me/+201007560466'
-  },
+
   {
     icon: <MessageText size={28} color="#0088CC" variant="Bold" />,
-    label: 'ساعات الدعم',
-    value: 'السبت – الخميس، 9 صباحاً – 10 مساءً',
+    label: 'أوقات الدعم',
+    value: 'السبت إلى الأربعاء | 9 صباحًا : 5 مسائًا',
     href: null
   }
 ];
@@ -166,7 +161,8 @@ export default function Contact() {
                 تواصل معنا
               </Typography>
               <Typography variant="h6" sx={{ color: 'text.secondary', fontWeight: 400, maxWidth: 500, mx: 'auto' }}>
-                نحن هنا للإجابة على استفساراتك، أرسل لنا رسالة وسنتواصل معك في أقرب وقت
+                تحتاج للتواصل معنا لأي سبب؟
+                أرسل لنا وسنقوم بالرد عليك في القريب العاجل.
               </Typography>
             </Box>
 
@@ -209,29 +205,7 @@ export default function Contact() {
                     </Paper>
                   ))}
 
-                  {/* Social Links */}
-                  <Paper elevation={0} sx={{ p: 3, borderRadius: '20px', border: '1px solid', borderColor: 'divider' }}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 2, color: 'text.primary' }}>تابعنا على</Typography>
-                    <Stack direction="row" flexWrap="wrap" gap={1}>
-                      {[
-                        { label: 'YouTube', href: 'https://www.youtube.com/@NabtaStudio' },
-                        { label: 'Facebook', href: 'https://www.facebook.com/NabtaStudio' },
-                        { label: 'Instagram', href: 'https://www.instagram.com/NabtaStudio' },
-                        { label: 'Twitter/X', href: 'https://twitter.com/NabtaStudio' },
-                        { label: 'TikTok', href: 'https://www.tiktok.com/@nabta_studio' },
-                        { label: 'LinkedIn', href: 'https://www.linkedin.com/in/NabtaStudio' },
-                        { label: 'Pinterest', href: 'https://www.pinterest.com/NabtaStudio' },
-                        { label: 'Snapchat', href: 'https://web.snapchat.com/NabtaStudio' },
-                        { label: 'Vimeo', href: 'https://vimeo.com/NabtaStudio' },
-                        { label: 'SoundCloud', href: 'https://soundcloud.com/NabtaStudio' }
-                      ].map(({ label, href }) => (
-                        <Link key={label} href={href} target="_blank" rel="noopener noreferrer" underline="none"
-                          sx={{ fontSize: 12, fontWeight: 600, px: 1.5, py: 0.5, borderRadius: '8px', border: '1px solid', borderColor: 'divider', color: 'text.secondary', transition: 'all 0.2s', '&:hover': { borderColor: '#0088CC', color: '#0088CC', bgcolor: '#E8F4FD' } }}>
-                          {label}
-                        </Link>
-                      ))}
-                    </Stack>
-                  </Paper>
+
 
                   {/* Decorative Card */}
                   <Paper elevation={0} sx={{ p: 4, borderRadius: '20px', background: 'linear-gradient(135deg, #0088CC 0%, #006699 100%)', color: '#fff', textAlign: 'center' }}>

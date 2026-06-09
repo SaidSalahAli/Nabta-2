@@ -136,10 +136,11 @@ export default function FooterBlock({ isFull }) {
         }}
       >
         <Container>
-          <Grid container spacing={4} direction="row-reverse">
+          <Grid container spacing={4}>
             {/* RIGHT: Nav columns */}
+            {/* LEFT: Logo + Social Icons */}
             <Grid size={{ xs: 12, md: 8 }}>
-              <Grid container spacing={4} direction="row-reverse">
+              <Grid container spacing={4} >
                 {/* Column 1 — روابط */}
                 <Grid size={{ xs: 6, sm: 4 }}>
                   <Stack gap={2.5}>
@@ -187,8 +188,6 @@ export default function FooterBlock({ isFull }) {
                 </Grid>
               </Grid>
             </Grid>
-
-            {/* LEFT: Logo + Social Icons */}
             <Grid size={{ xs: 12, md: 4 }}>
               <motion.div
                 initial={{ opacity: 0, translateY: 30 }}
@@ -240,6 +239,9 @@ export default function FooterBlock({ isFull }) {
                 </Stack>
               </motion.div>
             </Grid>
+
+
+
           </Grid>
         </Container>
       </Box>

@@ -163,7 +163,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                 swiperRef.current = swiper;
                 handleSlideChange();
               }}
-              autoplay={{ delay: 1500 }}
+              autoplay={{ delay: 5000, disableOnInteraction: false }}
               onSlideChange={handleSlideChange}
               slidesPerView={1}
               spaceBetween={20}
@@ -173,7 +173,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                 1024: { slidesPerView: 3, spaceBetween: 20 },
                 1280: { slidesPerView: 3, spaceBetween: 20 }
               }}
-              modules={[Pagination, FreeMode]}
+              modules={[Pagination, FreeMode, Autoplay]}
               style={{ padding: '10px 0 20px 0' }}
             >
               {episodes.map((episode, index) => (
