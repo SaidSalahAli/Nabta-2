@@ -163,7 +163,6 @@ function BottomBar({ primaryColor }) {
       setActiveTab(index);
       if (location.pathname !== '/') {
         navigate('/');
-        // ننتظر الصفحة تتحمل ثم نعمل scroll
         setTimeout(() => {
           const el = document.getElementById(link.scrollTo);
           if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });

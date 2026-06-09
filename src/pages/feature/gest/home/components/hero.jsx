@@ -8,7 +8,7 @@ import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import slider1 from 'assets/Home/slider_1.svg';
 import slider2 from 'assets/Home/slider_2.svg';
 import slider3 from 'assets/Home/slider_3.svg';
-import slider4 from 'assets/Home/slider_4.jpg';
+import slider4 from 'assets/Home/slider_4.svg';
 
 export default function Hero({ shouldAnimate = false }) {
   const theme = useTheme();

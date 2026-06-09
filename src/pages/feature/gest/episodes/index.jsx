@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Container, Grid, Pagination, Stack, Fade, CircularProgress } from '@mui/material';
+import { Box, Typography, Container, Grid, Pagination, Stack, Fade, CircularProgress, Tabs, Tab } from '@mui/material';
 import EpisodeCard from 'components/EpisodeCard';
 import img from 'assets/images/test.jpeg';
 import { useGetEpisodes } from 'api/episodes';
+import { useGetEpisodeCategories } from 'api/episodeCategories';
 import SEO from 'components/SEO';
-
 
 export default function AllEpisodes() {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const [page, setPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
     setChecked(true);
   }, []);
 
   const handleChange = (event, value) => {
-    setPage(value);
+    // Keep page locked to 1 as requested until backend pagination is ready
+    setPage(1);
   };
 
-  const { episodes, episodesLoading } = useGetEpisodes();
+  const { episodes = [], episodesLoading } = useGetEpisodes();
+  const { categories = [], categoriesLoading } = useGetEpisodeCategories();
 
-  if (episodesLoading) {
+  if (episodesLoading || categoriesLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100%' }}>
         <CircularProgress />
@@ -30,20 +33,32 @@ export default function AllEpisodes() {
     );
   }
 
+  // Filter episodes by selected category
+  const filteredEpisodes = selectedCategory === 'all'
+    ? episodes
+    : episodes.filter(episode => String(episode.category_id) === String(selectedCategory));
+
+  const currentCategory = selectedCategory === 'all'
+    ? null
+    : categories.find(cat => String(cat.id) === String(selectedCategory));
+
+  const infoTitle = currentCategory ? currentCategory.name_ar : 'جميع الحلقات';
+  const infoDescription = currentCategory?.description_ar || 'شاهد حلقات منصة نبتة التعليمية والتربوية الهادفة للأطفال. محتوى آمن، ممتع، ومبتكر يسهم في بناء وعي طفلك وتنمية مهاراته .';
+  const infoImage = currentCategory?.image || currentCategory?.photo || currentCategory?.PhotoUrl || currentCategory?.photoUrl || img;
+
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
-        <SEO 
-          title="الحلقات الكرتونية" 
-          description="شاهد حلقات كرتون أستوديو نبتة التعليمية والتربوية الهادفة للأطفال. محتوى آمن، ممتع، ومبتكر يسهم في بناء وعي طفلك وتنمية مهاراته."
-          keywords="أفلام كرتون أطفال, حلقات كرتون تعليمية, قصص كرتون هادفة, كرتون نبتة, مسلسلات أطفال تربوية"
+        <SEO
+          title="الحلقات الكرتونية"
+          description="شاهد حلقات منصة نبتة التعليمية والتربوية الهادفة للأطفال. محتوى آمن، ممتع، ومبتكر يسهم في بناء وعي طفلك وتنمية مهاراته."
+          keywords="أفلام أطفال, حلقات تعليمية, قصص هادفة, نبتة, مسلسلات أطفال تربوية"
           url="/episodes"
         />
         <Container maxWidth="lg">
           {/* Main Title */}
           <Box sx={{ mb: 6, textAlign: 'center' }}>
-
-            <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
+            <Typography variant="h1" sx={{ fontWeight: 800, color: 'primary.main', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
               الحلقات
             </Typography>
           </Box>
@@ -64,11 +79,10 @@ export default function AllEpisodes() {
           >
             <Box sx={{ flex: 1 }}>
               <Typography variant="h3" sx={{ fontWeight: 700, mb: 2, color: '#2E2A39' }}>
-                نبذة عن السلسلة
+                {infoTitle}
               </Typography>
               <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '18px', lineHeight: 1.8 }}>
-                هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن توليد مثل هذا
-                النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.
+                {infoDescription}
               </Typography>
             </Box>
             <Box
@@ -80,33 +94,117 @@ export default function AllEpisodes() {
                 boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
               }}
             >
-              <Box component="img" src={img} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Series Cover" />
+              <Box component="img" src={infoImage} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={infoTitle} />
             </Box>
           </Box>
 
-          {/* Episodes Grid */}
-          <Grid container spacing={4}>
-            {episodes.map((episode, index) => (
-              <Grid item xs={12} sm={6} md={4} key={episode.id}>
-                <EpisodeCard
-                  episode={{
-                    id: episode.id,
-                    title: episode.title_ar,
-                    image: episode.thumbnail_image || episode.cover_image || img,
-                    watch: 'شاهد'
+          {/* Category Tabs */}
+          <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center' }}>
+            <Tabs
+              value={selectedCategory}
+              onChange={(e, newValue) => setSelectedCategory(newValue)}
+              variant="scrollable"
+              scrollButtons="auto"
+              allowScrollButtonsMobile
+              sx={{
+                '& .MuiTabs-indicator': {
+                  display: 'none'
+                },
+                '& .MuiTabs-flexContainer': {
+                  gap: 1.5,
+                  pb: 1
+                }
+              }}
+            >
+              <Tab
+                value="all"
+                label="الكل"
+                sx={{
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  borderRadius: '10px',
+                  border: '2px solid',
+                  borderColor: selectedCategory === 'all' ? 'primary.main' : '#E0E0E0',
+                  backgroundColor: selectedCategory === 'all' ? 'primary.main' : '#fff',
+                  color: selectedCategory === 'all' ? '#fff' : '#637381',
+                  px: 3,
+                  py: 1,
+                  minHeight: 'auto',
+                  minWidth: 'auto',
+                  textTransform: 'none',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: selectedCategory === 'all' ? 'primary.light' : '#f5f5f5',
+                    borderColor: selectedCategory === 'all' ? 'primary.light' : '#ccc'
+                  },
+                  '&.Mui-selected': {
+                    color: '#fff'
+                  }
+                }}
+              />
+              {categories.map((cat) => (
+                <Tab
+                  key={cat.id}
+                  value={String(cat.id)}
+                  label={cat.name_ar}
+                  sx={{
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    borderRadius: '10px',
+                    border: '2px solid',
+                    borderColor: selectedCategory === String(cat.id) ? 'primary.main' : '#E0E0E0',
+                    backgroundColor: selectedCategory === String(cat.id) ? 'primary.main' : '#fff',
+                    color: selectedCategory === String(cat.id) ? '#fff' : '#637381',
+                    px: 3,
+                    py: 1,
+                    minHeight: 'auto',
+                    minWidth: 'auto',
+                    textTransform: 'none',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      backgroundColor: selectedCategory === String(cat.id) ? 'primary.light' : '#f5f5f5',
+                      borderColor: selectedCategory === String(cat.id) ? 'primary.light' : '#ccc'
+                    },
+                    '&.Mui-selected': {
+                      color: '#fff'
+                    }
                   }}
-                  isAnimating={checked}
-                  index={index}
-                  onClick={() => navigate(`/episodes/${episode.id}`)}
                 />
-              </Grid>
-            ))}
-          </Grid>
+              ))}
+            </Tabs>
+          </Box>
+
+          {/* Episodes Grid */}
+          {filteredEpisodes.length > 0 ? (
+            <Grid container spacing={4}>
+              {filteredEpisodes.map((episode, index) => (
+                <Grid item xs={12} sm={6} md={6} key={episode.id}>
+                  <EpisodeCard
+                    episode={{
+                      id: episode.id,
+                      title: episode.title_ar,
+                      image: episode.thumbnail_image || episode.cover_image || img,
+                      watch: 'شاهد'
+                    }}
+                    isAnimating={checked}
+                    index={index}
+                    onClick={() => navigate(`/episodes/${episode.id}`)}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Box sx={{ py: 8, textAlign: 'center' }}>
+              <Typography variant="h5" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                لا توجد حلقات في هذا التصنيف حالياً.
+              </Typography>
+            </Box>
+          )}
 
           {/* Pagination */}
           <Stack spacing={2} sx={{ mt: 8, alignItems: 'center' }}>
             <Pagination
-              count={4}
+              count={1}
               page={page}
               onChange={handleChange}
               variant="outlined"

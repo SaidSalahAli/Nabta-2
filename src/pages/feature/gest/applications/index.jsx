@@ -27,8 +27,8 @@ export default function AllApplications() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
-        <SEO 
-          title="التطبيقات التعليمية" 
+        <SEO
+          title="التطبيقات التعليمية"
           description="اكتشف وحمل تطبيقات أستوديو نبتة التعليمية والتربوية التفاعلية للأطفال. تطبيقات آمنة تماماً خالية من الإعلانات تدعم نمو طفلك المعرفي."
           keywords="تطبيقات أطفال تعليمية, ألعاب أطفال مفيدة, تطبيقات نبتة للأندرويد, تطبيقات أطفال بدون إعلانات"
           url="/applications"
@@ -37,7 +37,7 @@ export default function AllApplications() {
           {/* Main Title */}
           <Box sx={{ mb: 6, textAlign: 'center' }}>
 
-            <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
+            <Typography variant="h1" sx={{ fontWeight: 800, color: 'primary.main', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
               التطبيقات
             </Typography>
           </Box>

@@ -240,8 +240,8 @@ export default function WorksheetsPage() {
   return (
     <Fade in={checked} timeout={800}>
       <Box sx={{ py: 8, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
-        <SEO 
-          title="أوراق عمل تعليمية للأطفال" 
+        <SEO
+          title="أوراق عمل تعليمية للأطفال"
           description="حمل أوراق عمل تلوين، كتابة، وأنشطة تعليمية وتفاعلية مجانية للأطفال من منصة أستوديو نبتة لتنمية ذكاء طفلك ومهاراته الحركية."
           keywords="أوراق عمل تلوين للأطفال, شيتات تعليمية للأطفال, أوراق تلوين للطباعة, أنشطة تعليمية للأطفال pdf, شيتات نبتة"
           url="/worksheets"
@@ -250,7 +250,7 @@ export default function WorksheetsPage() {
           {/* Header */}
           <Box sx={{ mb: 6, textAlign: 'center' }}>
 
-            <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.2rem', md: '3rem' } }}>
+            <Typography variant="h1" sx={{ fontWeight: 800, color: 'primary.main', mb: 2, fontSize: { xs: '2.2rem', md: '3rem' } }}>
               أوراق عمل
             </Typography>
             <Typography variant="h6" sx={{ color: 'text.secondary', fontWeight: 400, maxWidth: 600, mx: 'auto', lineHeight: 1.8 }}>

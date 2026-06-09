@@ -120,8 +120,7 @@ export default function FooterBlock({ isFull }) {
 
   const col2 = [
     { label: 'المتجر', href: 'https://play.google.com/store/apps/developer?id=Nabta+Studio', external: true },
-    { label: 'كيف تدعمنا؟', href: '/support', external: false },
-    { label: 'لغتي العربية', href: 'https://play.google.com/store/apps/details?id=air.ARABICMYLANGUAGE', external: true }
+    { label: 'كيف تدعمنا؟', href: '/support', external: false }
   ];
 
   return (
@@ -159,12 +158,7 @@ export default function FooterBlock({ isFull }) {
                           {label}
                         </FooterLink>
                       ) : (
-                        <FooterLink
-                          key={label}
-                          component={RouterLink}
-                          to={to}
-                          underline="none"
-                        >
+                        <FooterLink key={label} component={RouterLink} to={to} underline="none">
                           {label}
                         </FooterLink>
                       )
@@ -191,7 +185,6 @@ export default function FooterBlock({ isFull }) {
                     ))}
                   </Stack>
                 </Grid>
-
               </Grid>
             </Grid>
 
@@ -205,7 +198,10 @@ export default function FooterBlock({ isFull }) {
                 <Stack gap={3} alignItems={{ xs: 'center', md: 'flex-start' }}>
                   <Logo to="/" />
 
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: 13, textAlign: { xs: 'center', md: 'right' }, lineHeight: 1.8 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: 'text.secondary', fontSize: 13, textAlign: { xs: 'center', md: 'right' }, lineHeight: 1.8 }}
+                  >
                     منصة نبتة — صناعة محتوى تربوي تعليمي للأطفال
                   </Typography>
 

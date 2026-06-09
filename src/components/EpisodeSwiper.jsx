@@ -70,19 +70,19 @@ export default function EpisodeSwiper({ episodes, isAnimating, onCardClick }) {
           bgcolor: isAtEnd ? 'action.disabledBackground' : 'background.paper',
           boxShadow: isAtEnd ? 'none' : '0 2px 8px rgba(0,0,0,0.15)',
           borderRadius: '50%',
-          border: '1px solid',
-          borderColor: isAtEnd ? 'action.disabled' : 'divider',
+          border: '2px solid #0088CC',
+          // borderColor: isAtEnd ? 'action.disabled' : 'divider',
           opacity: isAtEnd ? 0.5 : 1,
           cursor: isAtEnd ? 'not-allowed' : 'pointer',
           '&:hover': {
-            borderColor: isAtEnd ? 'action.disabled' : 'primary.main',
+            borderColor: isAtEnd ? 'action.disabled' : '#0088CC',
             backgroundColor: isAtEnd ? 'action.disabledBackground' : 'background.paper',
             '& svg': { color: isAtEnd ? '#999' : '#fff' }
           },
           transition: 'all 0.2s ease'
         }}
       >
-        <ArrowLeft size={20} color={isAtEnd ? '#ccc' : '#0088CC'} />
+        <ArrowLeft size={20} color={isAtEnd ? '#0088CC' : '#0088CC'} />
       </IconButton>
 
       {/* RIGHT arrow — goes to prev */}
@@ -100,19 +100,19 @@ export default function EpisodeSwiper({ episodes, isAnimating, onCardClick }) {
           borderRadius: '50%',
           bgcolor: isAtStart ? 'action.disabledBackground' : 'background.paper',
           boxShadow: isAtStart ? 'none' : '0 2px 8px rgba(0,0,0,0.15)',
-          border: '1px solid',
-          borderColor: isAtStart ? 'action.disabled' : 'divider',
+          border: '2px solid #0088CC',
+          // borderColor: isAtStart ? 'action.disabled' : 'divider',
           opacity: isAtStart ? 0.5 : 1,
           cursor: isAtStart ? 'not-allowed' : 'pointer',
           '&:hover': {
-            borderColor: isAtStart ? 'action.disabled' : 'primary.main',
+            borderColor: isAtStart ? 'action.disabled' : '#0088CC',
             backgroundColor: isAtStart ? 'action.disabledBackground' : 'background.paper',
-            '& svg': { color: isAtStart ? '#999' : '#fff' }
+            '& svg': { color: isAtStart ? '#0088CC' : '#0088CC' }
           },
           transition: 'all 0.2s ease'
         }}
       >
-        <ArrowRight size={20} color={isAtStart ? '#ccc' : '#0088CC'} />
+        <ArrowRight size={20} color={isAtStart ? '#0088CC' : '#0088CC'} />
       </IconButton>
 
       <Swiper
