@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Container, Fade, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import img from 'assets/Home/worksheets.svg';
+import img from 'assets/Home/worksheets.png';
 export default function Worksheets({ shouldAnimate = false }) {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);

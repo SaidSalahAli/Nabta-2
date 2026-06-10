@@ -147,7 +147,6 @@ export default function Support() {
               كيف تدعمنا؟
             </Typography>
           </Box>
-
           {/* Intro Section */}
           <Box sx={{ mb: 6 }}>
             <Paper
@@ -195,6 +194,60 @@ export default function Support() {
               </Typography>
             </Paper>
           </Box>
+          {/* Support Methods Grid */}
+          <Grid container spacing={3}>
+            {supportMethods.map((method) => (
+              <Grid item xs={12} sm={6} md={4} key={method.id}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    height: '100%',
+                    borderRadius: '10px',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                      transform: 'translateY(-5px)',
+                      borderColor: '#FFD666'
+                    }
+                  }}
+                >
+                  {/* Image — top full width */}
+                  <Box
+                    sx={{
+                      width: '100%',
+                      backgroundColor: '#f8f8f8',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderBottom: '1px solid',
+                      borderColor: 'divider',
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={method.image}
+                      alt={method.title}
+                      sx={{ maxWidth: '100%', objectFit: 'contain' }}
+                    />
+                  </Box>
+
+                  {/* Content — bottom */}
+                  <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#2E2A39', mb: 2, textAlign: 'center' }}>
+                      {method.title}
+                    </Typography>
+                    {method.content}
+                  </Box>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+
 
           {/* Support Types */}
           <Box sx={{ mb: 6 }}>
@@ -332,59 +385,7 @@ export default function Support() {
             </Typography>
           </Box>
 
-          {/* Support Methods Grid */}
-          <Grid container spacing={3}>
-            {supportMethods.map((method) => (
-              <Grid item xs={12} sm={6} md={4} key={method.id}>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    height: '100%',
-                    borderRadius: '10px',
-                    border: '1px solid',
-                    borderColor: 'divider',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-                      transform: 'translateY(-5px)',
-                      borderColor: '#FFD666'
-                    }
-                  }}
-                >
-                  {/* Image — top full width */}
-                  <Box
-                    sx={{
-                      width: '100%',
-                      backgroundColor: '#f8f8f8',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderBottom: '1px solid',
-                      borderColor: 'divider',
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={method.image}
-                      alt={method.title}
-                      sx={{ maxWidth: '100%', objectFit: 'contain' }}
-                    />
-                  </Box>
 
-                  {/* Content — bottom */}
-                  <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#2E2A39', mb: 2, textAlign: 'center' }}>
-                      {method.title}
-                    </Typography>
-                    {method.content}
-                  </Box>
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
         </Container>
       </Box>
     </Fade>
