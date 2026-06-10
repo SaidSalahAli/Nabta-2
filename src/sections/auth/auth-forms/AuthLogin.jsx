@@ -145,7 +145,7 @@ export default function AuthLogin({ forgot }) {
                 <Link
                   variant="subtitle2"
                   component={RouterLink}
-                  to={isLoggedIn && forgot ? forgot : '/forgot-password'}
+                  to="/auth/forgot-password"
                   color="text.secondary"
                 >
                   نسيت كلمة المرور؟

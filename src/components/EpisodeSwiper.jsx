@@ -67,22 +67,30 @@ export default function EpisodeSwiper({ episodes, isAnimating, onCardClick }) {
           zIndex: 10,
           width: 40,
           height: 40,
-          bgcolor: isAtEnd ? 'action.disabledBackground' : 'background.paper',
-          boxShadow: isAtEnd ? 'none' : '0 2px 8px rgba(0,0,0,0.15)',
+          bgcolor: '#fff',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
           borderRadius: '50%',
-          border: '2px solid #0088CC',
-          // borderColor: isAtEnd ? 'action.disabled' : 'divider',
-          opacity: isAtEnd ? 0.5 : 1,
+          border: 'none',
           cursor: isAtEnd ? 'not-allowed' : 'pointer',
           '&:hover': {
-            borderColor: isAtEnd ? 'action.disabled' : '#0088CC',
-            backgroundColor: isAtEnd ? 'action.disabledBackground' : 'background.paper',
-            '& svg': { color: isAtEnd ? '#999' : '#fff' }
+            backgroundColor: '#fff',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+          },
+          '&.Mui-disabled': {
+            bgcolor: '#fff !important',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.12) !important',
+            opacity: '1 !important',
+            '& svg': {
+              opacity: 0.4
+            }
+          },
+          '& svg path': {
+            strokeWidth: '3.5px !important'
           },
           transition: 'all 0.2s ease'
         }}
       >
-        <ArrowLeft size={20} color={isAtEnd ? '#0088CC' : '#0088CC'} />
+        <ArrowLeft size={30} color="#0088CC" />
       </IconButton>
 
       {/* RIGHT arrow — goes to prev */}
@@ -98,21 +106,29 @@ export default function EpisodeSwiper({ episodes, isAnimating, onCardClick }) {
           width: 40,
           height: 40,
           borderRadius: '50%',
-          bgcolor: isAtStart ? 'action.disabledBackground' : 'background.paper',
-          boxShadow: isAtStart ? 'none' : '0 2px 8px rgba(0,0,0,0.15)',
-          border: '2px solid #0088CC',
-          // borderColor: isAtStart ? 'action.disabled' : 'divider',
-          opacity: isAtStart ? 0.5 : 1,
+          bgcolor: '#fff',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+          border: 'none',
           cursor: isAtStart ? 'not-allowed' : 'pointer',
           '&:hover': {
-            borderColor: isAtStart ? 'action.disabled' : '#0088CC',
-            backgroundColor: isAtStart ? 'action.disabledBackground' : 'background.paper',
-            '& svg': { color: isAtStart ? '#0088CC' : '#0088CC' }
+            backgroundColor: '#fff',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+          },
+          '&.Mui-disabled': {
+            bgcolor: '#fff !important',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.12) !important',
+            opacity: '1 !important',
+            '& svg': {
+              opacity: 0.4
+            }
+          },
+          '& svg path': {
+            strokeWidth: '3.5px !important'
           },
           transition: 'all 0.2s ease'
         }}
       >
-        <ArrowRight size={20} color={isAtStart ? '#0088CC' : '#0088CC'} />
+        <ArrowRight size={30} color="#0088CC" />
       </IconButton>
 
       <Swiper

@@ -77,17 +77,6 @@ export default function Worksheets({ shouldAnimate = false }) {
                 </Button>
               </Box>
 
-              <Typography
-                sx={{
-                  fontSize: { xs: '18px', md: '18px' },
-                  color: '#000',
-                  lineHeight: 2,
-                  maxWidth: { xs: '100%', md: '650px' },
-                  mx: { xs: 'auto', md: 0 }
-                }}
-              >أوراق عمل
-                ينتقل المستخدم إلى صفحة تحتوي على ملفات أوراق المذاكرة والتلوين القابلة للطباعة، مع بعض الخيارات المناسبة للأطفال.
-              </Typography>
             </Box>
 
             {/* RIGHT ILLUSTRATION */}

@@ -183,6 +183,16 @@ export default function ViewEpisode() {
   const dateObject = new Date(episode.CreatedAt || new Date());
   const formattedDate = dateObject.toLocaleDateString('ar-EG');
   const formattedTime = dateObject.toLocaleTimeString('ar-EG');
+  let hijriDate = '';
+  try {
+    hijriDate = new Intl.DateTimeFormat('ar-SA-u-ca-islamic', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }).format(dateObject);
+  } catch (e) {
+    // fallback
+  }
 
   return (
     <Fade in={checked} timeout={800}>
@@ -292,7 +302,7 @@ export default function ViewEpisode() {
                 boxShadow: '0 8px 24px rgba(255, 214, 102, 0.3)'
               }}
             >
-              جميع النص داخل الفيديو
+              محتوى الحلقة مقروء
             </Button>
 
             <Collapse in={showTranscript}>
@@ -360,7 +370,7 @@ export default function ViewEpisode() {
               >
                 <Calendar size="20" color="#0088CC" variant="Bold" />
                 <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: { xs: '13px', sm: '14px' } }}>
-                  التاريخ: {formattedDate} ({formattedTime})
+                  التاريخ: {formattedDate} م {hijriDate ? `| ${hijriDate}` : ''} ({formattedTime})
                 </Typography>
               </Box>
             </Stack>

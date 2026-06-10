@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Typography, Container, Fade, IconButton, Card, CardMedia, CardContent } from '@mui/material';
+import { Box, Typography, Container, Fade, IconButton, Card, CardMedia } from '@mui/material';
 import img1 from 'assets/Home/Opinions_1.png';
 import img2 from 'assets/Home/Opinions_2.png';
 import img3 from 'assets/Home/Opinions_3.png';
@@ -10,19 +10,35 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, FreeMode, Autoplay } from 'swiper/modules';
 import { ArrowLeft, ArrowRight } from 'iconsax-react';
-// import EpisodeCard from '../../../../../components/EpisodeCard';
-// import EpisodeCard from './EpisodeCard';
-// import imgbg from 'assets/images/test2.png';
-export default function PartnersReviews({ shouldAnimate = false }) {
+
+export default function PartnersReviews() {
   const [checked, setChecked] = useState(false);
   const swiperRef = useRef(null);
-  const [isAtStart, setIsAtStart] = React.useState(true);
-  const [isAtEnd, setIsAtEnd] = React.useState(false);
+  const containerRef = useRef(null);
+  const [isAtStart, setIsAtStart] = useState(true);
+  const [isAtEnd, setIsAtEnd] = useState(false);
+
   useEffect(() => {
-    if (shouldAnimate) {
-      setChecked(true);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setChecked(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
     }
-  }, [shouldAnimate]);
+
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
 
   const episodes = [
     { id: 1, image: img1 },
@@ -33,7 +49,7 @@ export default function PartnersReviews({ shouldAnimate = false }) {
   ];
 
   // Card image height + half card total height ≈ centers arrow on image area
-  const CARD_IMAGE_HEIGHT = 130;
+  const CARD_IMAGE_HEIGHT = 180;
 
   const handleSlideChange = () => {
     if (!swiperRef.current) return;
@@ -56,40 +72,41 @@ export default function PartnersReviews({ shouldAnimate = false }) {
   return (
     <Fade in={checked} timeout={800}>
       <Box
+        ref={containerRef}
         sx={{
-          py: 4,
+          py: { xs: 6, md: 8 },
           width: '100%',
           backgroundColor: '#a4257b'
-          // backgroundImage: `url(${imgbg})`,
-          //   backgroundSize: 'cover',
-          //   backgroundPosition: 'center'
         }}
       >
         <Container maxWidth="lg">
           {/* Title Section */}
-          <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 700, color: '#fff', mb: 1 }}>
+          <Box sx={{ mb: 5, textAlign: 'center' }}>
+            <Typography variant="h1" sx={{ fontWeight: 700, color: '#fff', mb: 2 }}>
               ماذا قالوا عنا؟
             </Typography>
-            <Typography variant="body2" sx={{ color: '#fff', fontSize: '18px' }}>
-              أراء بعض من شركاؤنا الاستراتيجيين من عمًلئنا الكرام في أعمالنا ومنتجاتنا اإلبداعية والتي نفخر بها{' '}
+            <Typography variant="body2" sx={{ color: '#fff', fontSize: '18px', mb: 1, lineHeight: 1.6 }}>
+              أراء بعض من شركاؤنا الاستراتيجيين من عملائنا الكرام في أعمالنا ومنتجاتنا الإبداعية والتي نفخر بها.
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#FFD666', fontSize: '16px', fontWeight: 600 }}>
+              تأخذ هذه الآراء مباشرتًا من منصة (جوجل بلاي) التي عليها التطبيق، لتكون ذات مصداقية!
             </Typography>
           </Box>
 
-          {/* Episodes Swiper */}
+          {/* Reviews Swiper */}
           <Box
             sx={{
               position: 'relative',
               px: '48px', // make room for arrows on both sides
               '& .swiper-pagination-bullet': {
-                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                backgroundColor: 'rgba(255, 255, 255, 0.4)',
                 width: 8,
                 height: 8,
                 opacity: 0.5,
                 borderRadius: '50%'
               },
               '& .swiper-pagination-bullet-active': {
-                backgroundColor: '#0088CC',
+                backgroundColor: '#FFD666',
                 opacity: 1
               },
               '& .swiper-pagination': {
@@ -110,22 +127,30 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                 zIndex: 10,
                 width: 40,
                 height: 40,
-                bgcolor: isAtEnd ? 'action.disabledBackground' : 'background.paper',
-                boxShadow: isAtEnd ? 'none' : '0 2px 8px rgba(0,0,0,0.15)',
+                bgcolor: '#fff',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
                 borderRadius: '50%',
-                border: '1px solid',
-                borderColor: isAtEnd ? 'action.disabled' : 'divider',
-                opacity: isAtEnd ? 0.5 : 1,
+                border: 'none',
                 cursor: isAtEnd ? 'not-allowed' : 'pointer',
                 '&:hover': {
-                  borderColor: isAtEnd ? 'action.disabled' : 'primary.main',
-                  backgroundColor: isAtEnd ? 'action.disabledBackground' : 'background.paper',
-                  '& svg': { color: isAtEnd ? '#999' : '#fff' }
+                  backgroundColor: '#fff',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                },
+                '&.Mui-disabled': {
+                  bgcolor: '#fff !important',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.12) !important',
+                  opacity: '1 !important',
+                  '& svg': {
+                    opacity: 0.4
+                  }
+                },
+                '& svg path': {
+                  strokeWidth: '3.5px !important'
                 },
                 transition: 'all 0.2s ease'
               }}
             >
-              <ArrowLeft size={20} color={isAtEnd ? '#ccc' : '#0088CC'} />
+              <ArrowLeft size={30} color="#0088CC" />
             </IconButton>
 
             {/* RIGHT arrow — goes to prev */}
@@ -141,21 +166,29 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                 width: 40,
                 height: 40,
                 borderRadius: '50%',
-                bgcolor: isAtStart ? 'action.disabledBackground' : 'background.paper',
-                boxShadow: isAtStart ? 'none' : '0 2px 8px rgba(0,0,0,0.15)',
-                border: '1px solid',
-                borderColor: isAtStart ? 'action.disabled' : 'divider',
-                opacity: isAtStart ? 0.5 : 1,
+                bgcolor: '#fff',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                border: 'none',
                 cursor: isAtStart ? 'not-allowed' : 'pointer',
                 '&:hover': {
-                  borderColor: isAtStart ? 'action.disabled' : 'primary.main',
-                  backgroundColor: isAtStart ? 'action.disabledBackground' : 'background.paper',
-                  '& svg': { color: isAtStart ? '#999' : '#fff' }
+                  backgroundColor: '#fff',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                },
+                '&.Mui-disabled': {
+                  bgcolor: '#fff !important',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.12) !important',
+                  opacity: '1 !important',
+                  '& svg': {
+                    opacity: 0.4
+                  }
+                },
+                '& svg path': {
+                  strokeWidth: '3.5px !important'
                 },
                 transition: 'all 0.2s ease'
               }}
             >
-              <ArrowRight size={20} color={isAtStart ? '#ccc' : '#0088CC'} />
+              <ArrowRight size={30} color="#0088CC" />
             </IconButton>
 
             <Swiper
@@ -166,12 +199,12 @@ export default function PartnersReviews({ shouldAnimate = false }) {
               autoplay={{ delay: 5000, disableOnInteraction: false }}
               onSlideChange={handleSlideChange}
               slidesPerView={1}
-              spaceBetween={20}
+              spaceBetween={24}
               freeMode={true}
               breakpoints={{
-                640: { slidesPerView: 2, spaceBetween: 20 },
-                1024: { slidesPerView: 3, spaceBetween: 20 },
-                1280: { slidesPerView: 3, spaceBetween: 20 }
+                640: { slidesPerView: 2, spaceBetween: 24 },
+                1024: { slidesPerView: 3, spaceBetween: 24 },
+                1280: { slidesPerView: 3, spaceBetween: 24 }
               }}
               modules={[Pagination, FreeMode, Autoplay]}
               style={{ padding: '10px 0 20px 0' }}
@@ -180,50 +213,41 @@ export default function PartnersReviews({ shouldAnimate = false }) {
                 <SwiperSlide key={episode.id}>
                   <Fade in={checked} timeout={800} style={{ transitionDelay: checked ? `${index * 100}ms` : '0ms' }}>
                     <Card
-                      // onClick={onClick}
                       sx={{
-                        borderRadius: '0',
+                        borderRadius: '16px',
                         overflow: 'hidden',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
                         transition: 'all 0.3s ease',
                         cursor: 'pointer',
                         height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
                         '&:hover': {
-                          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                          boxShadow: '0 12px 32px rgba(0,0,0,0.12)',
                           transform: 'translateY(-4px)'
                         }
                       }}
                     >
-                      <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+                      <Box sx={{ position: 'relative', overflow: 'hidden', backgroundColor: '#fff', p: 1, display: 'flex', justifyContent: 'center' }}>
                         <CardMedia
                           component="img"
                           image={episode.image}
-                          alt={episode.title || `رأي وتجربة شريك النجاح ${episode.id}`}
+                          alt={`رأي وتجربة شريك النجاح ${episode.id}`}
                           sx={{
                             width: '100%',
-                            height: '100%',
-                            objectFit: 'cover'
+                            height: 'auto',
+                            maxHeight: '280px',
+                            objectFit: 'contain',
+                            borderRadius: '12px'
                           }}
                         />
                       </Box>
-
                     </Card>
-                  </Fade>{' '}
+                  </Fade>
                 </SwiperSlide>
               ))}
             </Swiper>
           </Box>
-          {/* View All Link */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              '&:hover': { '& .view-all-text': { color: '#006699' } }
-            }}
-          ></Box>
         </Container>
       </Box>
     </Fade>

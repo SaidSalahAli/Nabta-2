@@ -147,7 +147,17 @@ export default function AuthRegister() {
         } catch (err) {
           if (scriptedRef.current) {
             setStatus({ success: false });
-            setErrors({ submit: err.errors?.Mobail || 'حدث خطأ، حاول مرة أخرى' });
+            
+            let errorMsg = 'حدث خطأ، حاول مرة أخرى';
+            if (err && (err.message === 'Email already exists' || err.message === 'Email already Exist')) {
+              errorMsg = 'هذا البريد الإلكتروني مسجل بالفعل. يرجى استخدام بريد إلكتروني آخر أو تسجيل الدخول.';
+            } else if (err && err.errors?.Mobail) {
+              errorMsg = err.errors.Mobail;
+            } else if (err && err.message) {
+              errorMsg = err.message;
+            }
+            
+            setErrors({ submit: errorMsg });
             setSubmitting(false);
           }
         }
