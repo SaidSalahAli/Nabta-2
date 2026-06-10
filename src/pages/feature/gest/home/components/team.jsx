@@ -24,7 +24,7 @@ export default function Team({ shouldAnimate = false }) {
     {
       id: 1,
       name: 'حمدي محمود',
-      role: 'مؤسس نبتة',
+      role: 'مؤسس منصة نبتة',
       image: img2
     },
     {
@@ -78,7 +78,7 @@ export default function Team({ shouldAnimate = false }) {
                 mb: 2
               }}
             >
-              فريق نبتة
+              فريق منصة نبتة
             </Typography>
 
             <Typography
@@ -90,7 +90,7 @@ export default function Team({ shouldAnimate = false }) {
                 lineHeight: 1.9
               }}
             >
-              فريق نبتة يعمل بحُب لإيمانه بأنه أساس لنجاح نفخر به، وبينه تجانس وشعور بالمسؤولية تجاه أطفالنا الأحباء، لذلك يسعى بكل جهد
+              فريق منصة نبتة يعمل بحُب لإيمانه بأنه أساس لنجاح نفخر به، وبينه تجانس وشعور بالمسؤولية تجاه أطفالنا الأحباء، لذلك يسعى بكل جهد
               ومثابرة لإخراج محتوى مفيد ونافع يحبه الأطفال.
             </Typography>
           </Box>

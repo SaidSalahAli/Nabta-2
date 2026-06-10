@@ -63,7 +63,7 @@ export default function NabtaNumbers({ shouldAnimate = false }) {
                 fontSize: { xs: '28px', sm: '34px', md: '42px' }
               }}
             >
-              أثر نبتة بالأرقام
+              أثر منصة نبتة بالأرقام
             </Typography>
           </Box>
 

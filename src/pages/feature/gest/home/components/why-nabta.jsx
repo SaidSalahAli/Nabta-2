@@ -53,7 +53,7 @@ export default function WhyNabta({ shouldAnimate = false }) {
                 color: 'primary.main'
               }}
             >
-              لماذا تختار نبتة؟
+              لماذا تختار منصة نبتة؟
             </Typography>
           </Box>
 

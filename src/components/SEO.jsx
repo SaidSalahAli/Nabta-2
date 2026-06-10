@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 export default function SEO({ title, description, keywords, image, url }) {
   useEffect(() => {
     // 1. Title
-    const formattedTitle = title ? `${title} | أستوديو نبتة` : 'منصة أستوديو نبتة - محتوى تربوي وتعليمي للأطفال';
+    const formattedTitle = title ? `${title} | منصة نبتة` : 'منصة نبتة - محتوى تربوي وتعليمي للأطفال';
     document.title = formattedTitle;
 
     // Helper function to update meta tags
@@ -28,14 +28,14 @@ export default function SEO({ title, description, keywords, image, url }) {
     };
 
     // 2. Description
-    const defaultDesc = 'منصة أستوديو نبتة لصناعة المحتوى التربوي والتعليمي المبتكر للأطفال، ودعم الأمهات والآباء بأدوات وأساليب تربوية إبداعية وأوراق عمل وتطبيقات متميزة.';
+    const defaultDesc = 'منصة نبتة لصناعة المحتوى التربوي والتعليمي المبتكر للأطفال، ودعم الأمهات والآباء بأدوات وأساليب تربوية إبداعية وأوراق عمل وتطبيقات متميزة.';
     const finalDesc = description || defaultDesc;
     updateMetaTag('meta[name="description"]', 'content', finalDesc);
     updateMetaTag('meta[property="og:description"]', 'content', finalDesc);
     updateMetaTag('meta[property="twitter:description"]', 'content', finalDesc);
 
     // 3. Keywords
-    const defaultKeywords = 'أستوديو نبتة, نبتة, تعليم الأطفال, كرتون أطفال, أوراق عمل أطفال, تطبيقات أطفال تعليمية, تربية الأطفال, Nabta Studio';
+    const defaultKeywords = 'منصة نبتة, تعليم الأطفال, كرتون أطفال, أوراق عمل أطفال, تطبيقات أطفال تعليمية, تربية الأطفال, Nabta Platform';
     const finalKeywords = keywords ? `${keywords}, ${defaultKeywords}` : defaultKeywords;
     updateMetaTag('meta[name="keywords"]', 'content', finalKeywords);
 

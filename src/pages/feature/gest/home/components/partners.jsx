@@ -59,7 +59,7 @@ export default function Partners({ shouldAnimate = false }) {
                 mb: 1
               }}
             >
-              شركاء نبتة
+              شركاء منصة نبتة
             </Typography>
 
             <Typography
@@ -71,7 +71,7 @@ export default function Partners({ shouldAnimate = false }) {
                 lineHeight: 1.9
               }}
             >
-              نحن في نبتة نسير معًا جنبًا إلى جنب مع شركاؤنا في النجاح
+              نحن في منصة نبتة نسير معًا جنبًا إلى جنب مع شركائنا في النجاح
             </Typography>
           </Box>
 

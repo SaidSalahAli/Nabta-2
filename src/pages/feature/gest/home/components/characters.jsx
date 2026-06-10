@@ -41,7 +41,7 @@ export default function Characters({ shouldAnimate = false }) {
       >
         <Container maxWidth="lg">
           <Typography variant="h1" sx={{ fontWeight: 700, color: '#fff', mb: 1, textAlign: 'center' }}>
-            شخصيات نبتة
+            شخصيات منصة نبتة
           </Typography>
 
           <Box
