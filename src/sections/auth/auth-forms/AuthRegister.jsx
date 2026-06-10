@@ -124,7 +124,7 @@ export default function AuthRegister() {
         password: Yup.string()
           .required('كلمة المرور مطلوبة')
           .test('no-leading-trailing-whitespace', 'كلمة المرور لا يمكن أن تبدأ أو تنتهي بمسافة', (value) => value === value?.trim())
-          .max(10, 'كلمة المرور يجب أن تكون أقل من 10 أحرف'),
+          .max(255, 'كلمة المرور يجب أن تكون أقل من 255 حرفًا'),
         confirmPassword: Yup.string()
           .required('تأكيد كلمة المرور مطلوب')
           .oneOf([Yup.ref('password')], 'كلمتا المرور غير متطابقتين')
@@ -145,18 +145,23 @@ export default function AuthRegister() {
             setTimeout(() => navigate('/auth/login', { replace: true }), 1500);
           }
         } catch (err) {
+          console.error('Register error:', err);
           if (scriptedRef.current) {
             setStatus({ success: false });
-            
+
             let errorMsg = 'حدث خطأ، حاول مرة أخرى';
-            if (err && (err.message === 'Email already exists' || err.message === 'Email already Exist')) {
+            const errStr = err ? JSON.stringify(err).toLowerCase() : '';
+
+            if (errStr.includes('already exists') || errStr.includes('already exist')) {
               errorMsg = 'هذا البريد الإلكتروني مسجل بالفعل. يرجى استخدام بريد إلكتروني آخر أو تسجيل الدخول.';
             } else if (err && err.errors?.Mobail) {
               errorMsg = err.errors.Mobail;
             } else if (err && err.message) {
               errorMsg = err.message;
+            } else if (typeof err === 'string') {
+              errorMsg = err;
             }
-            
+
             setErrors({ submit: errorMsg });
             setSubmitting(false);
           }

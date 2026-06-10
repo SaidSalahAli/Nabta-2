@@ -45,10 +45,11 @@ const ApplicationsAdmin = Loadable(lazy(() => import('pages/feature/control-pane
 
 // render - contact messages
 const ContactMessagesAdmin = Loadable(lazy(() => import('pages/feature/control-panel/contact-messages')));
-
 // render - categories
 const CategoriesAdmin = Loadable(lazy(() => import('pages/feature/control-panel/categories')));
 
+// render - users
+const UsersAdmin = Loadable(lazy(() => import('pages/feature/control-panel/users')));
 // ==============================|| MAIN ROUTES ||============================== //
 
 const MainRoutes = {
@@ -152,6 +153,10 @@ const MainRoutes = {
         {
           path: 'dashboard/categories',
           element: <CategoriesAdmin />
+        },
+        {
+          path: 'dashboard/users',
+          element: <UsersAdmin />
         }
       ]
     },

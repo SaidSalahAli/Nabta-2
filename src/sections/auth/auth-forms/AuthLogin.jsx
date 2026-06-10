@@ -71,7 +71,7 @@ export default function AuthLogin({ forgot }) {
         password: Yup.string()
           .required('كلمة المرور مطلوبة')
           .test('no-leading-trailing-whitespace', 'كلمة المرور لا يمكن أن تبدأ أو تنتهي بمسافة', (value) => value === value?.trim())
-          .max(10, 'كلمة المرور يجب أن تكون أقل من 10 أحرف')
+          .max(255, 'كلمة المرور يجب أن تكون أقل من 255 حرفًا')
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
