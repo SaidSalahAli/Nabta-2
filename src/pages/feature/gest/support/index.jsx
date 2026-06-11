@@ -147,53 +147,6 @@ export default function Support() {
               كيف تدعمنا؟
             </Typography>
           </Box>
-          {/* Intro Section */}
-          <Box sx={{ mb: 6 }}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: { xs: 3, md: 5 },
-                borderRadius: '24px',
-                backgroundColor: '#fff',
-                boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
-                border: '1px solid',
-                borderColor: 'divider',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 3
-              }}
-            >
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 800,
-                  color: '#2E2A39',
-                  lineHeight: 1.6,
-                  fontSize: { xs: '20px', md: '24px' },
-                  borderRight: '5px solid #FFD666',
-                  pr: 2
-                }}
-              >
-                شاركنا التحدي في بناء جيل واعي متفتح منذ نعومة أظافره وطفولته البريئة وكُن أحد الداعمين!
-              </Typography>
-
-              <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '17px', lineHeight: 1.9 }}>
-                أهلًا ومرحبًا بالداعم الكريم.. نحن في نبتة نؤمن بأن الأطفال مثل النباتات كلما اعتنيت بهم وسقيتهم المعرفة السليمة أثمروا وأزهروا نبتة طيبة ونافعة.
-              </Typography>
-
-              <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '17px', lineHeight: 1.9 }}>
-                ونسعى من خلال “داعمين نبتة” لإيصال محتوانا التربوي والتعليمي لجميع الأطفال حول العالم؛ خاصة في عالمنا العربي؛ وبالأخص (الغير مقتدرين).
-              </Typography>
-
-              <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '17px', lineHeight: 1.9 }}>
-                يمكننا تحقيق هذه الرسالة السامية معًا، نحتاج مساعدتك؛ لذلك نطمح لمشاركة “ألف داعم” معنا شهريًا لإتاحة فرصة تربوية تعليمية لأطفالنا فهم يستحقون ذلك منا.
-              </Typography>
-
-              <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '17px', lineHeight: 1.9 }}>
-                تم بالفعل توفير دعم كامل لأكثر من 1,180,000 طفل حول العالم بقيمة 2,360,000 مليون دولار، من خلال تحميل تطبيق “لغتي العربية” بشكل مجاني تمامًا وتعلم الأطفال من خلاله؛ فنحن (ولله الحمد والمنة) منذ أن بدأنا لم يكن هدفنا الربح والتكسب في المقام الأول، ولكن نحتاج مساعدتك لنكمل الطريق في دعم الأطفال وأولياء أمورهم.
-              </Typography>
-            </Paper>
-          </Box>
           {/* Support Methods Grid */}
           <Grid container spacing={3}>
             {supportMethods.map((method) => (
@@ -247,6 +200,54 @@ export default function Support() {
               </Grid>
             ))}
           </Grid>
+          {/* Intro Section */}
+          <Box sx={{ my: 6 }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: { xs: 3, md: 5 },
+                borderRadius: '24px',
+                backgroundColor: '#fff',
+                boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
+                border: '1px solid',
+                borderColor: 'divider',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 3
+              }}
+            >
+              <Typography
+                variant="h3"
+                sx={{
+                  fontWeight: 800,
+                  color: '#2E2A39',
+                  lineHeight: 1.6,
+                  fontSize: { xs: '20px', md: '24px' },
+                  borderRight: '5px solid #FFD666',
+                  pr: 2
+                }}
+              >
+                شاركنا التحدي في بناء جيل واعي متفتح منذ نعومة أظافره وطفولته البريئة وكُن أحد الداعمين!
+              </Typography>
+
+              <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '17px', lineHeight: 1.9 }}>
+                أهلًا ومرحبًا بالداعم الكريم.. نحن في نبتة نؤمن بأن الأطفال مثل النباتات كلما اعتنيت بهم وسقيتهم المعرفة السليمة أثمروا وأزهروا نبتة طيبة ونافعة.
+              </Typography>
+
+              <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '17px', lineHeight: 1.9 }}>
+                ونسعى من خلال “داعمين نبتة” لإيصال محتوانا التربوي والتعليمي لجميع الأطفال حول العالم؛ خاصة في عالمنا العربي؛ وبالأخص (الغير مقتدرين).
+              </Typography>
+
+              <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '17px', lineHeight: 1.9 }}>
+                يمكننا تحقيق هذه الرسالة السامية معًا، نحتاج مساعدتك؛ لذلك نطمح لمشاركة “ألف داعم” معنا شهريًا لإتاحة فرصة تربوية تعليمية لأطفالنا فهم يستحقون ذلك منا.
+              </Typography>
+
+              <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '17px', lineHeight: 1.9 }}>
+                تم بالفعل توفير دعم كامل لأكثر من 1,180,000 طفل حول العالم بقيمة 2,360,000 مليون دولار، من خلال تحميل تطبيق “لغتي العربية” بشكل مجاني تمامًا وتعلم الأطفال من خلاله؛ فنحن (ولله الحمد والمنة) منذ أن بدأنا لم يكن هدفنا الربح والتكسب في المقام الأول، ولكن نحتاج مساعدتك لنكمل الطريق في دعم الأطفال وأولياء أمورهم.
+              </Typography>
+            </Paper>
+          </Box>
+
 
 
           {/* Support Types */}
@@ -375,15 +376,7 @@ export default function Support() {
             </Paper>
           </Box>
 
-          {/* Support Methods Guidelines */}
-          <Box sx={{ mb: 4, p: 3, backgroundColor: '#e3f2fd', borderRadius: '16px', borderRight: '4px solid #0088CC' }}>
-            <Typography variant="body1" sx={{ color: '#005b9f', lineHeight: 1.8, fontWeight: 700, fontSize: '15px', mb: 1 }}>
-              • بالنسبة للدعم من خلال: حساب بنكي، أو انستاباي، أو محفظة إلكترونية.. يمكن كتابة البيانات الظاهرة على الصفحة.
-            </Typography>
-            <Typography variant="body1" sx={{ color: '#005b9f', lineHeight: 1.8, fontWeight: 700, fontSize: '15px' }}>
-              • بالنسبة للدعم من خلال باي بال، أو باتريون، أو باي كافيه.. يمكن الضغط على كلمة (هنا) لينتقل إلى موقع الخدمة مباشرتًا.
-            </Typography>
-          </Box>
+
 
 
         </Container>

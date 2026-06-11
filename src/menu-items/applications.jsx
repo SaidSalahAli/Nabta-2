@@ -15,19 +15,20 @@ const applications = {
   type: 'group',
   children: [
     {
-      id: 'dashboard/categories',
-      title: 'تصنيفات التطبيقات',
-      type: 'item',
-      url: '/dashboard/categories',
-      icon: icons.categories
-    },
-    {
       id: 'dashboard/applications',
       title: 'التطبيقات',
       type: 'item',
       url: '/dashboard/applications',
       icon: icons.applications
+    },
+    {
+      id: 'dashboard/categories',
+      title: 'تصنيفات التطبيقات',
+      type: 'item',
+      url: '/dashboard/categories',
+      icon: icons.categories
     }
+
   ]
 };
 

@@ -88,9 +88,7 @@ export default function PartnersReviews() {
             <Typography variant="body2" sx={{ color: '#fff', fontSize: '18px', mb: 1, lineHeight: 1.6 }}>
               أراء بعض من شركاؤنا الاستراتيجيين من عملائنا الكرام في أعمالنا ومنتجاتنا الإبداعية والتي نفخر بها.
             </Typography>
-            <Typography variant="body2" sx={{ color: '#FFD666', fontSize: '16px', fontWeight: 600 }}>
-              تأخذ هذه الآراء مباشرتًا من منصة (جوجل بلاي) التي عليها التطبيق، لتكون ذات مصداقية!
-            </Typography>
+
           </Box>
 
           {/* Reviews Swiper */}

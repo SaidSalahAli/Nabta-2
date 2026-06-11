@@ -73,14 +73,11 @@ export default function FooterBlock({ isFull }) {
   };
 
   const socialLinks = [
-    { icon: <Send2 variant="Bold" size={18} />, label: 'Telegram', href: 'https://t.me/+201007560466' },
-    { icon: <WhatsAppIcon />, label: 'WhatsApp', href: 'https://wa.me/201007560466' },
+    // { icon: <WhatsAppIcon />, label: 'WhatsApp', href: 'https://wa.me/201007560466' },
     { icon: <Youtube variant="Bold" size={18} />, label: 'YouTube', href: 'https://www.youtube.com/@NabtaStudio' },
     { icon: <Instagram variant="Bold" size={18} />, label: 'Instagram', href: 'https://www.instagram.com/NabtaStudio' },
     { icon: <Facebook variant="Bold" size={18} />, label: 'Facebook', href: 'https://www.facebook.com/NabtaStudio' },
     { icon: <TwitterXIcon />, label: 'Twitter / X', href: 'https://twitter.com/NabtaStudio' },
-    { icon: <TikTokIcon />, label: 'TikTok', href: 'https://www.tiktok.com/@nabta_studio' },
-    { icon: <LinkedInIcon />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/NabtaStudio' }
   ];
 
   const col1 = [
@@ -170,7 +167,7 @@ export default function FooterBlock({ isFull }) {
                 animate={{ opacity: 1, translateY: 0 }}
                 transition={{ type: 'spring', stiffness: 150, damping: 30 }}
               >
-                <Stack gap={3} alignItems={{ xs: 'center', md: 'flex-end' }}>
+                <Stack gap={3} alignItems={{ xs: 'center', md: 'center' }}>
                   <Logo to="/" width={140} />
 
                   {/* Social Icons — Row 1 */}

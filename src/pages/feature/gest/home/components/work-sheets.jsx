@@ -17,7 +17,7 @@ export default function Worksheets({ shouldAnimate = false }) {
           py: { xs: 1, md: 1 },
           position: 'relative',
           overflow: 'hidden',
-          backgroundColor: '#fcfcfc'
+          backgroundColor: '#cccccc29'
         }}
       >
         <Container maxWidth="lg">
