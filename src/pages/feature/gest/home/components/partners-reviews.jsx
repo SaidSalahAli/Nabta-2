@@ -5,6 +5,9 @@ import img2 from 'assets/Home/Opinions_2.png';
 import img3 from 'assets/Home/Opinions_3.png';
 import img4 from 'assets/Home/Opinions_4.png';
 import img5 from 'assets/Home/Opinions_5.png';
+import img6 from 'assets/Home/Opinions_6.png';
+import img7 from 'assets/Home/Opinions_7.png';
+import img8 from 'assets/Home/Opinions_8.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -45,11 +48,14 @@ export default function PartnersReviews() {
     { id: 2, image: img2 },
     { id: 3, image: img3 },
     { id: 4, image: img4 },
-    { id: 5, image: img5 }
+    { id: 5, image: img5 },
+    { id: 6, image: img6 },
+    { id: 7, image: img7 },
+    { id: 8, image: img8 }
   ];
 
   // Card image height + half card total height ≈ centers arrow on image area
-  const CARD_IMAGE_HEIGHT = 180;
+  const CARD_IMAGE_HEIGHT = 290;
 
   const handleSlideChange = () => {
     if (!swiperRef.current) return;
@@ -88,7 +94,6 @@ export default function PartnersReviews() {
             <Typography variant="body2" sx={{ color: '#fff', fontSize: '18px', mb: 1, lineHeight: 1.6 }}>
               أراء بعض من شركاؤنا الاستراتيجيين من عملائنا الكرام في أعمالنا ومنتجاتنا الإبداعية والتي نفخر بها.
             </Typography>
-
           </Box>
 
           {/* Reviews Swiper */}
@@ -226,7 +231,16 @@ export default function PartnersReviews() {
                         }
                       }}
                     >
-                      <Box sx={{ position: 'relative', overflow: 'hidden', backgroundColor: '#fff', p: 1, display: 'flex', justifyContent: 'center' }}>
+                      <Box
+                        sx={{
+                          position: 'relative',
+                          overflow: 'hidden',
+                          backgroundColor: '#fff',
+                          p: 1,
+                          display: 'flex',
+                          justifyContent: 'center'
+                        }}
+                      >
                         <CardMedia
                           component="img"
                           image={episode.image}

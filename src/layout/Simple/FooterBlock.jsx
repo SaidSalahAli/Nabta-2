@@ -88,7 +88,7 @@ export default function FooterBlock({ isFull }) {
   ];
 
   const col2 = [
-    { label: 'المتجر', href: '#', external: true },
+    { label: 'المتجر', href: 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live', external: true },
     { label: 'كيف تدعمنا؟', href: '/support', external: false }
   ];
 

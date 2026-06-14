@@ -248,7 +248,7 @@ function BottomBar({ primaryColor }) {
       {/* Action Buttons */}
       <Stack direction="row" alignItems="center" gap={1} sx={{ display: { xs: 'none', md: 'flex' }, flexShrink: 0 }}>
         {[
-          { label: 'المتجر', path: 'https://speedegy.net/' },
+          { label: 'المتجر', path: 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live' },
           { label: 'ادعمنا', path: '/support' }
         ].map((btn) => (
           <Button
@@ -362,7 +362,7 @@ function MobileDrawer({ open, onClose, primaryColor }) {
 
         <Stack gap={1} mt={2}>
           {[
-            { label: 'المتجر', path: 'https://speedegy.net/' },
+            { label: 'المتجر', path: 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live' },
             { label: 'ادعمنا', path: '/support' }
           ].map((btn) => (
             <Button
