@@ -248,13 +248,20 @@ function BottomBar({ primaryColor }) {
       {/* Action Buttons */}
       <Stack direction="row" alignItems="center" gap={1} sx={{ display: { xs: 'none', md: 'flex' }, flexShrink: 0 }}>
         {[
-          { label: 'المتجر', path: 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live' },
-          { label: 'ادعمنا', path: '/support' }
+          { label: 'المتجر', path: 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live', external: true },
+          { label: 'ادعمنا', path: '/support', external: false }
         ].map((btn) => (
           <Button
             key={btn.label}
-            component={btn.path !== '#' ? Link : 'button'}
-            to={btn.path !== '#' ? btn.path : undefined}
+            {...(btn.external ? {
+              component: 'a',
+              href: btn.path,
+              target: '_blank',
+              rel: 'noopener noreferrer'
+            } : {
+              component: btn.path !== '#' ? Link : 'button',
+              to: btn.path !== '#' ? btn.path : undefined
+            })}
             variant="text"
             sx={{
               fontSize: 13,
@@ -362,13 +369,20 @@ function MobileDrawer({ open, onClose, primaryColor }) {
 
         <Stack gap={1} mt={2}>
           {[
-            { label: 'المتجر', path: 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live' },
-            { label: 'ادعمنا', path: '/support' }
+            { label: 'المتجر', path: 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live', external: true },
+            { label: 'ادعمنا', path: '/support', external: false }
           ].map((btn) => (
             <Button
               key={btn.label}
-              component={btn.path !== '#' ? Link : 'button'}
-              to={btn.path !== '#' ? btn.path : undefined}
+              {...(btn.external ? {
+                component: 'a',
+                href: btn.path,
+                target: '_blank',
+                rel: 'noopener noreferrer'
+              } : {
+                component: btn.path !== '#' ? Link : 'button',
+                to: btn.path !== '#' ? btn.path : undefined
+              })}
               onClick={() => {
                 if (btn.path !== '#') onClose();
               }}
