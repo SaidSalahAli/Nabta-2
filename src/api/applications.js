@@ -11,9 +11,9 @@ import axiosServices, { fetcher } from 'utils/axios';
 const endpoints = {
   key: 'api/app-full/list',
   list: 'api/app-full/list',
-  create: 'api/app-full/add',
+  create: 'api/app-full/save',
   read: (id) => `api/app-full/details/${id}`,
-  update: (id) => `api/app-full/update/${id}`,
+  update: () => `api/app-full/save`,
   delete: (id) => `api/app-full/delete/${id}`,
   search: (keyword) => `api/app-full/search?keyword=${keyword || ''}`
 };
@@ -74,7 +74,11 @@ export function useGetApplication(id) {
 // Create application
 export async function createApplication(applicationData) {
   try {
-    const response = await axiosServices.post(endpoints.create, applicationData);
+    const config = {};
+    if (applicationData instanceof FormData) {
+      config.headers = { 'Content-Type': 'multipart/form-data' };
+    }
+    const response = await axiosServices.post(endpoints.create, applicationData, config);
     mutate(endpoints.key);
     return response.data;
   } catch (error) {
@@ -85,7 +89,11 @@ export async function createApplication(applicationData) {
 // Update application
 export async function updateApplication(id, applicationData) {
   try {
-    const response = await axiosServices.put(endpoints.update(id), applicationData);
+    const config = {};
+    if (applicationData instanceof FormData) {
+      config.headers = { 'Content-Type': 'multipart/form-data' };
+    }
+    const response = await axiosServices.post(endpoints.update(id), applicationData, config);
     mutate(endpoints.key);
     mutate(endpoints.read(id));
     return response.data;
