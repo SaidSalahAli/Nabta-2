@@ -24,12 +24,21 @@ import DialogContentText from '@mui/material/DialogContentText';
 // project-imports
 import MainCard from 'components/MainCard';
 import Loader from 'components/Loader';
+import { IMAGES_URL } from 'config';
 import { useGetApplications, createApplication, updateApplication, deleteApplication } from 'api/applications';
 import { openSnackbar } from 'api/snackbar';
 import ApplicationForm from 'sections/applications/ApplicationForm';
 
 // assets
 import { Edit, Trash, Add } from 'iconsax-react';
+
+const getImageUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `${IMAGES_URL}/${url}`;
+};
 
 // ==============================|| APPLICATIONS ||============================== //
 
@@ -47,7 +56,7 @@ export default function Applications() {
   const filteredApplications = applications.filter((app) =>
     (app.name || app.Name || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   const paginatedApplications = filteredApplications.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const handleChangePage = (event, newPage) => setPage(newPage);
@@ -179,14 +188,14 @@ export default function Applications() {
                         {(app.thumbnail || app.Thumbnail) && (
                           <Box
                             component="img"
-                            src={app.thumbnail || app.Thumbnail}
+                            src={getImageUrl(app.thumbnail || app.Thumbnail)}
                             alt={app.name || app.Name}
                             sx={{ width: 50, height: 50, borderRadius: 1, objectFit: 'cover' }}
                           />
                         )}
                       </TableCell>
                       <TableCell>{app.name || app.Name}</TableCell>
-                      <TableCell>{app.categoryId || app.CategoryId}</TableCell>
+                      <TableCell>{app.category_name || app.categoryId || app.CategoryId}</TableCell>
                       <TableCell>{app.slug || app.Slug}</TableCell>
                       <TableCell align="center">
                         <Stack direction="row" spacing={0.5} justifyContent="center">

@@ -9,17 +9,13 @@ import axiosServices, { fetcher } from 'utils/axios';
 // ==============================|| API - APPLICATIONS ||============================== //
 
 const endpoints = {
-  key: 'api/Applications/List',
-  list: 'api/Applications/List',
-  create: 'api/Applications/Add',
-  read: (id) => `api/Applications/Get/${id}`,
-  update: (id) => `api/Applications/Update/${id}`,
-  delete: (id) => `api/Applications/Delete/${id}`,
-  search: (name, categoryId) => {
-    let url = `api/Applications/Search?name=${name || ''}`;
-    if (categoryId) url += `&categoryId=${categoryId}`;
-    return url;
-  }
+  key: 'api/app-full/list',
+  list: 'api/app-full/list',
+  create: 'api/app-full/add',
+  read: (id) => `api/app-full/details/${id}`,
+  update: (id) => `api/app-full/update/${id}`,
+  delete: (id) => `api/app-full/delete/${id}`,
+  search: (keyword) => `api/app-full/search?keyword=${keyword || ''}`
 };
 
 // Get all applications
@@ -63,7 +59,8 @@ export function useGetApplication(id) {
 
   const memoizedValue = useMemo(
     () => ({
-      application: data?.data || data?.Data || null,
+      application: data?.application || null,
+      category: data?.category || null,
       applicationLoading: isLoading,
       applicationError: error,
       applicationMutate: mutateData
@@ -109,9 +106,9 @@ export async function deleteApplication(id) {
 }
 
 // Search applications
-export async function searchApplications(name, categoryId) {
+export async function searchApplications(keyword) {
   try {
-    const response = await axiosServices.get(endpoints.search(name, categoryId));
+    const response = await axiosServices.get(endpoints.search(keyword));
     return response.data;
   } catch (error) {
     return Promise.reject((error.response && error.response.data) || 'Error searching applications');

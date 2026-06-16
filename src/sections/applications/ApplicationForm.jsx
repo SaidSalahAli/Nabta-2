@@ -46,17 +46,16 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
   });
 
   useEffect(() => {
-
     if (application) {
       setInitialValues({
-        categoryId: application.categoryId || application.CategoryId || '',
+        categoryId: application.category_id || application.categoryId || application.CategoryId || '',
         name: application.name || application.Name || '',
         slug: application.slug || application.Slug || '',
-        shortDescription: application.shortDescription || application.ShortDescription || '',
-        fullDescription: application.fullDescription || application.FullDescription || '',
-        appStoreUrl: application.appStoreUrl || application.AppStoreUrl || '',
-        playStoreUrl: application.playStoreUrl || application.PlayStoreUrl || '',
-        promoVideoUrl: application.promoVideoUrl || application.PromoVideoUrl || '',
+        shortDescription: application.short_description || application.shortDescription || application.ShortDescription || '',
+        fullDescription: application.full_description || application.fullDescription || application.FullDescription || '',
+        appStoreUrl: application.app_store_url || application.appStoreUrl || application.AppStoreUrl || '',
+        playStoreUrl: application.play_store_url || application.playStoreUrl || application.PlayStoreUrl || '',
+        promoVideoUrl: application.promo_video_url || application.promoVideoUrl || application.PromoVideoUrl || '',
         thumbnailUrl: application.thumbnail || application.Thumbnail || ''
       });
     }
@@ -65,14 +64,14 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
   const handleFormSubmit = async (values, { setStatus, setSubmitting }) => {
     try {
       const jsonData = {
-        categoryId: Number(values.categoryId),
+        category_id: Number(values.categoryId),
         name: values.name,
         slug: values.slug,
-        shortDescription: values.shortDescription,
-        fullDescription: values.fullDescription,
-        appStoreUrl: values.appStoreUrl,
-        playStoreUrl: values.playStoreUrl,
-        promoVideoUrl: values.promoVideoUrl,
+        short_description: values.shortDescription,
+        full_description: values.fullDescription,
+        app_store_url: values.appStoreUrl,
+        play_store_url: values.playStoreUrl,
+        promo_video_url: values.promoVideoUrl,
         thumbnail: values.thumbnailUrl || ''
       };
 

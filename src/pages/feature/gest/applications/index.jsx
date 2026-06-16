@@ -5,7 +5,16 @@ import EpisodeCard from 'components/EpisodeCard';
 import img from 'assets/images/test.jpeg';
 import { useGetApplications } from 'api/applications';
 import { useGetCategories } from 'api/categories';
+import { IMAGES_URL } from 'config';
 import SEO from 'components/SEO';
+
+const getImageUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `${IMAGES_URL}/${url}`;
+};
 
 export default function AllApplications() {
   const navigate = useNavigate();
@@ -36,7 +45,7 @@ export default function AllApplications() {
   // Filter applications by selected category
   const filteredApplications = selectedCategory === 'all'
     ? applications
-    : applications.filter(app => String(app.categoryId || app.CategoryId) === String(selectedCategory));
+    : applications.filter(app => String(app.category_id || app.categoryId || app.CategoryId) === String(selectedCategory));
 
   // Get current category info for the banner
   const currentCategory = selectedCategory === 'all'
@@ -184,7 +193,7 @@ export default function AllApplications() {
                     episode={{
                       id: app.id || app.Id,
                       title: app.name || app.Name,
-                      image: app.thumbnail || app.Thumbnail || img,
+                      image: getImageUrl(app.thumbnail || app.Thumbnail) || img,
                       watch: 'تحميل'
                     }}
                     isAnimating={checked}
