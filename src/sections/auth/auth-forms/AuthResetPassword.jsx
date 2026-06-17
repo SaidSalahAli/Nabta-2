@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -24,6 +24,7 @@ import IconButton from 'components/@extended/IconButton';
 import useAuth from 'hooks/useAuth';
 import useScriptRef from 'hooks/useScriptRef';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
+import axiosServices from 'utils/axios';
 
 // assets
 import { Eye, EyeSlash } from 'iconsax-react';
@@ -33,6 +34,8 @@ import { Eye, EyeSlash } from 'iconsax-react';
 export default function AuthResetPassword() {
   const scriptedRef = useScriptRef();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token') || window.localStorage.getItem('resetCode') || window.localStorage.getItem('token');
 
   const { isLoggedIn } = useAuth();
 
@@ -71,7 +74,15 @@ export default function AuthResetPassword() {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            // password reset
+            if (!token) {
+              throw new Error('رمز إعادة تعيين كلمة المرور مفقود أو غير صالح.');
+            }
+
+            await axiosServices.post('api/AccountNabta/ResetPassword', {
+              token: token,
+              newPassword: values.password
+            });
+
             if (scriptedRef.current) {
               setStatus({ success: true });
               setSubmitting(false);
@@ -94,7 +105,10 @@ export default function AuthResetPassword() {
             console.error(err);
             if (scriptedRef.current) {
               setStatus({ success: false });
-              setErrors({ submit: err.message });
+              const errorMessage = typeof err === 'string'
+                ? err
+                : (err?.message || err?.Message || err?.error || 'Wrong Services');
+              setErrors({ submit: errorMessage });
               setSubmitting(false);
             }
           }

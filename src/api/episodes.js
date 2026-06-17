@@ -12,7 +12,7 @@ import { processImageFields } from 'utils/imageCompressor';
 
 const endpoints = {
   key: 'api/Episodes',
-  list: 'api/Episodes/List',
+  list: 'api/Episodes/GetAll',
   create: 'api/Episodes/Add',
   read: (id) => `api/Episodes/ById?id=${id}`,
   update: 'api/Episodes/Update',
@@ -89,25 +89,42 @@ const convertToApiFormat = (episodeData) => {
 
 // Get all episodes with filters
 export function useGetEpisodes(params = {}) {
+  const queryParams = {
+    page: params.page !== undefined ? params.page : 1,
+    pageSize: params.page !== undefined ? (params.pageSize || 10) : 10000,
+    ...params
+  };
+
   const {
     data,
     isLoading,
     error,
     mutate: mutateData
-  } = useSWR([endpoints.key, params], () => fetcher([endpoints.list, { params }]), {
+  } = useSWR([endpoints.key, queryParams], () => fetcher([endpoints.list, { params: queryParams }]), {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false
   });
 
+  const pagination = data?.Pagination || data?.pagination;
+  const episodesData = Array.isArray(data) ? data : data?.Data || data?.data || [];
+
   const memoizedValue = useMemo(
     () => ({
-      episodes: mapEpisodes(Array.isArray(data) ? data : data?.Data || data?.data || []),
+      episodes: mapEpisodes(episodesData),
+      pagination: pagination ? {
+        currentPage: pagination.currentPage ?? pagination.CurrentPage,
+        pageSize: pagination.pageSize ?? pagination.PageSize,
+        totalItems: pagination.totalItems ?? pagination.TotalItems,
+        totalPages: pagination.totalPages ?? pagination.TotalPages,
+        hasPreviousPage: pagination.hasPreviousPage ?? pagination.HasPreviousPage,
+        hasNextPage: pagination.hasNextPage ?? pagination.HasNextPage
+      } : null,
       episodesLoading: isLoading,
       episodesError: error,
       episodesMutate: mutateData
     }),
-    [data, isLoading, error, mutateData]
+    [data, isLoading, error, mutateData, episodesData, pagination]
   );
 
   return memoizedValue;

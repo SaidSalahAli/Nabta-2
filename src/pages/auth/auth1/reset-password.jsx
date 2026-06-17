@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useSearchParams } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -22,6 +22,7 @@ import useScriptRef from 'hooks/useScriptRef';
 import { openSnackbar } from 'api/snackbar';
 import IconButton from 'components/@extended/IconButton';
 import AuthBackground from 'assets/images/auth/AuthBackground';
+import axiosServices from 'utils/axios';
 
 // assets
 import { Eye, EyeSlash } from 'iconsax-react';
@@ -29,6 +30,8 @@ import { Eye, EyeSlash } from 'iconsax-react';
 export default function ResetPassword() {
   const scriptedRef = useScriptRef();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token') || window.localStorage.getItem('resetCode') || window.localStorage.getItem('token');
   const { isLoggedIn } = useAuth();
 
   const [showPassword, setShowPassword] = React.useState(false);
@@ -99,6 +102,15 @@ export default function ResetPassword() {
                 })}
                 onSubmit={async (values, { setStatus, setSubmitting, setErrors }) => {
                   try {
+                    if (!token) {
+                      throw new Error('رمز إعادة تعيين كلمة المرور مفقود أو غير صالح.');
+                    }
+
+                    await axiosServices.post('api/AccountNabta/ResetPassword', {
+                      token: token,
+                      newPassword: values.password
+                    });
+
                     if (scriptedRef.current) {
                       setStatus({ success: true });
                       setSubmitting(false);
@@ -117,7 +129,10 @@ export default function ResetPassword() {
                   } catch (err) {
                     if (scriptedRef.current) {
                       setStatus({ success: false });
-                      setErrors({ submit: err.message || 'حدث خطأ أثناء تعيين كلمة المرور' });
+                      const errorMessage = typeof err === 'string'
+                        ? err
+                        : (err?.message || err?.Message || err?.error || 'حدث خطأ أثناء تعيين كلمة المرور');
+                      setErrors({ submit: errorMessage });
                       setSubmitting(false);
                     }
                   }

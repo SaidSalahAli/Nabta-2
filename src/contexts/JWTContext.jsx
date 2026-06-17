@@ -131,7 +131,7 @@ export const JWTProvider = ({ children }) => {
   };
 
   const resetPassword = async (email) => {
-    console.log('email - ', email);
+    await axios.post('api/AccountNabta/ForgotPassword', { email });
   };
 
   const updateProfile = () => {};

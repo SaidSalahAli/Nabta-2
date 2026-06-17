@@ -25,28 +25,20 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // project-imports
 import MainCard from 'components/MainCard';
 import { openSnackbar } from 'api/snackbar';
+import { useGetUsers } from 'api/users';
 
 // assets
 import { Sms, Notification, SearchNormal1, People } from 'iconsax-react';
 
 // ==============================|| REGISTERED USERS MANAGEMENT ||==============================//
 
-// Mock data representing users registered in the system
-const initialUsers = [
-  { id: 1, name: 'أحمد محمود', email: 'ahmed.mahmoud@gmail.com', phone: '01002345678', date: '2026-05-12', status: 'نشط' },
-  { id: 2, name: 'سارة علي', email: 'sara.ali@yahoo.com', phone: '0501234567', date: '2026-05-14', status: 'نشط' },
-  { id: 3, name: 'عبد الرحمن محمد', email: 'abdo.mohammed@outlook.com', phone: '0559876543', date: '2026-06-01', status: 'غير نشط' },
-  { id: 4, name: 'فاطمة أحمد', email: 'fatima.ahmed@gmail.com', phone: '01234567890', date: '2026-06-05', status: 'نشط' },
-  { id: 5, name: 'يوسف خالد', email: 'yousef.khaled@hotmail.com', phone: '0563456789', date: '2026-06-09', status: 'نشط' },
-  { id: 6, name: 'مريم عمر', email: 'maryam.omar@gmail.com', phone: '0155554321', date: '2026-06-10', status: 'نشط' }
-];
-
 export default function UsersAdmin() {
-  const [users, setUsers] = useState(initialUsers);
+  const { users: fetchedUsers = [], usersLoading } = useGetUsers();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
@@ -65,8 +57,25 @@ export default function UsersAdmin() {
   const [notiPlatform, setNotiPlatform] = useState('all');
   const [notiLoading, setNotiLoading] = useState(false);
 
+  if (usersLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', width: '100%' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  const mappedUsers = fetchedUsers.map((user) => ({
+    id: user.Id ?? user.id,
+    name: `${user.FirstName || ''} ${user.LastName || ''}`.trim() || user.Name || 'مستخدم غير معروف',
+    email: user.Email ?? user.email,
+    phone: user.Mobail ?? user.phone ?? '',
+    date: user.DateRecord ?? user.date ?? new Date().toISOString(),
+    status: (user.Status === true || user.status === 'نشط' || String(user.Status) === 'true') ? 'نشط' : 'غير نشط'
+  }));
+
   // Search filter
-  const filteredUsers = users.filter(
+  const filteredUsers = mappedUsers.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -17,12 +17,19 @@ export default function AllEpisodes() {
     setChecked(true);
   }, []);
 
-  const handleChange = (event, value) => {
-    // Keep page locked to 1 as requested until backend pagination is ready
+  useEffect(() => {
     setPage(1);
+  }, [selectedCategory]);
+
+  const handleChange = (event, value) => {
+    setPage(value);
   };
 
-  const { episodes = [], episodesLoading } = useGetEpisodes();
+  const { episodes = [], pagination, episodesLoading } = useGetEpisodes({
+    page,
+    pageSize: 10,
+    ...(selectedCategory !== 'all' && { categoryId: selectedCategory })
+  });
   const { categories = [], categoriesLoading } = useGetEpisodeCategories();
 
   if (episodesLoading || categoriesLoading) {
@@ -33,10 +40,8 @@ export default function AllEpisodes() {
     );
   }
 
-  // Filter episodes by selected category
-  const filteredEpisodes = selectedCategory === 'all'
-    ? episodes
-    : episodes.filter(episode => String(episode.category_id) === String(selectedCategory));
+  // Filter episodes: server handles it if categoryId is passed, but fallback just in case
+  const filteredEpisodes = episodes;
 
   const currentCategory = selectedCategory === 'all'
     ? null
@@ -201,10 +206,9 @@ export default function AllEpisodes() {
             </Box>
           )}
 
-          {/* Pagination */}
           <Stack spacing={2} sx={{ mt: 8, alignItems: 'center' }}>
             <Pagination
-              count={1}
+              count={pagination?.totalPages || 1}
               page={page}
               onChange={handleChange}
               variant="outlined"

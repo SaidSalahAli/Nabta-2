@@ -26,12 +26,19 @@ export default function AllApplications() {
     setChecked(true);
   }, []);
 
-  const handleChange = (event, value) => {
-    // Keep page locked to 1 as requested until backend pagination is ready
+  useEffect(() => {
     setPage(1);
+  }, [selectedCategory]);
+
+  const handleChange = (event, value) => {
+    setPage(value);
   };
 
-  const { applications = [], applicationsLoading } = useGetApplications();
+  const { applications = [], pagination, applicationsLoading } = useGetApplications({
+    page,
+    pageSize: 10,
+    ...(selectedCategory !== 'all' && { categoryId: selectedCategory })
+  });
   const { categories = [], categoriesLoading } = useGetCategories();
 
   if (applicationsLoading || categoriesLoading) {
@@ -42,10 +49,8 @@ export default function AllApplications() {
     );
   }
 
-  // Filter applications by selected category
-  const filteredApplications = selectedCategory === 'all'
-    ? applications
-    : applications.filter(app => String(app.category_id || app.categoryId || app.CategoryId) === String(selectedCategory));
+  // Filter applications: server handles it if categoryId is passed, but fallback just in case
+  const filteredApplications = applications;
 
   // Get current category info for the banner
   const currentCategory = selectedCategory === 'all'
@@ -211,10 +216,9 @@ export default function AllApplications() {
             </Box>
           )}
 
-          {/* Pagination */}
           <Stack spacing={2} sx={{ mt: 8, alignItems: 'center' }}>
             <Pagination
-              count={1}
+              count={pagination?.totalPages || 1}
               page={page}
               onChange={handleChange}
               variant="outlined"

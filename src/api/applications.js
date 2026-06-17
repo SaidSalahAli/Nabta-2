@@ -20,25 +20,42 @@ const endpoints = {
 
 // Get all applications
 export function useGetApplications(params = {}) {
+  const queryParams = {
+    page: params.page !== undefined ? params.page : 1,
+    pageSize: params.page !== undefined ? (params.pageSize || 10) : 10000,
+    ...params
+  };
+
   const {
     data,
     isLoading,
     error,
     mutate: mutateData
-  } = useSWR([endpoints.key, params], () => fetcher([endpoints.list, { params }]), {
+  } = useSWR([endpoints.key, queryParams], () => fetcher([endpoints.list, { params: queryParams }]), {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false
   });
 
+  const pagination = data?.Pagination || data?.pagination;
+  const applicationsData = Array.isArray(data) ? data : data?.Data || data?.data || [];
+
   const memoizedValue = useMemo(
     () => ({
-      applications: Array.isArray(data) ? data : data?.Data || data?.data || [],
+      applications: applicationsData,
+      pagination: pagination ? {
+        currentPage: pagination.currentPage ?? pagination.CurrentPage,
+        pageSize: pagination.pageSize ?? pagination.PageSize,
+        totalItems: pagination.totalItems ?? pagination.TotalItems,
+        totalPages: pagination.totalPages ?? pagination.TotalPages,
+        hasPreviousPage: pagination.hasPreviousPage ?? pagination.HasPreviousPage,
+        hasNextPage: pagination.hasNextPage ?? pagination.HasNextPage
+      } : null,
       applicationsLoading: isLoading,
       applicationsError: error,
       applicationsMutate: mutateData
     }),
-    [data, isLoading, error, mutateData]
+    [data, isLoading, error, mutateData, applicationsData, pagination]
   );
 
   return memoizedValue;
