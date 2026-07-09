@@ -41,7 +41,6 @@ const validationSchema = Yup.object().shape({
   categoryId: Yup.mixed().required('التصنيف مطلوب'),
   name: Yup.string().required('اسم التطبيق مطلوب'),
   slug: Yup.string().required('رابط التطبيق مطلوب'),
-  shortDescription: Yup.string(),
   fullDescription: Yup.string(),
   appStoreUrl: Yup.string().url('رابط غير صالح'),
   playStoreUrl: Yup.string().url('رابط غير صالح'),
@@ -50,10 +49,10 @@ const validationSchema = Yup.object().shape({
 
 export default function ApplicationForm({ application = null, onSubmit, isLoading = false, onCancel }) {
   const { categories = [] } = useGetCategories();
-  
+
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState('');
-  
+
   const [bannerFiles, setBannerFiles] = useState([]);
   const [bannerPreviews, setBannerPreviews] = useState([]);
 
@@ -61,7 +60,6 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
     categoryId: '',
     name: '',
     slug: '',
-    shortDescription: '',
     fullDescription: '',
     appStoreUrl: '',
     playStoreUrl: '',
@@ -74,13 +72,12 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
         categoryId: application.category_id || application.categoryId || application.CategoryId || '',
         name: application.name || application.Name || '',
         slug: application.slug || application.Slug || '',
-        shortDescription: application.short_description || application.shortDescription || application.ShortDescription || '',
         fullDescription: application.full_description || application.fullDescription || application.FullDescription || '',
         appStoreUrl: application.app_store_url || application.appStoreUrl || application.AppStoreUrl || '',
         playStoreUrl: application.play_store_url || application.playStoreUrl || application.PlayStoreUrl || '',
         promoVideoUrl: application.promo_video_url || application.promoVideoUrl || application.PromoVideoUrl || ''
       });
-      
+
       // Thumbnail Preview
       if (application.thumbnail || application.Thumbnail) {
         setThumbnailPreview(getImageUrl(application.thumbnail || application.Thumbnail));
@@ -105,7 +102,6 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
         categoryId: '',
         name: '',
         slug: '',
-        shortDescription: '',
         fullDescription: '',
         appStoreUrl: '',
         playStoreUrl: '',
@@ -151,30 +147,29 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
   const handleFormSubmit = async (values, { setStatus, setSubmitting }) => {
     try {
       const selectedCategoryObj = categories.find(cat => String(cat.id || cat.Id) === String(values.categoryId));
-      
+
       const formData = new FormData();
-      
+
       // Category fields
       formData.append('Category.Id', values.categoryId || 0);
       formData.append('Category.Name', selectedCategoryObj?.name || selectedCategoryObj?.Name || '');
       formData.append('Category.Description', selectedCategoryObj?.description || selectedCategoryObj?.Description || '');
-      
+
       // Application fields
       formData.append('Application.Id', application?.id || application?.Id || 0);
       formData.append('Application.Name', values.name);
       formData.append('Application.Slug', values.slug);
-      formData.append('Application.Short_Description', values.shortDescription || '');
       formData.append('Application.Full_Description', values.fullDescription || '');
       formData.append('Application.App_Store_Url', values.appStoreUrl || '');
       formData.append('Application.Play_Store_Url', values.playStoreUrl || '');
       formData.append('Application.Promo_Video_Url', values.promoVideoUrl || '');
-      formData.append('Application.Platforms', '[]'); 
+      formData.append('Application.Platforms', '[]');
 
       // Thumbnail file
       if (thumbnailFile) {
         formData.append('Thumbnail', thumbnailFile);
       }
-      
+
       // Banner files
       if (bannerFiles.length > 0) {
         bannerFiles.forEach(file => {
@@ -267,26 +262,7 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
               </Stack>
             </Grid>
 
-            {/* Short Description */}
-            <Grid size={{ xs: 12 }}>
-              <Stack spacing={1}>
-                <InputLabel htmlFor="shortDescription">وصف قصير</InputLabel>
-                <OutlinedInput
-                  id="shortDescription"
-                  type="text"
-                  value={values.shortDescription}
-                  name="shortDescription"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  placeholder="وصف قصير للتطبيق"
-                  fullWidth
-                  multiline
-                  rows={2}
-                  error={Boolean(touched.shortDescription && errors.shortDescription)}
-                />
-                {touched.shortDescription && errors.shortDescription && <FormHelperText error>{errors.shortDescription}</FormHelperText>}
-              </Stack>
-            </Grid>
+
 
             {/* Full Description */}
             <Grid size={{ xs: 12 }}>
@@ -403,7 +379,7 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
                   إضافة لقطات شاشة
                   <input type="file" hidden accept="image/*" multiple onChange={handleBannerImagesChange} />
                 </Button>
-                
+
                 {bannerPreviews.length > 0 && (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
                     {bannerPreviews.map((preview, idx) => (

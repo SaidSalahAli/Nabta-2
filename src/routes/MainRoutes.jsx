@@ -109,7 +109,7 @@ const MainRoutes = {
     {
       path: '/',
       element: (
-        <AuthGuard>
+        <AuthGuard requiredRole="Admin">
           <DashboardLayout />
         </AuthGuard>
       ),

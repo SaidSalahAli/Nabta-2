@@ -25,14 +25,23 @@ export default function EpisodeCard({ episode, isAnimating, index, onClick }) {
           }
         }}
       >
-        <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+        <Box
+          sx={{
+            position: 'relative',
+            overflow: 'hidden',
+            width: '100%',
+            aspectRatio: '16 / 9',
+            backgroundColor: '#f5f5f5'
+          }}
+        >
           <CardMedia
             component="img"
-            height="180"
             image={episode.image}
             alt={episode.title}
             sx={{
-              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
               transition: 'transform 0.3s ease',
               '&:hover': { transform: 'scale(1.05)' }
             }}

@@ -141,7 +141,7 @@ export default function ForgotPassword() {
                       </Grid>
 
                       {/* Code Link */}
-                      <Grid size={12} sx={{ mt: -1, textAlign: 'right' }}>
+                      <Grid size={12} sx={{ mt: -1 }}>
                         <Link
                           component={RouterLink}
                           to="/auth/code-verification"

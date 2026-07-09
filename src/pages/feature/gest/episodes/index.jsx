@@ -44,8 +44,7 @@ export default function AllEpisodes() {
   const filteredEpisodes = episodes;
 
   const currentCategory = selectedCategory === 'all'
-    ? null
-    : categories.find(cat => String(cat.id) === String(selectedCategory));
+    ? null : categories.find(cat => String(cat.id) === String(selectedCategory));
 
   const infoTitle = currentCategory ? currentCategory.name_ar : 'جميع الحلقات';
   const infoDescription = currentCategory?.description_ar || 'شاهد حلقات منصة نبتة التعليمية والتربوية الهادفة للأطفال. محتوى آمن، ممتع، ومبتكر يسهم في بناء وعي طفلك وتنمية مهاراته .';

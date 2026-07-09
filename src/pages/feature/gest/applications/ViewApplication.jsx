@@ -26,7 +26,7 @@ const getImageUrl = (url) => {
 const getYouTubeEmbedUrl = (url) => {
   if (!url) return '';
   if (url.includes('embed/')) return url;
-  
+
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
   if (match && match[2].length === 11) {
@@ -65,21 +65,21 @@ export default function ViewApplication() {
 
   const title = application.name || '';
   const description = application.full_description || application.short_description || '';
-  
+
   // Use banner_images if available, otherwise fallback to thumbnail
   const screenshots = application.banner_images && application.banner_images.length > 0
     ? application.banner_images.map((imgObj, idx) => ({
-        id: imgObj.id || idx,
-        image: getImageUrl(imgObj.image_url),
-        caption: title
-      }))
+      id: imgObj.id || idx,
+      image: getImageUrl(imgObj.image_url),
+      caption: title
+    }))
     : [
-        {
-          id: 1,
-          image: getImageUrl(application.thumbnail) || mockImage1,
-          caption: title
-        }
-      ];
+      {
+        id: 1,
+        image: getImageUrl(application.thumbnail) || mockImage1,
+        caption: title
+      }
+    ];
 
   return (
     <Fade in={checked} timeout={800}>
@@ -151,7 +151,13 @@ export default function ViewApplication() {
           <Box
             sx={{
               mb: { xs: 5, md: 6 },
-              px: { xs: 0, sm: 1, md: 4 }
+              width: '100vw',
+              position: 'relative',
+              left: '50%',
+              right: '50%',
+              marginLeft: '-50vw',
+              marginRight: '-50vw',
+              px: { xs: 2, sm: 3, md: 6 }
             }}
           >
             <Swiper
@@ -166,8 +172,8 @@ export default function ViewApplication() {
               }}
               breakpoints={{
                 480: { slidesPerView: 1 },
-                640: { slidesPerView: 2 },
-                960: { slidesPerView: 3 }
+                640: { slidesPerView: 1.5 },
+                960: { slidesPerView: 2 }
               }}
               style={{
                 paddingBottom: '50px'
@@ -193,9 +199,9 @@ export default function ViewApplication() {
                       sx={{
                         width: '100%',
                         height: {
-                          xs: '220px',
-                          sm: '240px',
-                          md: '250px'
+                          xs: '320px',
+                          sm: '420px',
+                          md: '550px'
                         },
                         objectFit: 'cover',
                         display: 'block'
@@ -243,12 +249,13 @@ export default function ViewApplication() {
             sx={{ mb: { xs: 6, md: 8 } }}
           >
             {application.play_store_url && (
+
+
               <Button
                 variant="contained"
                 href={application.play_store_url}
                 target="_blank"
                 fullWidth={false}
-                endIcon={<Play size="22" color="#2E2A39" variant="Bold" />}
                 sx={{
                   width: { xs: '100%', sm: 'auto' },
                   px: { xs: 3, sm: 5 },
@@ -267,6 +274,7 @@ export default function ViewApplication() {
                   transition: 'all 0.3s ease'
                 }}
               >
+                <Play size="22" color="#2E2A39" variant="Bold" />
                 تحميل للأندرويد (Google Play)
               </Button>
             )}

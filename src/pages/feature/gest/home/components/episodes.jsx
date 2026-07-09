@@ -43,7 +43,7 @@ export default function Episodes({ shouldAnimate = false }) {
               الحلقات
             </Typography>
             <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
-              حلقات متخصصة لأولياء الأمور والمعلمين والآباء والأمهات
+              حلقات توعوية لأولياء الأمور الأمهات والآباء والمعلمين، وحلقات تربوية تعليمية للأطفال
             </Typography>
           </Box>
           {/* Episodes Swiper */}

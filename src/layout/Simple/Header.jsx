@@ -111,15 +111,17 @@ function UserMenu({ user, primaryColor, onLogout }) {
           </Typography>
           <Typography sx={{ fontSize: 12, color: 'text.secondary', mt: 0.25 }}>{user?.email}</Typography>
         </Box>
-        <MenuItem
-          onClick={() => {
-            setAnchorEl(null);
-            navigate('/dashboard/episodes');
-          }}
-          sx={{ fontSize: 14, py: 1.25 }}
-        >
-          لوحة التحكم
-        </MenuItem>
+        {user?.role === 'Admin' && (
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              navigate('/dashboard/episodes');
+            }}
+            sx={{ fontSize: 14, py: 1.25 }}
+          >
+            لوحة التحكم
+          </MenuItem>
+        )}
         <Divider />
         <MenuItem
           onClick={() => {

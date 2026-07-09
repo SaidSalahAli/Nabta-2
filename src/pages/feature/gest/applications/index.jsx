@@ -58,7 +58,7 @@ export default function AllApplications() {
     : categories.find(cat => String(cat.id || cat.Id) === String(selectedCategory));
 
   const infoTitle = currentCategory ? (currentCategory.name || currentCategory.Name) : 'جميع التطبيقات';
-  const infoDescription = currentCategory?.description || currentCategory?.Description || 'اكتشف وحمل تطبيقات منصة نبتة التعليمية والتربوية التفاعلية للأطفال. تطبيقات آمنة تماماً خالية من الإعلانات تدعم نمو طفلك المعرفي.';
+  const infoDescription = currentCategory?.description || currentCategory?.Description || 'تطبيقات تعليمية تفاعلية لتأسيس الأطفال في مرحلة الطفولة المبكرة';
   const infoImage = currentCategory?.photoUrl || currentCategory?.PhotoUrl || currentCategory?.photo || currentCategory?.Photo || img;
 
   return (
@@ -66,7 +66,7 @@ export default function AllApplications() {
       <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
         <SEO
           title="التطبيقات التعليمية"
-          description="اكتشف وحمل تطبيقات منصة نبتة التعليمية والتربوية التفاعلية للأطفال. تطبيقات آمنة تماماً خالية من الإعلانات تدعم نمو طفلك المعرفي."
+          description="تطبيقات تعليمية تفاعلية لتأسيس الأطفال في مرحلة الطفولة المبكرة"
           keywords="تطبيقات أطفال تعليمية, ألعاب أطفال مفيدة, تطبيقات منصة نبتة للأندرويد, تطبيقات أطفال بدون إعلانات"
           url="/applications"
         />
