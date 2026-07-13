@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Container, Grid, Pagination, Stack, Fade, Tabs, Tab, CircularProgress } from '@mui/material';
 import EpisodeCard from 'components/EpisodeCard';
-import img from 'assets/images/test.jpeg';
+import img from 'assets/images/Video1.png';
 import { useGetApplications } from 'api/applications';
 import { useGetCategories } from 'api/categories';
 import { IMAGES_URL } from 'config';

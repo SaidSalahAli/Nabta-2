@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Container, Grid, Pagination, Stack, Fade, CircularProgress, Tabs, Tab } from '@mui/material';
 import EpisodeCard from 'components/EpisodeCard';
-import img from 'assets/images/test.jpeg';
+import img from 'assets/images/Video1.png';
 import { useGetEpisodes } from 'api/episodes';
 import { useGetEpisodeCategories } from 'api/episodeCategories';
 import SEO from 'components/SEO';
@@ -47,7 +47,7 @@ export default function AllEpisodes() {
     ? null : categories.find(cat => String(cat.id) === String(selectedCategory));
 
   const infoTitle = currentCategory ? currentCategory.name_ar : 'جميع الحلقات';
-  const infoDescription = currentCategory?.description_ar || 'شاهد حلقات منصة نبتة التعليمية والتربوية الهادفة للأطفال. محتوى آمن، ممتع، ومبتكر يسهم في بناء وعي طفلك وتنمية مهاراته .';
+  const infoDescription = currentCategory?.description_ar || 'حلقات توعوية لأولياء الأمور الأمهات والآباء والمعلمين، وحلقات تربوية تعليمية للأطفال.';
   const infoImage = currentCategory?.image || currentCategory?.photo || currentCategory?.PhotoUrl || currentCategory?.photoUrl || img;
 
   return (
@@ -55,7 +55,7 @@ export default function AllEpisodes() {
       <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
         <SEO
           title="الحلقات الكرتونية"
-          description="شاهد حلقات منصة نبتة التعليمية والتربوية الهادفة للأطفال. محتوى آمن، ممتع، ومبتكر يسهم في بناء وعي طفلك وتنمية مهاراته."
+          description="حلقات توعوية لأولياء الأمور الأمهات والآباء والمعلمين، وحلقات تربوية تعليمية للأطفال"
           keywords="أفلام أطفال, حلقات تعليمية, قصص هادفة, منصة نبتة, مسلسلات أطفال تربوية"
           url="/episodes"
         />
