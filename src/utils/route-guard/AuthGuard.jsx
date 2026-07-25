@@ -8,13 +8,16 @@ import useAuth from 'hooks/useAuth';
 // ==============================|| AUTH GUARD ||============================== //
 
 export default function AuthGuard({ children, requiredRole = null }) {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, isInitialized, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
+    // Wait until auth state is fully initialized before redirecting
+    if (!isInitialized) return;
+
     if (!isLoggedIn) {
-      navigate('login', {
+      navigate('/auth/login', {
         state: {
           from: location.pathname
         },
@@ -24,7 +27,7 @@ export default function AuthGuard({ children, requiredRole = null }) {
       // If a specific role is required and user doesn't have it, redirect to home
       navigate('/', { replace: true });
     }
-  }, [isLoggedIn, user, navigate, location, requiredRole]);
+  }, [isLoggedIn, isInitialized, user, navigate, location, requiredRole]);
 
   return children;
 }

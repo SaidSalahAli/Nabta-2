@@ -93,8 +93,8 @@ export default function Support() {
       image: vodafoneImg,
       content: (
         <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>رقم التحويل: 01067007977</Typography>
-          <CopyButton text="01067007977" />
+          <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>رقم التحويل: 01007560466</Typography>
+          <CopyButton text="01007560466" />
           <Typography variant="caption" sx={{ color: 'error.main', fontWeight: 600, display: 'block', mt: 1 }}>الرقم خاص بالدعم فقط — داخل مصر</Typography>
         </Box>
       )

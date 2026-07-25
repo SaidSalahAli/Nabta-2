@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight } from 'iconsax-react';
 import img1 from 'assets/Home/ahmed.jpg';
 import img2 from 'assets/Home/hamdy.jpg';
 import img3 from 'assets/Home/magdy.png';
+import img4 from 'assets/Home/team0004.png';
 
 export default function Team({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
@@ -39,6 +40,12 @@ export default function Team({ shouldAnimate = false }) {
       name: 'مجدي غباشي',
       role: 'مطور باك اند',
       image: img3
+    },
+    {
+      id: 4,
+      name: 'مروة خيري',
+      role: 'محركة',
+      image: img4
     }
   ];
 

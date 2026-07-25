@@ -52,7 +52,8 @@ export default function Applications({ shouldAnimate = false }) {
               التطبيقات
             </Typography>
             <Typography variant="body2" sx={{ color: '#fff', fontSize: '18px' }}>
-              حلقات متخصصة لأولياء الأمور والمعلمين والآباء والأمهات
+              تطبيقات تعليمية تفاعلية لتأسيس الأطفال في مرحلة الطفولة المبكرة.
+
             </Typography>
           </Box>
 

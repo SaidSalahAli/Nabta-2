@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
-import { Box, Typography, Container, Breadcrumbs, Link, Button, Paper, Fade, CircularProgress, Stack } from '@mui/material';
+import { Box, Typography, Container, Breadcrumbs, Link, Button, Paper, CircularProgress, Stack } from '@mui/material';
 import { ArrowLeft2, Play } from 'iconsax-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SEO from 'components/SEO';
 import { useGetApplication } from 'api/applications';
 import { IMAGES_URL } from 'config';
-
+import AnimatedSection from 'components/AnimatedSection';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -14,6 +14,7 @@ import 'swiper/css/navigation';
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 
 import mockImage1 from 'assets/images/test.jpeg';
+import AppDownload from 'assets/Home/App Download.png';
 
 const getImageUrl = (url) => {
   if (!url) return '';
@@ -37,13 +38,8 @@ const getYouTubeEmbedUrl = (url) => {
 
 export default function ViewApplication() {
   const { id } = useParams();
-  const [checked, setChecked] = useState(false);
 
   const { application, applicationLoading } = useGetApplication(id);
-
-  useEffect(() => {
-    setChecked(true);
-  }, []);
 
   if (applicationLoading) {
     return (
@@ -82,23 +78,23 @@ export default function ViewApplication() {
     ];
 
   return (
-    <Fade in={checked} timeout={800}>
-      <Box
-        sx={{
-          py: { xs: 3, sm: 4, md: 6 },
-          backgroundColor: '#fcfcfc',
-          minHeight: '100vh'
-        }}
-      >
-        <SEO
-          title={title}
-          description={description?.slice(0, 160)}
-          image={screenshots[0]?.image}
-          url={`/applications/${id}`}
-        />
-        <Container maxWidth="lg">
+    <Box
+      sx={{
+        py: { xs: 3, sm: 4, md: 6 },
+        backgroundColor: '#fcfcfc',
+        minHeight: '100vh'
+      }}
+    >
+      <SEO
+        title={title}
+        description={description?.slice(0, 160)}
+        image={screenshots[0]?.image}
+        url={`/applications/${id}`}
+      />
+      <Container maxWidth="lg">
 
-          {/* Breadcrumbs */}
+        {/* Breadcrumbs */}
+        <AnimatedSection fade={true}>
           <Breadcrumbs
             separator={<ArrowLeft2 size="14" color="#2E2A39" style={{ transform: 'rotate(180deg)' }} />}
             aria-label="breadcrumb"
@@ -132,8 +128,10 @@ export default function ViewApplication() {
               {title}
             </Typography>
           </Breadcrumbs>
+        </AnimatedSection>
 
-          {/* Title */}
+        {/* Title */}
+        <AnimatedSection fade={true}>
           <Typography
             variant="h1"
             sx={{
@@ -146,8 +144,10 @@ export default function ViewApplication() {
           >
             {title}
           </Typography>
+        </AnimatedSection>
 
-          {/* Screenshots */}
+        {/* Screenshots */}
+        <AnimatedSection fade={true}>
           <Box
             sx={{
               mb: { xs: 5, md: 6 },
@@ -239,8 +239,10 @@ export default function ViewApplication() {
               ))}
             </Swiper>
           </Box>
+        </AnimatedSection>
 
-          {/* Download Buttons */}
+        {/* Download Buttons */}
+        <AnimatedSection fade={true}>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
             spacing={2}
@@ -274,8 +276,9 @@ export default function ViewApplication() {
                   transition: 'all 0.3s ease'
                 }}
               >
-                <Play size="22" color="#2E2A39" variant="Bold" />
-                تحميل للأندرويد (Google Play)
+                <img src={AppDownload} alt="App Download" style={{ width: '20px', height: '20px', marginLeft: '10px' }} />
+                {/* <Play size="22" color="#2E2A39" variant="Bold" /> */}
+                حمّله الآن
               </Button>
             )}
 
@@ -307,8 +310,10 @@ export default function ViewApplication() {
               </Button>
             )}
           </Stack>
+        </AnimatedSection>
 
-          {/* About */}
+        {/* About */}
+        <AnimatedSection fade={true}>
           <Box sx={{ mb: { xs: 6, md: 8 } }}>
             <Typography
               variant="h1"
@@ -365,9 +370,11 @@ export default function ViewApplication() {
               </Typography>
             </Paper>
           </Box>
+        </AnimatedSection>
 
-          {/* Video */}
-          {application.promo_video_url && (
+        {/* Video */}
+        {application.promo_video_url && (
+          <AnimatedSection fade={true}>
             <Box sx={{ mb: 4 }}>
               <Typography
                 variant="h3"
@@ -420,9 +427,9 @@ export default function ViewApplication() {
                 />
               </Paper>
             </Box>
-          )}
-        </Container>
-      </Box>
-    </Fade>
+          </AnimatedSection>
+        )}
+      </Container>
+    </Box>
   );
 }

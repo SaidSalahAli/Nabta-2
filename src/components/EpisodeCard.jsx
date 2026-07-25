@@ -1,11 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Card, CardMedia, CardContent, Typography, Fade } from '@mui/material';
 
 export default function EpisodeCard({ episode, isAnimating, index, onClick }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    // If the parent explicitly sets isAnimating, we can still use it, otherwise we rely on scroll
+    if (isAnimating) {
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isAnimating]);
 
   return (
-    <Fade in={isAnimating} timeout={800} style={{ transitionDelay: isAnimating ? `${index * 100}ms` : '0ms' }}>
+    <Box ref={ref} sx={{ height: '100%' }}>
+      <Fade in={isVisible} timeout={800} style={{ transitionDelay: isVisible ? `${(index % 10) * 100}ms` : '0ms' }}>
       <Card
         onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
@@ -98,6 +125,7 @@ export default function EpisodeCard({ episode, isAnimating, index, onClick }) {
           </Box>
         </CardContent>
       </Card>
-    </Fade>
+      </Fade>
+    </Box>
   );
 }
