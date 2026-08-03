@@ -9,18 +9,27 @@ import axiosServices, { fetcher } from 'utils/axios';
 // ==============================|| API - CONTACT MESSAGES ||============================== //
 
 const endpoints = {
-  key: 'api/ContactMessages/List',
-  list: 'api/ContactMessages/List',
-  create: 'api/ContactMessages/Add',
-  read: (id) => `api/ContactMessages/Get/${id}`,
-  update: (id) => `api/ContactMessages/Update/${id}`,
-  delete: (id) => `api/ContactMessages/Delete/${id}`,
-  search: (name, email, status) => {
-    let url = `api/ContactMessages/Search?name=${name || ''}`;
-    if (email) url += `&email=${email}`;
-    if (status) url += `&status=${status}`;
-    return url;
+  key: 'api/ContactUs/List',
+  list: 'api/ContactUs/List',
+  create: 'api/ContactUs/Add',
+  read: (id) => `api/ContactUs/ById?id=${id}`,
+  update: 'api/ContactUs/Update',
+  delete: (id) => `api/ContactUs/Delete?id=${id}`,
+  search: (params = {}) => {
+    let url = `api/ContactUs/Search?`;
+    const queryParams = [];
+    if (params.fullName) queryParams.push(`fullName=${encodeURIComponent(params.fullName)}`);
+    if (params.email) queryParams.push(`email=${encodeURIComponent(params.email)}`);
+    if (params.phone) queryParams.push(`phone=${encodeURIComponent(params.phone)}`);
+    if (params.subject) queryParams.push(`subject=${encodeURIComponent(params.subject)}`);
+    if (params.isRead !== undefined && params.isRead !== null) queryParams.push(`isRead=${params.isRead}`);
+    return url + queryParams.join('&');
   }
+};
+
+const fetcherPost = async (url) => {
+  const res = await axiosServices.post(url);
+  return res.data;
 };
 
 // Get all contact messages
@@ -49,14 +58,14 @@ export function useGetContactMessages(params = {}) {
   return memoizedValue;
 }
 
-// Get single contact message
+// Get single contact message (uses POST as per api specification)
 export function useGetContactMessage(id) {
   const {
     data,
     isLoading,
     error,
     mutate: mutateData
-  } = useSWR(id ? [endpoints.read(id)] : null, () => fetcher(endpoints.read(id)), {
+  } = useSWR(id ? [endpoints.read(id)] : null, () => fetcherPost(endpoints.read(id)), {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false
@@ -78,7 +87,19 @@ export function useGetContactMessage(id) {
 // Create contact message
 export async function createContactMessage(messageData) {
   try {
-    const response = await axiosServices.post(endpoints.create, messageData);
+    const payload = {
+      fullName: messageData.fullName || messageData.name || '',
+      FullName: messageData.fullName || messageData.name || '',
+      email: messageData.email || '',
+      Email: messageData.email || '',
+      phone: messageData.phone || '',
+      Phone: messageData.phone || '',
+      subject: messageData.subject || '',
+      Subject: messageData.subject || '',
+      message: messageData.message || '',
+      Message: messageData.message || ''
+    };
+    const response = await axiosServices.post(endpoints.create, payload);
     mutate(endpoints.key);
     return response.data;
   } catch (error) {
@@ -89,7 +110,23 @@ export async function createContactMessage(messageData) {
 // Update contact message
 export async function updateContactMessage(id, messageData) {
   try {
-    const response = await axiosServices.put(endpoints.update(id), messageData);
+    const payload = {
+      id: Number(id || messageData.id || messageData.Id),
+      Id: Number(id || messageData.id || messageData.Id),
+      fullName: messageData.fullName || messageData.name || messageData.Name || messageData.FullName || '',
+      FullName: messageData.fullName || messageData.name || messageData.Name || messageData.FullName || '',
+      email: messageData.email || messageData.Email || '',
+      Email: messageData.email || messageData.Email || '',
+      phone: messageData.phone || messageData.Phone || '',
+      Phone: messageData.phone || messageData.Phone || '',
+      subject: messageData.subject || messageData.Subject || '',
+      Subject: messageData.subject || messageData.Subject || '',
+      message: messageData.message || messageData.Message || '',
+      Message: messageData.message || messageData.Message || '',
+      isRead: messageData.isRead !== undefined ? messageData.isRead : (messageData.IsRead !== undefined ? messageData.IsRead : false),
+      IsRead: messageData.isRead !== undefined ? messageData.isRead : (messageData.IsRead !== undefined ? messageData.IsRead : false)
+    };
+    const response = await axiosServices.put(endpoints.update, payload);
     mutate(endpoints.key);
     mutate(endpoints.read(id));
     return response.data;
@@ -98,10 +135,10 @@ export async function updateContactMessage(id, messageData) {
   }
 }
 
-// Delete contact message
+// Delete contact message (uses POST as per api specification)
 export async function deleteContactMessage(id) {
   try {
-    const response = await axiosServices.delete(endpoints.delete(id));
+    const response = await axiosServices.post(endpoints.delete(id));
     mutate(endpoints.key);
     return response.data;
   } catch (error) {
@@ -110,9 +147,10 @@ export async function deleteContactMessage(id) {
 }
 
 // Search contact messages
-export async function searchContactMessages(name, email, status) {
+export async function searchContactMessages(params = {}) {
   try {
-    const response = await axiosServices.get(endpoints.search(name, email, status));
+    const url = endpoints.search(params);
+    const response = await axiosServices.get(url);
     return response.data;
   } catch (error) {
     return Promise.reject((error.response && error.response.data) || 'Error searching messages');

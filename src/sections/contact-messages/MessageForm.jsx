@@ -23,28 +23,28 @@ import { openSnackbar } from 'api/snackbar';
 // ==============================|| CONTACT MESSAGE FORM ||============================== //
 
 const validationSchema = Yup.object().shape({
-  status: Yup.string().required('حالة الرسالة مطلوبة')
+  isRead: Yup.boolean().required('حالة الرسالة مطلوبة')
 });
-
-const statusOptions = ['New', 'InProgress', 'Replied', 'Closed'];
 
 export default function MessageForm({ message = null, onSubmit, isLoading = false, onCancel }) {
   const [initialValues, setInitialValues] = useState({
-    status: 'New'
+    isRead: false
   });
 
   useEffect(() => {
     if (message) {
       setInitialValues({
-        status: message.status || message.Status || 'New'
+        isRead: message.isRead !== undefined ? message.isRead : (message.IsRead !== undefined ? message.IsRead : false)
       });
     }
   }, [message]);
 
   const handleFormSubmit = async (values, { setStatus, setSubmitting }) => {
     try {
-      // In a real scenario, you might want to send the whole message object updated with new status
-      const updatedData = { ...message, status: values.status };
+      const updatedData = {
+        ...message,
+        isRead: values.isRead === 'true' || values.isRead === true
+      };
       await onSubmit(updatedData);
       setStatus({ success: true });
       setSubmitting(false);
@@ -74,7 +74,7 @@ export default function MessageForm({ message = null, onSubmit, isLoading = fals
                 <Grid container spacing={2}>
                   <Grid size={{ xs: 6 }}>
                     <Typography variant="caption" color="textSecondary">الاسم</Typography>
-                    <Typography variant="body1">{message.name || message.Name}</Typography>
+                    <Typography variant="body1">{message.fullName || message.FullName || message.name || message.Name}</Typography>
                   </Grid>
                   <Grid size={{ xs: 6 }}>
                     <Typography variant="caption" color="textSecondary">البريد الإلكتروني</Typography>
@@ -101,24 +101,21 @@ export default function MessageForm({ message = null, onSubmit, isLoading = fals
             {/* Edit Status */}
             <Grid size={{ xs: 12 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="status">حالة الرسالة</InputLabel>
+                <InputLabel htmlFor="isRead">حالة الرسالة</InputLabel>
                 <Select
-                  id="status"
-                  name="status"
-                  value={values.status}
+                  id="isRead"
+                  name="isRead"
+                  value={values.isRead}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={Boolean(touched.status && errors.status)}
+                  error={Boolean(touched.isRead && errors.isRead)}
                   fullWidth
                 >
-                  {statusOptions.map((opt) => (
-                    <MenuItem key={opt} value={opt}>
-                      {opt === 'New' ? 'جديدة' : opt === 'InProgress' ? 'جاري المعالجة' : opt === 'Replied' ? 'تم الرد' : 'مغلقة'}
-                    </MenuItem>
-                  ))}
+                  <MenuItem value={false}>غير مقروءة</MenuItem>
+                  <MenuItem value={true}>مقروءة</MenuItem>
                 </Select>
-                {touched.status && errors.status && (
-                  <FormHelperText error>{errors.status}</FormHelperText>
+                {touched.isRead && errors.isRead && (
+                  <FormHelperText error>{errors.isRead}</FormHelperText>
                 )}
               </Stack>
             </Grid>

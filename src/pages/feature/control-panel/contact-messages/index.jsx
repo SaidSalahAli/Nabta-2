@@ -45,7 +45,7 @@ export default function ContactMessages() {
   const { contactMessages = [], contactMessagesLoading, contactMessagesMutate } = useGetContactMessages();
 
   const filteredMessages = contactMessages.filter((msg) =>
-    (msg.name || msg.Name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (msg.fullName || msg.FullName || msg.name || msg.Name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (msg.email || msg.Email || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
   
@@ -115,15 +115,9 @@ export default function ContactMessages() {
     }
   };
 
-  const getStatusChip = (status) => {
-    let label = status;
-    let color = 'default';
-    switch (status) {
-      case 'New': label = 'جديدة'; color = 'info'; break;
-      case 'InProgress': label = 'جاري المعالجة'; color = 'warning'; break;
-      case 'Replied': label = 'تم الرد'; color = 'success'; break;
-      case 'Closed': label = 'مغلقة'; color = 'default'; break;
-    }
+  const getStatusChip = (isRead) => {
+    let label = isRead ? 'مقروءة' : 'جديدة';
+    let color = isRead ? 'success' : 'info';
     return <Chip label={label} color={color} size="small" />;
   };
 
@@ -170,12 +164,12 @@ export default function ContactMessages() {
                 {paginatedMessages.length > 0 ? (
                   paginatedMessages.map((msg) => (
                     <TableRow key={msg.id || msg.Id} hover>
-                      <TableCell>{msg.name || msg.Name}</TableCell>
+                      <TableCell>{msg.fullName || msg.FullName || msg.name || msg.Name}</TableCell>
                       <TableCell>{msg.email || msg.Email}</TableCell>
                       <TableCell sx={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {msg.subject || msg.Subject}
                       </TableCell>
-                      <TableCell>{getStatusChip(msg.status || msg.Status)}</TableCell>
+                      <TableCell>{getStatusChip(msg.isRead !== undefined ? msg.isRead : msg.IsRead)}</TableCell>
                       <TableCell align="center">
                         <Stack direction="row" spacing={0.5} justifyContent="center">
                           <Button size="small" variant="outlined" onClick={() => handleViewClick(msg)} startIcon={<Eye size={16} />}>
@@ -234,7 +228,7 @@ export default function ContactMessages() {
         <DialogTitle>تأكيد الحذف</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            هل تريد بالتأكيد حذف الرسالة من "{selectedMessage?.name || selectedMessage?.Name}"؟ لا يمكن
+            هل تريد بالتأكيد حذف الرسالة من "{selectedMessage?.fullName || selectedMessage?.FullName || selectedMessage?.name || selectedMessage?.Name}"؟ لا يمكن
             التراجع عن هذا الإجراء.
           </DialogContentText>
         </DialogContent>

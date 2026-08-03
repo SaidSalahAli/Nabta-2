@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 export default function SEO({ title, description, keywords, image, url }) {
   useEffect(() => {
     // 1. Title
-    const formattedTitle = title ? `${title} | منصة نبتة` : 'منصة نبتة - محتوى تربوي وتعليمي للأطفال';
+    const formattedTitle = title ? `${title}` : 'منصة نبتة - محتوى تربوي وتعليمي للأطفال';
     document.title = formattedTitle;
 
     // Helper function to update meta tags
