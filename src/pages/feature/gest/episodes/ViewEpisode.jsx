@@ -14,11 +14,17 @@ import {
   Collapse,
   CircularProgress,
   Menu,
-  MenuItem
+  MenuItem,
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  Chip
 } from '@mui/material';
 
 import { useGetEpisode } from 'api/episodes';
-import { ArrowLeft2, Share, Calendar, Profile, DocumentText } from 'iconsax-react';
+import { ArrowLeft2, Share, Calendar, Profile, DocumentText, DocumentDownload, Document, Eye, CloseCircle, Export } from 'iconsax-react';
 import SEO from 'components/SEO';
 
 
@@ -157,6 +163,7 @@ export default function ViewEpisode() {
   const { id } = useParams();
   const [checked, setChecked] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
+  const [previewPdf, setPreviewPdf] = useState(null);
 
   useEffect(() => {
     setChecked(true);
@@ -179,6 +186,8 @@ export default function ViewEpisode() {
       </Box>
     );
   }
+
+  const worksheets = episode.EpisodeWorksheets || episode.episode_worksheets || episode.EpisodeWorksheet || [];
 
   const dateObject = new Date(episode.CreatedAt || new Date());
   const formattedDate = dateObject.toLocaleDateString('ar-EG');
@@ -206,7 +215,6 @@ export default function ViewEpisode() {
         <Container maxWidth="lg">
           {/* Breadcrumbs */}
           <Breadcrumbs
-
             separator={<ArrowLeft2 size="14" color="#2E2A39" style={{ transform: 'rotate(180deg)' }} />}
             aria-label="breadcrumb"
             sx={{ mb: { xs: 2, md: 4 }, flexWrap: 'wrap' }}
@@ -331,6 +339,147 @@ export default function ViewEpisode() {
             </Collapse>
           </Box>
 
+          {/* Worksheets Section */}
+          {worksheets && worksheets.length > 0 && (
+            <Box sx={{ mb: { xs: 4, md: 6 } }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+                <DocumentDownload size="28" color="#FFD666" variant="Bold" />
+                <Typography variant="h3" sx={{ fontWeight: 800, color: 'primary.main', fontSize: { xs: '1.4rem', sm: '1.8rem' } }}>
+                  أوراق العمل التابعة للحلقة
+                </Typography>
+              </Box>
+
+              <Grid container spacing={3}>
+                {worksheets.map((ws, idx) => {
+                  const title = ws.TitleAr || ws.title_ar || 'ورقة عمل';
+                  const description = ws.DescriptionAr || ws.description_ar || '';
+                  const fileUrl = ws.FileUrl || ws.file_url || '';
+                  const thumbnail = ws.ThumbnailImage || ws.thumbnail_image || '';
+                  const fileType = (ws.FileType || ws.file_type || 'pdf').toUpperCase();
+
+                  return (
+                    <Grid item xs={12} sm={6} md={4} key={ws.Id || ws.id || idx}>
+                      <Paper
+                        elevation={0}
+                        sx={{
+                          p: 2.5,
+                          borderRadius: '16px',
+                          border: '1px solid',
+                          borderColor: '#e8e8e8',
+                          backgroundColor: '#ffffff',
+                          transition: 'all 0.3s ease',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          height: '100%',
+                          '&:hover': {
+                            transform: 'translateY(-4px)',
+                            boxShadow: '0 12px 30px rgba(0,0,0,0.08)',
+                            borderColor: '#FFD666'
+                          }
+                        }}
+                      >
+                        {/* Thumbnail / Icon Container */}
+                        <Box
+                          sx={{
+                            position: 'relative',
+                            width: '100%',
+                            height: 180,
+                            borderRadius: '12px',
+                            overflow: 'hidden',
+                            backgroundColor: '#fef9ec',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mb: 2
+                          }}
+                        >
+                          {thumbnail ? (
+                            <Box component="img" src={thumbnail} alt={title} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ) : (
+                            <Document size="56" color="#FFD666" variant="Bold" />
+                          )}
+                          <Chip
+                            label={fileType}
+                            size="small"
+                            sx={{
+                              position: 'absolute',
+                              top: 10,
+                              right: 10,
+                              backgroundColor: '#e74c3c',
+                              color: '#fff',
+                              fontWeight: 700,
+                              fontSize: 11
+                            }}
+                          />
+                        </Box>
+
+                        {/* Info */}
+                        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, color: '#2E2A39', lineHeight: 1.4 }}>
+                          {title}
+                        </Typography>
+                        {description && (
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: 'text.secondary',
+                              mb: 2,
+                              lineHeight: 1.6,
+                              whiteSpace: 'pre-line',
+                              overflow: 'hidden',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 3,
+                              WebkitBoxOrient: 'vertical'
+                            }}
+                          >
+                            {description}
+                          </Typography>
+                        )}
+
+                        {/* Actions */}
+                        <Stack direction="row" spacing={1.5} sx={{ mt: 'auto', pt: 1 }}>
+                          <Button
+                            variant="contained"
+                            fullWidth
+                            startIcon={<Eye size="18" />}
+                            onClick={() => setPreviewPdf({ url: fileUrl, title })}
+                            sx={{
+                              borderRadius: '10px',
+                              fontWeight: 700,
+                              backgroundColor: 'primary.main',
+                              color: '#fff',
+                              '&:hover': { backgroundColor: 'primary.dark' }
+                            }}
+                          >
+                            معاينة PDF
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            fullWidth
+                            startIcon={<DocumentDownload size="18" />}
+                            component="a"
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download
+                            sx={{
+                              borderRadius: '10px',
+                              fontWeight: 700,
+                              borderColor: '#2E2A39',
+                              color: '#2E2A39',
+                              '&:hover': { borderColor: 'primary.main', backgroundColor: '#f9f9f9' }
+                            }}
+                          >
+                            تحميل
+                          </Button>
+                        </Stack>
+                      </Paper>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Box>
+          )}
+
           <Divider sx={{ mb: { xs: 3, md: 4 } }} />
 
           {/* Footer */}
@@ -381,6 +530,81 @@ export default function ViewEpisode() {
             </Box>
           </Box>
         </Container>
+
+        {/* PDF Preview Dialog */}
+        <Dialog
+          open={Boolean(previewPdf)}
+          onClose={() => setPreviewPdf(null)}
+          maxWidth="lg"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: '20px',
+              height: '85vh',
+              overflow: 'hidden'
+            }
+          }}
+        >
+          <DialogTitle
+            sx={{
+              m: 0,
+              p: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: '#f8f9fa',
+              borderBottom: '1px solid #eee'
+            }}
+          >
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <Document size="24" color="#e74c3c" variant="Bold" />
+              <Typography variant="h5" sx={{ fontWeight: 700, color: '#2E2A39' }}>
+                {previewPdf?.title}
+              </Typography>
+            </Stack>
+
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<Export size="16" />}
+                component="a"
+                href={previewPdf?.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ borderRadius: '8px', fontWeight: 600 }}
+              >
+                فتح في نافذة جديدة
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={<DocumentDownload size="16" />}
+                component="a"
+                href={previewPdf?.url}
+                download
+                sx={{ borderRadius: '8px', fontWeight: 600 }}
+              >
+                تحميل
+              </Button>
+              <IconButton onClick={() => setPreviewPdf(null)} sx={{ color: 'text.secondary' }}>
+                <CloseCircle size="24" />
+              </IconButton>
+            </Stack>
+          </DialogTitle>
+
+          <DialogContent sx={{ p: 0, height: '100%', backgroundColor: '#525659' }}>
+            {previewPdf?.url ? (
+              <iframe
+                src={previewPdf.url}
+                title={previewPdf.title}
+                width="100%"
+                height="100%"
+                style={{ border: 'none' }}
+              />
+            ) : null}
+          </DialogContent>
+        </Dialog>
       </Box>
     </Fade>
   );

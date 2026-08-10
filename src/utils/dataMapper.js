@@ -51,6 +51,8 @@ export const mapEpisode = (episode) => {
     created_at: episode.CreatedAt || episode.created_at,
     updated_at: episode.UpdatedAt || episode.updated_at,
     author: episode.Author || episode.author,
+    episode_worksheets: episode.EpisodeWorksheets || episode.episode_worksheets || episode.EpisodeWorksheet || [],
+    EpisodeWorksheets: episode.EpisodeWorksheets || episode.episode_worksheets || episode.EpisodeWorksheet || [],
     // Keep original for reference
     ...episode
   };

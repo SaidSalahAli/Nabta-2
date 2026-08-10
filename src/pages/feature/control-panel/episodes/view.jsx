@@ -14,6 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Chip from '@mui/material/Chip';
+import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 
@@ -24,7 +25,7 @@ import { useGetEpisode, deleteEpisode } from 'api/episodes';
 import { openSnackbar } from 'api/snackbar';
 
 // assets
-import { Edit, Trash, DocumentText } from 'iconsax-react';
+import { Edit, Trash, DocumentText, Eye, DocumentDownload, Document, Export, CloseCircle } from 'iconsax-react';
 
 // ==============================|| EPISODE DETAILS VIEW ||============================== //
 
@@ -35,6 +36,7 @@ export default function ViewEpisode() {
   const [openTranscript, setOpenTranscript] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [previewPdf, setPreviewPdf] = useState(null);
 
   const handleEditClick = () => {
     navigate(`/episodes/${id}/edit`);
@@ -95,6 +97,8 @@ export default function ViewEpisode() {
       </Grid>
     );
   }
+
+  const worksheets = episode.EpisodeWorksheets || episode.episode_worksheets || episode.EpisodeWorksheet || [];
 
   return (
     <Grid container spacing={3}>
@@ -189,6 +193,88 @@ export default function ViewEpisode() {
               </Button>
             </>
           )}
+
+          {/* Worksheets Section */}
+          {worksheets.length > 0 && (
+            <>
+              <Divider sx={{ my: 3 }} />
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                أوراق العمل المرتبطة ({worksheets.length})
+              </Typography>
+              <Grid container spacing={2}>
+                {worksheets.map((ws, idx) => {
+                  const title = ws.TitleAr || ws.title_ar || 'ورقة عمل';
+                  const description = ws.DescriptionAr || ws.description_ar || '';
+                  const fileUrl = ws.FileUrl || ws.file_url || '';
+                  const thumbnail = ws.ThumbnailImage || ws.thumbnail_image || '';
+                  const fileType = (ws.FileType || ws.file_type || 'pdf').toUpperCase();
+
+                  return (
+                    <Grid size={{ xs: 12, sm: 6 }} key={ws.Id || ws.id || idx}>
+                      <Card variant="outlined" sx={{ p: 2, borderRadius: 2 }}>
+                        <Stack direction="row" spacing={2} alignItems="center">
+                          <Box
+                            sx={{
+                              width: 70,
+                              height: 70,
+                              borderRadius: 1,
+                              backgroundColor: '#f5f5f5',
+                              overflow: 'hidden',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0
+                            }}
+                          >
+                            {thumbnail ? (
+                              <Box component="img" src={thumbnail} alt={title} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                              <Document size={36} color="#1890ff" variant="Bold" />
+                            )}
+                          </Box>
+                          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                            <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+                              <Typography variant="subtitle1" noWrap sx={{ fontWeight: 600 }}>
+                                {title}
+                              </Typography>
+                              <Chip label={fileType} color="error" size="small" sx={{ height: 20, fontSize: 10 }} />
+                            </Stack>
+                            {description && (
+                              <Typography variant="caption" color="textSecondary" noWrap display="block">
+                                {description}
+                              </Typography>
+                            )}
+                            <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                              <Button
+                                size="small"
+                                variant="contained"
+                                startIcon={<Eye size="14" />}
+                                onClick={() => setPreviewPdf({ url: fileUrl, title })}
+                              >
+                                معاينة PDF
+                              </Button>
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                startIcon={<DocumentDownload size="14" />}
+                                component="a"
+                                href={fileUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                download
+                              >
+                                تحميل
+                              </Button>
+                            </Stack>
+                          </Box>
+                        </Stack>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </>
+          )}
         </MainCard>
       </Grid>
 
@@ -260,6 +346,38 @@ export default function ViewEpisode() {
             {isDeleting ? 'جاري الحذف...' : 'حذف'}
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/* PDF Preview Modal */}
+      <Dialog
+        open={Boolean(previewPdf)}
+        onClose={() => setPreviewPdf(null)}
+        maxWidth="lg"
+        fullWidth
+        PaperProps={{ sx: { height: '85vh', borderRadius: 3, overflow: 'hidden' } }}
+      >
+        <DialogTitle sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#f8f9fa' }}>
+          <Stack direction="row" spacing={1.5} alignItems="center">
+            <Document size="24" color="#e74c3c" variant="Bold" />
+            <Typography variant="h6">{previewPdf?.title}</Typography>
+          </Stack>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Button size="small" variant="outlined" startIcon={<Export size="16" />} component="a" href={previewPdf?.url} target="_blank" rel="noopener noreferrer">
+              فتح في نافذة جديدة
+            </Button>
+            <Button size="small" variant="contained" startIcon={<DocumentDownload size="16" />} component="a" href={previewPdf?.url} download>
+              تحميل
+            </Button>
+            <IconButton onClick={() => setPreviewPdf(null)}>
+              <CloseCircle size="24" />
+            </IconButton>
+          </Stack>
+        </DialogTitle>
+        <DialogContent sx={{ p: 0, height: '100%', backgroundColor: '#525659' }}>
+          {previewPdf?.url && (
+            <iframe src={previewPdf.url} title={previewPdf.title} width="100%" height="100%" style={{ border: 'none' }} />
+          )}
+        </DialogContent>
       </Dialog>
     </Grid>
   );
