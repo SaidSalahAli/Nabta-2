@@ -29,9 +29,9 @@ export default function AboutNabta({ shouldAnimate = false }) {
               نبته
             </Typography>
             <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
-              منصة صناعة محتوى تربوي تعليمي للأطفال، ودعم الأمهات والآباء
+              منصة صناعة محتوى تربوي تعليمي للأطفال، ودعم الأمهات والآباء.
               <br />
-              تربية تتعلّم... وتعليم يربّي
+              تربية تعلّم... وتعليم يربّي
             </Typography>
           </Box>
 

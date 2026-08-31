@@ -23,8 +23,14 @@ const initialState = {
 
 const verifyToken = (serviceToken) => {
   if (!serviceToken) return false;
-  const decoded = jwtDecode(serviceToken);
-  return decoded.exp > Date.now() / 1000;
+  try {
+    const decoded = jwtDecode(serviceToken);
+    // بعض التوكنات ما فيها exp — نعتبرها صالحة
+    if (!decoded.exp) return true;
+    return decoded.exp > Date.now() / 1000;
+  } catch {
+    return false;
+  }
 };
 
 const setSession = (serviceToken) => {
@@ -96,14 +102,15 @@ export const JWTProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await axios.post('api/AccountNabta/Login', { email, password });
-    const { accessToken, user } = response.data;
-    setSession(accessToken);
+    const data = response.data;
+    const token = data.accessToken || data.token || data.serviceToken;
+    setSession(token);
 
-    const userFromToken = getUserFromToken(accessToken);
+    const userFromToken = getUserFromToken(token);
 
     dispatch({
       type: LOGIN,
-      payload: { isLoggedIn: true, user: userFromToken || user }
+      payload: { isLoggedIn: true, user: userFromToken || data.user || data }
     });
   };
 

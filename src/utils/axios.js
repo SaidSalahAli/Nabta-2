@@ -24,14 +24,9 @@ axiosServices.interceptors.request.use(
 axiosServices.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 && !window.location.href.includes('/auth/login')) {
-      window.location.pathname = '/maintenance/500';
-    }
-    if (error.response?.status === 302 || error.response?.status === 301) {
-      // Handle redirects - usually means auth is required
-      if (!window.location.href.includes('/auth/login')) {
-        window.location.pathname = '/auth/login';
-      }
+    if (error.response?.status === 401 && !window.location.href.includes('/auth')) {
+      localStorage.removeItem('serviceToken');
+      window.location.pathname = '/auth/login';
     }
     return Promise.reject((error.response && error.response.data) || 'Wrong Services');
   }

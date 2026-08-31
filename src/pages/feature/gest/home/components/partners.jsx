@@ -71,7 +71,7 @@ export default function Partners({ shouldAnimate = false }) {
                 lineHeight: 1.9
               }}
             >
-              نحن في منصة نبتة نسير معًا جنبًا إلى جنب مع شركائنا في النجاح
+              نحن في منصة نبتة نسير معًا جنبًا إلى جنب مع شركائنا في النجاح.
             </Typography>
           </Box>
 
