@@ -164,7 +164,7 @@ function BottomBar({ primaryColor }) {
     if (link.scrollTo) {
       setActiveTab(index);
       if (location.pathname !== '/') {
-        navigate('/');
+        navigate('/', { state: { scrollTo: link.scrollTo } });
         setTimeout(() => {
           const el = document.getElementById(link.scrollTo);
           if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -335,6 +335,24 @@ function BottomBar({ primaryColor }) {
 
 function MobileDrawer({ open, onClose, primaryColor }) {
   const { isLoggedIn, user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLinkClick = (link) => {
+    onClose();
+    if (link.scrollTo) {
+      if (location.pathname !== '/') {
+        navigate('/', { state: { scrollTo: link.scrollTo } });
+        setTimeout(() => {
+          const el = document.getElementById(link.scrollTo);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      } else {
+        const el = document.getElementById(link.scrollTo);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
 
   return (
     <Drawer anchor="top" open={open} onClose={onClose} sx={{ '& .MuiDrawer-paper': { backgroundImage: 'none' } }}>
@@ -357,10 +375,14 @@ function MobileDrawer({ open, onClose, primaryColor }) {
           {navLinks.map((link) => (
             <ListItemButton
               key={link.label}
-              component={link.path !== '#' ? Link : 'div'}
-              to={link.path !== '#' ? link.path : undefined}
+              component={link.scrollTo ? 'div' : link.path !== '#' ? Link : 'div'}
+              to={!link.scrollTo && link.path !== '#' ? link.path : undefined}
               onClick={() => {
-                if (link.path !== '#') onClose();
+                if (link.scrollTo) {
+                  handleLinkClick(link);
+                } else if (link.path !== '#') {
+                  onClose();
+                }
               }}
               sx={{ px: 0, borderRadius: 1 }}
             >

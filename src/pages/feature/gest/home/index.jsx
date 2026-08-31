@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Hero from './components/hero';
 import Applications from './components/applications';
 import Characters from './components/characters';
@@ -17,6 +18,20 @@ import SEO from 'components/SEO';
 import AnimatedSection from 'components/AnimatedSection';
 
 export default function Home() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const targetId = location.state.scrollTo;
+      const timer = setTimeout(() => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [location.state]);
   return (
     <Box sx={{ width: '100%' }}>
       <SEO

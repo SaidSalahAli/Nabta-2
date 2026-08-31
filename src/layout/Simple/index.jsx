@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
+import lazyRetry from 'utils/lazyRetry';
 
 // project-imports
 import Loader from 'components/Loader';
 import { SimpleLayoutType } from 'config';
 import Box from '@mui/material/Box';
 
-const Header = lazy(() => import('./Header'));
-const FooterBlock = lazy(() => import('./FooterBlock'));
+const Header = lazyRetry(() => import('./Header'));
+const FooterBlock = lazyRetry(() => import('./FooterBlock'));
 
 export default function SimpleLayout({ layout = SimpleLayoutType.SIMPLE }) {
   return (

@@ -1,7 +1,8 @@
-import { lazy } from 'react';
+import lazyRetry from 'utils/lazyRetry';
 
 // project-imports
 import Loadable from 'components/Loadable';
+import RouteErrorBoundary from 'components/RouteErrorBoundary';
 import { SimpleLayoutType } from 'config';
 import DashboardLayout from 'layout/Dashboard';
 import PagesLayout from 'layout/Pages';
@@ -9,51 +10,52 @@ import SimpleLayout from 'layout/Simple';
 import AuthGuard from 'utils/route-guard/AuthGuard';
 
 // pages routing
-const MaintenanceError = Loadable(lazy(() => import('pages/maintenance/error/404')));
-const MaintenanceError500 = Loadable(lazy(() => import('pages/maintenance/error/500')));
-const MaintenanceUnderConstruction = Loadable(lazy(() => import('pages/maintenance/under-construction/under-construction')));
-const MaintenanceUnderConstruction2 = Loadable(lazy(() => import('pages/maintenance/under-construction/under-construction2')));
-const MaintenanceComingSoon = Loadable(lazy(() => import('pages/maintenance/coming-soon/coming-soon')));
-const MaintenanceComingSoon2 = Loadable(lazy(() => import('pages/maintenance/coming-soon/coming-soon2')));
+const MaintenanceError = Loadable(lazyRetry(() => import('pages/maintenance/error/404')));
+const MaintenanceError500 = Loadable(lazyRetry(() => import('pages/maintenance/error/500')));
+const MaintenanceUnderConstruction = Loadable(lazyRetry(() => import('pages/maintenance/under-construction/under-construction')));
+const MaintenanceUnderConstruction2 = Loadable(lazyRetry(() => import('pages/maintenance/under-construction/under-construction2')));
+const MaintenanceComingSoon = Loadable(lazyRetry(() => import('pages/maintenance/coming-soon/coming-soon')));
+const MaintenanceComingSoon2 = Loadable(lazyRetry(() => import('pages/maintenance/coming-soon/coming-soon2')));
 
-const Home = Loadable(lazy(() => import('pages/feature/gest/home')));
-const AllEpisodes = Loadable(lazy(() => import('pages/feature/gest/episodes')));
-const ViewEpisodeGuest = Loadable(lazy(() => import('pages/feature/gest/episodes/ViewEpisode')));
-const AllApplications = Loadable(lazy(() => import('pages/feature/gest/applications')));
-const ViewApplication = Loadable(lazy(() => import('pages/feature/gest/applications/ViewApplication')));
-const Support = Loadable(lazy(() => import('pages/feature/gest/support')));
-const Contact = Loadable(lazy(() => import('pages/feature/gest/contact')));
-const WorksheetsGuest = Loadable(lazy(() => import('pages/feature/gest/worksheets')));
-const Dashboard = Loadable(lazy(() => import('pages/feature/control-panel/dashboard')));
+const Home = Loadable(lazyRetry(() => import('pages/feature/gest/home')));
+const AllEpisodes = Loadable(lazyRetry(() => import('pages/feature/gest/episodes')));
+const ViewEpisodeGuest = Loadable(lazyRetry(() => import('pages/feature/gest/episodes/ViewEpisode')));
+const AllApplications = Loadable(lazyRetry(() => import('pages/feature/gest/applications')));
+const ViewApplication = Loadable(lazyRetry(() => import('pages/feature/gest/applications/ViewApplication')));
+const Support = Loadable(lazyRetry(() => import('pages/feature/gest/support')));
+const Contact = Loadable(lazyRetry(() => import('pages/feature/gest/contact')));
+const WorksheetsGuest = Loadable(lazyRetry(() => import('pages/feature/gest/worksheets')));
+const Dashboard = Loadable(lazyRetry(() => import('pages/feature/control-panel/dashboard')));
 
 // render - episodes
-const EpisodesList = Loadable(lazy(() => import('pages/feature/control-panel/episodes')));
-const CreateEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/create')));
-const EditEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/edit')));
-const ViewEpisode = Loadable(lazy(() => import('pages/feature/control-panel/episodes/view')));
-const FAQ = Loadable(lazy(() => import('pages/feature/gest/FAQ')));
-const Terms = Loadable(lazy(() => import('pages/feature/gest/terms')));
-const Privacy = Loadable(lazy(() => import('pages/feature/gest/privacy')));
+const EpisodesList = Loadable(lazyRetry(() => import('pages/feature/control-panel/episodes')));
+const CreateEpisode = Loadable(lazyRetry(() => import('pages/feature/control-panel/episodes/create')));
+const EditEpisode = Loadable(lazyRetry(() => import('pages/feature/control-panel/episodes/edit')));
+const ViewEpisode = Loadable(lazyRetry(() => import('pages/feature/control-panel/episodes/view')));
+const FAQ = Loadable(lazyRetry(() => import('pages/feature/gest/FAQ')));
+const Terms = Loadable(lazyRetry(() => import('pages/feature/gest/terms')));
+const Privacy = Loadable(lazyRetry(() => import('pages/feature/gest/privacy')));
 // render - episode categories
-const EpisodeCategories = Loadable(lazy(() => import('pages/feature/control-panel/episode-categories')));
+const EpisodeCategories = Loadable(lazyRetry(() => import('pages/feature/control-panel/episode-categories')));
 
 // render - worksheets
-const Worksheets = Loadable(lazy(() => import('pages/feature/control-panel/worksheets')));
+const Worksheets = Loadable(lazyRetry(() => import('pages/feature/control-panel/worksheets')));
 
 // render - applications
-const ApplicationsAdmin = Loadable(lazy(() => import('pages/feature/control-panel/applications')));
+const ApplicationsAdmin = Loadable(lazyRetry(() => import('pages/feature/control-panel/applications')));
 
 // render - contact messages
-const ContactMessagesAdmin = Loadable(lazy(() => import('pages/feature/control-panel/contact-messages')));
+const ContactMessagesAdmin = Loadable(lazyRetry(() => import('pages/feature/control-panel/contact-messages')));
 // render - categories
-const CategoriesAdmin = Loadable(lazy(() => import('pages/feature/control-panel/categories')));
+const CategoriesAdmin = Loadable(lazyRetry(() => import('pages/feature/control-panel/categories')));
 
 // render - users
-const UsersAdmin = Loadable(lazy(() => import('pages/feature/control-panel/users')));
+const UsersAdmin = Loadable(lazyRetry(() => import('pages/feature/control-panel/users')));
 // ==============================|| MAIN ROUTES ||============================== //
 
 const MainRoutes = {
   path: '/',
+  errorElement: <RouteErrorBoundary />,
   children: [
     {
       path: '/',

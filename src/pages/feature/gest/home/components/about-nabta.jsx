@@ -18,7 +18,8 @@ export default function AboutNabta({ shouldAnimate = false }) {
           py: { xs: 8, md: 6 },
           position: 'relative',
           overflow: 'hidden',
-          backgroundColor: '#ffff'
+          backgroundColor: '#ffff',
+          scrollMarginTop: { xs: '80px', md: '110px' }
         }}
       >
         <Container maxWidth="lg">

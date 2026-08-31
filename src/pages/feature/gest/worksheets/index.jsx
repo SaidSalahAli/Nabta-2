@@ -191,7 +191,7 @@ function WorksheetSkeleton() {
 
 // ==============================|| WORKSHEETS GUEST PAGE ||============================== //
 
-const ITEMS_PER_PAGE = 8; // 4 per row × 2 rows
+const ITEMS_PER_PAGE = 12; // 4 per row × 3 rows
 
 export default function WorksheetsPage() {
   const [checked, setChecked] = useState(false);
@@ -203,7 +203,7 @@ export default function WorksheetsPage() {
   }, []);
 
   const handleChange = (event, value) => {
-    setPage(1);
+    setPage(value);
   };
 
   const { worksheets = [], worksheetsLoading } = useGetWorksheets();
@@ -216,6 +216,7 @@ export default function WorksheetsPage() {
     activeWorksheets = activeWorksheets.filter((w) => (w.TitleAr || w.titleAr || '').toLowerCase().includes(searchTerm.toLowerCase()));
   }
 
+  const totalPages = Math.ceil(activeWorksheets.length / ITEMS_PER_PAGE) || 1;
   const paginatedWorksheets = activeWorksheets.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
   return (
@@ -283,7 +284,7 @@ export default function WorksheetsPage() {
           {/* Grid */}
           {worksheetsLoading ? (
             <Grid container spacing={2.5}>
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 12 }).map((_, i) => (
                 <Grid item xs={6} sm={4} md={3} key={i}>
                   <WorksheetSkeleton />
                 </Grid>
@@ -307,38 +308,40 @@ export default function WorksheetsPage() {
               </Grid>
 
               {/* Pagination */}
-              <Stack spacing={2} sx={{ mt: 8, alignItems: 'center' }}>
-                <Pagination
-                  count={1}
-                  page={page}
-                  onChange={handleChange}
-                  variant="outlined"
-                  shape="rounded"
-                  color="primary"
-                  size="large"
-                  sx={{
-                    '& .MuiPaginationItem-root': {
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      borderRadius: '8px',
-                      border: '1px solid #E0E0E0',
-                      backgroundColor: '#fff',
-                      '&.Mui-selected': {
-                        backgroundColor: '#FFD666',
-                        borderColor: '#FFD666',
-                        color: '#2E2A39',
+              {totalPages > 1 && (
+                <Stack spacing={2} sx={{ mt: 8, alignItems: 'center' }}>
+                  <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={handleChange}
+                    variant="outlined"
+                    shape="rounded"
+                    color="primary"
+                    size="large"
+                    sx={{
+                      '& .MuiPaginationItem-root': {
+                        fontSize: '1.1rem',
+                        fontWeight: 600,
+                        borderRadius: '8px',
+                        border: '1px solid #E0E0E0',
+                        backgroundColor: '#fff',
+                        '&.Mui-selected': {
+                          backgroundColor: '#FFD666',
+                          borderColor: '#FFD666',
+                          color: '#2E2A39',
+                          '&:hover': {
+                            backgroundColor: '#ffcf4d',
+                            borderColor: '#ffcf4d'
+                          }
+                        },
                         '&:hover': {
-                          backgroundColor: '#ffcf4d',
-                          borderColor: '#ffcf4d'
+                          backgroundColor: '#f5f5f5'
                         }
-                      },
-                      '&:hover': {
-                        backgroundColor: '#f5f5f5'
                       }
-                    }
-                  }}
-                />
-              </Stack>
+                    }}
+                  />
+                </Stack>
+              )}
             </>
           )}
         </Container>

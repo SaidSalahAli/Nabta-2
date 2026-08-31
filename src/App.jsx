@@ -87,6 +87,23 @@ class ChunkErrorBoundary extends React.Component {
 // ==============================|| APP - THEME, ROUTER, LOCAL  ||============================== //
 
 export default function App() {
+  React.useEffect(() => {
+    const handlePreloadError = (event) => {
+      event?.preventDefault?.();
+      const now = Date.now();
+      const lastReload = sessionStorage.getItem('last_chunk_reload');
+      if (!lastReload || now - Number(lastReload) > 10000) {
+        sessionStorage.setItem('last_chunk_reload', String(now));
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener('vite:preloadError', handlePreloadError);
+    return () => {
+      window.removeEventListener('vite:preloadError', handlePreloadError);
+    };
+  }, []);
+
   return (
     <>
       <ThemeCustomization>

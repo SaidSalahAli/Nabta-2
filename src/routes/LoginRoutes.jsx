@@ -1,22 +1,24 @@
-import { lazy } from 'react';
+import lazyRetry from 'utils/lazyRetry';
 
 // project-imports
 import AuthLayout from 'layout/Auth';
 import Loadable from 'components/Loadable';
+import RouteErrorBoundary from 'components/RouteErrorBoundary';
 
 // render - login
-const AuthLogin = Loadable(lazy(() => import('pages/auth/auth1/login')));
-const AuthRegister = Loadable(lazy(() => import('pages/auth/auth1/register')));
-const AuthForgotPassword = Loadable(lazy(() => import('pages/auth/auth1/forgot-password')));
-const AuthCheckMail = Loadable(lazy(() => import('pages/auth/auth1/check-mail')));
-const AuthResetPassword = Loadable(lazy(() => import('pages/auth/auth1/reset-password')));
-const AuthCodeVerification = Loadable(lazy(() => import('pages/auth/auth1/code-verification')));
+const AuthLogin = Loadable(lazyRetry(() => import('pages/auth/auth1/login')));
+const AuthRegister = Loadable(lazyRetry(() => import('pages/auth/auth1/register')));
+const AuthForgotPassword = Loadable(lazyRetry(() => import('pages/auth/auth1/forgot-password')));
+const AuthCheckMail = Loadable(lazyRetry(() => import('pages/auth/auth1/check-mail')));
+const AuthResetPassword = Loadable(lazyRetry(() => import('pages/auth/auth1/reset-password')));
+const AuthCodeVerification = Loadable(lazyRetry(() => import('pages/auth/auth1/code-verification')));
 
 // ==============================|| AUTH ROUTES ||============================== //
 
 const LoginRoutes = {
   path: '/auth',
   element: <AuthLayout />,
+  errorElement: <RouteErrorBoundary />,
   children: [
     {
       index: true,
