@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { preload } from 'swr';
+import { useGoogleLogin } from '@react-oauth/google';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -26,6 +27,7 @@ import IconButton from 'components/@extended/IconButton';
 import useAuth from 'hooks/useAuth';
 import useScriptRef from 'hooks/useScriptRef';
 import { fetcher } from 'utils/axios';
+import { openSnackbar } from 'api/snackbar';
 
 // assets
 import { Eye, EyeSlash } from 'iconsax-react';
@@ -56,12 +58,51 @@ function GoogleIcon() {
 export default function AuthLogin({ forgot }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn, login } = useAuth();
+  const { isLoggedIn, login, loginWithGoogle } = useAuth();
   const scriptedRef = useScriptRef();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (e) => e.preventDefault();
+
+  const handleGoogleLogin = useGoogleLogin({
+    flow: 'implicit',
+    onSuccess: async (tokenResponse) => {
+      try {
+        setGoogleLoading(true);
+        // Get user info from Google using the access token
+        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+        });
+        const userInfo = await res.json();
+
+        // Send to our backend
+        await loginWithGoogle({ credential: tokenResponse.access_token, userInfo });
+        const from = location.state?.from || '/dashboard';
+        navigate(from, { replace: true });
+      } catch (err) {
+        console.error('Google login error:', err);
+        openSnackbar({
+          open: true,
+          message: err?.message || 'حدث خطأ أثناء تسجيل الدخول بجوجل',
+          variant: 'alert',
+          alert: { color: 'error' }
+        });
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    onError: (error) => {
+      console.error('Google login error:', error);
+      openSnackbar({
+        open: true,
+        message: 'تم إلغاء تسجيل الدخول بجوجل',
+        variant: 'alert',
+        alert: { color: 'warning' }
+      });
+    }
+  });
 
   return (
     <Formik
@@ -181,8 +222,17 @@ export default function AuthLogin({ forgot }) {
             {/* Google Login */}
             <Grid size={12}>
               <AnimateButton>
-                <Button fullWidth size="large" variant="outlined" color="secondary" startIcon={<GoogleIcon />} sx={{ gap: 1 }}>
-                  التسجيل عبر جوجل
+                <Button
+                  fullWidth
+                  size="large"
+                  variant="outlined"
+                  color="secondary"
+                  startIcon={<GoogleIcon />}
+                  sx={{ gap: 1 }}
+                  onClick={() => handleGoogleLogin()}
+                  disabled={googleLoading}
+                >
+                  {googleLoading ? 'جاري التحميل...' : 'التسجيل عبر جوجل'}
                 </Button>
               </AnimateButton>
             </Grid>

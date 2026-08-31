@@ -158,6 +158,27 @@ export const JWTProvider = ({ children }) => {
 
   const updateProfile = () => {};
 
+  const loginWithGoogle = async (credentialResponse) => {
+    const { credential: googleAccessToken, userInfo } = credentialResponse;
+    const response = await axios.post('api/AccountNabta/GoogleLogin', {
+      accessToken: googleAccessToken,
+      email: userInfo?.email,
+      firstName: userInfo?.given_name || '',
+      lastName: userInfo?.family_name || '',
+      picture: userInfo?.picture || ''
+    });
+    const data = response.data;
+    const token = data.accessToken || data.token || data.serviceToken;
+    setSession(token);
+
+    const userFromToken = getUserFromToken(token);
+
+    dispatch({
+      type: LOGIN,
+      payload: { isLoggedIn: true, user: userFromToken || data.user || data }
+    });
+  };
+
   if (state.isInitialized !== undefined && !state.isInitialized) {
     return <Loader />;
   }
@@ -169,6 +190,7 @@ export const JWTProvider = ({ children }) => {
         login,
         logout,
         register,
+        loginWithGoogle,
         resetPassword,
         forgotPassword,
         verifyOtp,

@@ -14,6 +14,9 @@ import logoAnimation from 'assets/images/logoAnimation.json';
 // auth-provider
 import { JWTProvider as AuthProvider } from 'contexts/JWTContext';
 
+// google oauth
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 // Simple ErrorBoundary to handle chunk loading failures
 class ChunkErrorBoundary extends React.Component {
   constructor(props) {
@@ -105,7 +108,7 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <ThemeCustomization>
         <RTLLayout>
           <Locales>
@@ -120,6 +123,6 @@ export default function App() {
           </Locales>
         </RTLLayout>
       </ThemeCustomization>
-    </>
+    </GoogleOAuthProvider>
   );
 }

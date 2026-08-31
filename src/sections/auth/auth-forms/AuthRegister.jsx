@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -28,6 +29,7 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import useAuth from 'hooks/useAuth';
 import useScriptRef from 'hooks/useScriptRef';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
+import { openSnackbar } from 'api/snackbar';
 
 // assets
 import { Eye, EyeSlash } from 'iconsax-react';
@@ -79,13 +81,14 @@ function GoogleIcon() {
 }
 
 export default function AuthRegister() {
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const scriptedRef = useScriptRef();
   const navigate = useNavigate();
 
   const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleClickShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
@@ -99,6 +102,47 @@ export default function AuthRegister() {
   useEffect(() => {
     changePassword('');
   }, []);
+
+  const handleGoogleRegister = useGoogleLogin({
+    flow: 'implicit',
+    onSuccess: async (tokenResponse) => {
+      try {
+        setGoogleLoading(true);
+        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+        });
+        const userInfo = await res.json();
+
+        await loginWithGoogle({ credential: tokenResponse.access_token, userInfo });
+        openSnackbar({
+          open: true,
+          message: 'تم تسجيل الدخول بنجاح!',
+          variant: 'alert',
+          alert: { color: 'success' }
+        });
+        navigate('/dashboard', { replace: true });
+      } catch (err) {
+        console.error('Google register error:', err);
+        openSnackbar({
+          open: true,
+          message: err?.message || 'حدث خطأ أثناء التسجيل بجوجل',
+          variant: 'alert',
+          alert: { color: 'error' }
+        });
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    onError: (error) => {
+      console.error('Google register error:', error);
+      openSnackbar({
+        open: true,
+        message: 'تم إلغاء التسجيل بجوجل',
+        variant: 'alert',
+        alert: { color: 'warning' }
+      });
+    }
+  });
 
   return (
     <Formik
@@ -369,8 +413,17 @@ export default function AuthRegister() {
             {/* Google Register */}
             <Grid size={12}>
               <AnimateButton>
-                <Button fullWidth size="large" variant="outlined" color="secondary" startIcon={<GoogleIcon />} sx={{ gap: 1 }}>
-                  التسجيل عبر جوجل
+                <Button
+                  fullWidth
+                  size="large"
+                  variant="outlined"
+                  color="secondary"
+                  startIcon={<GoogleIcon />}
+                  sx={{ gap: 1 }}
+                  onClick={() => handleGoogleRegister()}
+                  disabled={googleLoading}
+                >
+                  {googleLoading ? 'جاري التحميل...' : 'التسجيل عبر جوجل'}
                 </Button>
               </AnimateButton>
             </Grid>
