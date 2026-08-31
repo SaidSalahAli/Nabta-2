@@ -17,23 +17,80 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // ============================|| STATIC - CODE VERIFICATION ||============================ //
 
+import { useNavigate } from 'react-router-dom';
+
+// project-imports
+import useAuth from 'hooks/useAuth';
+import { openSnackbar } from 'api/snackbar';
+
 export default function AuthCodeVerification() {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { verifyOtp, forgotPassword } = useAuth();
+  const email = window.localStorage.getItem('email') || '';
+
+  const handleResend = async () => {
+    if (!email) {
+      openSnackbar({
+        open: true,
+        message: 'Email address not found',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+      return;
+    }
+    try {
+      const res = await forgotPassword(email);
+      openSnackbar({
+        open: true,
+        message: res?.message || 'OTP resent to your email',
+        variant: 'alert',
+        alert: { color: 'success' }
+      });
+    } catch (err) {
+      openSnackbar({
+        open: true,
+        message: err?.response?.data?.message || err.message || 'Error resending OTP',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+    }
+  };
 
   return (
     <Formik
-      initialValues={{ otp: '' }}
+      initialValues={{ otp: '', submit: null }}
       validationSchema={Yup.object({
-        otp: Yup.string().length(4, 'OTP must be exactly 4 digits').required('OTP is required')
+        otp: Yup.string().length(6, 'OTP must be exactly 6 digits').required('OTP is required')
       })}
-      onSubmit={(values, { resetForm }) => {
-        resetForm();
-        // reset focus after submission
-        const activeElement = document.activeElement;
-        if (activeElement) activeElement.blur();
+      onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        try {
+          if (!email) {
+            throw new Error('Email is missing, please try again.');
+          }
+          const response = await verifyOtp(email, values.otp.trim());
+          window.localStorage.setItem('resetOtp', values.otp.trim());
+          window.localStorage.setItem('resetCode', values.otp.trim());
+
+          setStatus({ success: true });
+          setSubmitting(false);
+          openSnackbar({
+            open: true,
+            message: response?.message || 'OTP verified successfully',
+            variant: 'alert',
+            alert: { color: 'success' }
+          });
+          setTimeout(() => {
+            navigate('/auth/reset-password', { replace: true });
+          }, 1500);
+        } catch (err) {
+          setStatus({ success: false });
+          setErrors({ submit: err?.response?.data?.message || err?.message || 'Invalid OTP code' });
+          setSubmitting(false);
+        }
       }}
     >
-      {({ errors, handleSubmit, touched, values, setFieldValue }) => (
+      {({ errors, handleSubmit, isSubmitting, touched, values, setFieldValue }) => (
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid size={12}>
@@ -52,12 +109,14 @@ export default function AuthCodeVerification() {
                   inputType="tel"
                   shouldAutoFocus
                   renderInput={(props) => <input {...props} />}
-                  numInputs={4}
-                  containerStyle={{ justifyContent: 'space-between', margin: -8 }}
+                  numInputs={6}
+                  containerStyle={{ justifyContent: 'center', gap: '8px', direction: 'ltr' }}
                   inputStyle={{
-                    width: '100%',
-                    margin: '8px',
-                    padding: '10px',
+                    width: '45px',
+                    height: '50px',
+                    fontSize: '18px',
+                    fontWeight: 600,
+                    textAlign: 'center',
                     border: '1px solid',
                     outline: 'none',
                     borderRadius: 4,
@@ -65,15 +124,22 @@ export default function AuthCodeVerification() {
                   }}
                 />
                 {touched.otp && errors.otp && (
-                  <FormHelperText error id="standard-weight-helper-text-otp">
+                  <FormHelperText error id="standard-weight-helper-text-otp" sx={{ textAlign: 'center', mt: 1 }}>
                     {errors.otp}
                   </FormHelperText>
                 )}
               </Box>
             </Grid>
+            {errors.submit && (
+              <Grid size={12}>
+                <FormHelperText error sx={{ textAlign: 'center' }}>
+                  {errors.submit}
+                </FormHelperText>
+              </Grid>
+            )}
             <Grid size={12}>
               <AnimateButton>
-                <Button disableElevation fullWidth size="large" type="submit" variant="contained">
+                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
                   Continue
                 </Button>
               </AnimateButton>
@@ -81,7 +147,7 @@ export default function AuthCodeVerification() {
             <Grid size={12}>
               <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
                 <Typography>Did not receive the email? Check your spam filter, or</Typography>
-                <Typography variant="body1" sx={{ minWidth: 87, textDecoration: 'none', cursor: 'pointer' }} color="primary">
+                <Typography variant="body1" onClick={handleResend} sx={{ minWidth: 87, textDecoration: 'none', cursor: 'pointer' }} color="primary">
                   Resend code
                 </Typography>
               </Stack>

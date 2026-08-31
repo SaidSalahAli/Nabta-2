@@ -35,9 +35,10 @@ export default function AuthResetPassword() {
   const scriptedRef = useScriptRef();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('token') || window.localStorage.getItem('resetCode') || window.localStorage.getItem('token');
+  const email = window.localStorage.getItem('email') || '';
+  const otp = searchParams.get('otp') || searchParams.get('token') || window.localStorage.getItem('resetOtp') || window.localStorage.getItem('resetCode') || window.localStorage.getItem('token');
 
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, confirmResetPassword } = useAuth();
 
   const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
@@ -74,24 +75,26 @@ export default function AuthResetPassword() {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            if (!token) {
-              throw new Error('رمز إعادة تعيين كلمة المرور مفقود أو غير صالح.');
+            if (!email) {
+              throw new Error('Email is missing, please start from beginning.');
+            }
+            if (!otp) {
+              throw new Error('OTP is missing, please verify OTP code first.');
             }
 
-            await axiosServices.post('api/AccountNabta/ResetPassword', {
-              token: token,
-              newPassword: values.password
-            });
+            const response = await confirmResetPassword(email, otp, values.password);
 
             if (scriptedRef.current) {
               setStatus({ success: true });
               setSubmitting(false);
 
+              window.localStorage.removeItem('resetOtp');
+              window.localStorage.removeItem('resetCode');
+
               openSnackbar({
                 open: true,
-                message: 'Successfuly reset password.',
+                message: response?.message || 'Successfully reset password.',
                 variant: 'alert',
-
                 alert: {
                   color: 'success'
                 }
@@ -107,7 +110,7 @@ export default function AuthResetPassword() {
               setStatus({ success: false });
               const errorMessage = typeof err === 'string'
                 ? err
-                : (err?.message || err?.Message || err?.error || 'Wrong Services');
+                : (err?.response?.data?.message || err?.message || err?.Message || err?.error || 'Wrong Services');
               setErrors({ submit: errorMessage });
               setSubmitting(false);
             }

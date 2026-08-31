@@ -130,8 +130,23 @@ export const JWTProvider = ({ children }) => {
     dispatch({ type: LOGOUT });
   };
 
+  const forgotPassword = async (email) => {
+    const response = await axios.post('api/AccountNabta/ForgotPassword', { email });
+    return response.data;
+  };
+
+  const verifyOtp = async (email, otp) => {
+    const response = await axios.post('api/AccountNabta/VerifyOtp', { email, otp });
+    return response.data;
+  };
+
+  const confirmResetPassword = async (email, otp, newPassword) => {
+    const response = await axios.post('api/AccountNabta/ResetPassword', { email, otp, newPassword });
+    return response.data;
+  };
+
   const resetPassword = async (email) => {
-    await axios.post('api/AccountNabta/ForgotPassword', { email });
+    return await forgotPassword(email);
   };
 
   const updateProfile = () => {};
@@ -140,7 +155,23 @@ export const JWTProvider = ({ children }) => {
     return <Loader />;
   }
 
-  return <JWTContext.Provider value={{ ...state, login, logout, register, resetPassword, updateProfile }}>{children}</JWTContext.Provider>;
+  return (
+    <JWTContext.Provider
+      value={{
+        ...state,
+        login,
+        logout,
+        register,
+        resetPassword,
+        forgotPassword,
+        verifyOtp,
+        confirmResetPassword,
+        updateProfile
+      }}
+    >
+      {children}
+    </JWTContext.Provider>
+  );
 };
 
 export default JWTContext;

@@ -79,13 +79,13 @@ export default function ForgotPassword() {
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                   try {
-                    await resetPassword(values.email.trim());
+                    const res = await resetPassword(values.email.trim());
                     if (scriptedRef.current) {
                       setStatus({ success: true });
                       setSubmitting(false);
                       openSnackbar({
                         open: true,
-                        message: 'تم إرسال كود تعيين كلمة المرور إلى بريدك الإلكتروني',
+                        message: res?.message || 'تم إرسال كود تعيين كلمة المرور إلى بريدك الإلكتروني',
                         variant: 'alert',
                         alert: { color: 'success' }
                       });
@@ -98,7 +98,7 @@ export default function ForgotPassword() {
                   } catch (err) {
                     if (scriptedRef.current) {
                       setStatus({ success: false });
-                      setErrors({ submit: err.message || 'حدث خطأ أثناء إرسال البريد' });
+                      setErrors({ submit: err?.response?.data?.message || err?.message || 'حدث خطأ أثناء إرسال البريد' });
                       setSubmitting(false);
                     }
                   }

@@ -39,39 +39,30 @@ export default function AuthForgotPassword() {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            await resetPassword(values.email).then(
-              () => {
-                setStatus({ success: true });
-                setSubmitting(false);
-                openSnackbar({
-                  open: true,
-                  message: 'Check mail for reset password link',
-                  variant: 'alert',
+            const email = values.email.trim();
+            const res = await resetPassword(email);
+            window.localStorage.setItem('email', email);
 
-                  alert: {
-                    color: 'success'
-                  }
-                });
-                setTimeout(() => {
-                  navigate(isLoggedIn ? '/auth/check-mail' : '/check-mail', { replace: true });
-                }, 1500);
-
-                // WARNING: do not set any formik state here as formik might be already destroyed here. You may get following error by doing so.
-                // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application.
-                // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-                // github issue: https://github.com/formium/formik/issues/2430
-              },
-              (err) => {
-                setStatus({ success: false });
-                setErrors({ submit: err.message });
-                setSubmitting(false);
-              }
-            );
+            if (scriptedRef.current) {
+              setStatus({ success: true });
+              setSubmitting(false);
+              openSnackbar({
+                open: true,
+                message: res?.message || 'OTP code sent to your email',
+                variant: 'alert',
+                alert: {
+                  color: 'success'
+                }
+              });
+              setTimeout(() => {
+                navigate('/auth/code-verification', { replace: true });
+              }, 1500);
+            }
           } catch (err) {
             console.error(err);
             if (scriptedRef.current) {
               setStatus({ success: false });
-              setErrors({ submit: err.message });
+              setErrors({ submit: err?.response?.data?.message || err?.message || 'Error sending reset code' });
               setSubmitting(false);
             }
           }

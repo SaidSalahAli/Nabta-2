@@ -25,7 +25,7 @@ export default function CodeVerification() {
   const theme = useTheme();
   const scriptedRef = useScriptRef();
   const navigate = useNavigate();
-  const { resetPassword } = useAuth(); // for resending code
+  const { verifyOtp, forgotPassword } = useAuth(); // for resending code and verifying OTP
 
   let email = window.localStorage.getItem('email') || '';
   let maskedEmail = '****@company.com';
@@ -51,17 +51,17 @@ export default function CodeVerification() {
       return;
     }
     try {
-      await resetPassword(email);
+      const res = await forgotPassword(email);
       openSnackbar({
         open: true,
-        message: 'تم إعادة إرسال رمز التحقق إلى بريدك الإلكتروني',
+        message: res?.message || 'تم إعادة إرسال رمز التحقق إلى بريدك الإلكتروني',
         variant: 'alert',
         alert: { color: 'success' }
       });
     } catch (err) {
       openSnackbar({
         open: true,
-        message: err.message || 'حدث خطأ أثناء إعادة إرسال الرمز',
+        message: err?.response?.data?.message || err.message || 'حدث خطأ أثناء إعادة إرسال الرمز',
         variant: 'alert',
         alert: { color: 'error' }
       });
@@ -122,17 +122,23 @@ export default function CodeVerification() {
               <Formik
                 initialValues={{ otp: '', submit: null }}
                 validationSchema={Yup.object().shape({
-                  otp: Yup.string().length(4, 'يجب أن يتكون الرمز من 4 أرقام').required('كود التحقق مطلوب')
+                  otp: Yup.string().length(6, 'يجب أن يتكون الرمز من 6 أرقام').required('كود التحقق مطلوب')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                   try {
-                    window.localStorage.setItem('resetCode', values.otp);
+                    if (!email) {
+                      throw new Error('البريد الإلكتروني مفقود، يرجى إعادة المحاولة من جديد');
+                    }
+                    const response = await verifyOtp(email, values.otp.trim());
+                    window.localStorage.setItem('resetOtp', values.otp.trim());
+                    window.localStorage.setItem('resetCode', values.otp.trim());
+
                     if (scriptedRef.current) {
                       setStatus({ success: true });
                       setSubmitting(false);
                       openSnackbar({
                         open: true,
-                        message: 'تم التحقق من الرمز بنجاح',
+                        message: response?.message || 'تم التحقق من الرمز بنجاح',
                         variant: 'alert',
                         alert: { color: 'success' }
                       });
@@ -143,7 +149,7 @@ export default function CodeVerification() {
                   } catch (err) {
                     if (scriptedRef.current) {
                       setStatus({ success: false });
-                      setErrors({ submit: err.message || 'الرمز المدخل غير صحيح' });
+                      setErrors({ submit: err?.response?.data?.message || err?.message || 'الرمز المدخل غير صحيح' });
                       setSubmitting(false);
                     }
                   }
@@ -169,14 +175,14 @@ export default function CodeVerification() {
                             inputType="tel"
                             shouldAutoFocus
                             renderInput={(props) => <input {...props} />}
-                            numInputs={4}
-                            containerStyle={{ justifyContent: 'space-between', direction: 'ltr' }}
+                            numInputs={6}
+                            containerStyle={{ justifyContent: 'center', gap: '8px', direction: 'ltr' }}
                             inputStyle={{
-                              width: '60px',
-                              height: '60px',
-                              margin: '0 4px',
-                              padding: '10px',
+                              width: '48px',
+                              height: '52px',
+                              padding: '8px 4px',
                               fontSize: '20px',
+                              fontWeight: 600,
                               textAlign: 'center',
                               border: '1px solid',
                               outline: 'none',

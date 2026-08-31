@@ -31,8 +31,9 @@ export default function ResetPassword() {
   const scriptedRef = useScriptRef();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('token') || window.localStorage.getItem('resetCode') || window.localStorage.getItem('token');
-  const { isLoggedIn } = useAuth();
+  const email = window.localStorage.getItem('email') || '';
+  const otp = searchParams.get('otp') || searchParams.get('token') || window.localStorage.getItem('resetOtp') || window.localStorage.getItem('resetCode') || window.localStorage.getItem('token');
+  const { isLoggedIn, confirmResetPassword } = useAuth();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -102,22 +103,25 @@ export default function ResetPassword() {
                 })}
                 onSubmit={async (values, { setStatus, setSubmitting, setErrors }) => {
                   try {
-                    if (!token) {
-                      throw new Error('رمز إعادة تعيين كلمة المرور مفقود أو غير صالح.');
+                    if (!email) {
+                      throw new Error('البريد الإلكتروني مفقود، يرجى البدء من البداية.');
+                    }
+                    if (!otp) {
+                      throw new Error('كود التحقق مفقود، يرجى إدخال رمز التحقق أولاً.');
                     }
 
-                    await axiosServices.post('api/AccountNabta/ResetPassword', {
-                      token: token,
-                      newPassword: values.password
-                    });
+                    const response = await confirmResetPassword(email, otp, values.password);
 
                     if (scriptedRef.current) {
                       setStatus({ success: true });
                       setSubmitting(false);
 
+                      window.localStorage.removeItem('resetOtp');
+                      window.localStorage.removeItem('resetCode');
+
                       openSnackbar({
                         open: true,
-                        message: 'تم تعيين كلمة المرور الجديدة بنجاح',
+                        message: response?.message || 'تم تعيين كلمة المرور الجديدة بنجاح',
                         variant: 'alert',
                         alert: { color: 'success' }
                       });
@@ -131,7 +135,7 @@ export default function ResetPassword() {
                       setStatus({ success: false });
                       const errorMessage = typeof err === 'string'
                         ? err
-                        : (err?.message || err?.Message || err?.error || 'حدث خطأ أثناء تعيين كلمة المرور');
+                        : (err?.response?.data?.message || err?.message || err?.Message || 'حدث خطأ أثناء تعيين كلمة المرور');
                       setErrors({ submit: errorMessage });
                       setSubmitting(false);
                     }
