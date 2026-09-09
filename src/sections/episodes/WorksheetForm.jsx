@@ -25,17 +25,18 @@ import { useGetEpisodes } from 'api/episodes';
 
 // ==============================|| WORKSHEET FORM ||============================== //
 
-const validationSchema = Yup.object().shape({
-  title_ar: Yup.string().required('عنوان ورقة العمل مطلوب'),
-  description_ar: Yup.string(),
-  file: Yup.mixed().required('الملف مطلوب'),
-  file_type: Yup.string().required('نوع الملف مطلوب'),
-  thumbnail: Yup.mixed(),
-  episode_id: Yup.string(),
-  category_id: Yup.number(),
-  sort_order: Yup.number().min(0, 'يجب أن تكون قيمة موجبة'),
-  is_active: Yup.boolean()
-});
+const getValidationSchema = (isEditing) =>
+  Yup.object().shape({
+    title_ar: Yup.string().required('عنوان ورقة العمل مطلوب'),
+    description_ar: Yup.string(),
+    file: isEditing ? Yup.mixed().nullable() : Yup.mixed().required('الملف مطلوب'),
+    file_type: Yup.string().required('نوع الملف مطلوب'),
+    thumbnail: Yup.mixed(),
+    episode_id: Yup.string(),
+    category_id: Yup.number(),
+    sort_order: Yup.number().min(0, 'يجب أن تكون قيمة موجبة'),
+    is_active: Yup.boolean()
+  });
 
 export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = false, onCancel }) {
   const { episodes = [] } = useGetEpisodes();
@@ -84,8 +85,10 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
     }
   };
 
+  const isEditing = Boolean(worksheet?.id);
+
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleFormSubmit} enableReinitialize>
+    <Formik initialValues={initialValues} validationSchema={getValidationSchema(isEditing)} onSubmit={handleFormSubmit} enableReinitialize>
       {({ errors, handleBlur, handleChange, handleSubmit, touched, values, setFieldValue }) => (
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>

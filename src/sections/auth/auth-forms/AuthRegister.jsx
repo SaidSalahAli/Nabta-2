@@ -29,7 +29,6 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import useAuth from 'hooks/useAuth';
 import useScriptRef from 'hooks/useScriptRef';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
-import { openSnackbar } from 'api/snackbar';
 
 // assets
 import { Eye, EyeSlash } from 'iconsax-react';

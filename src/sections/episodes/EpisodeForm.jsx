@@ -22,7 +22,6 @@ import * as Yup from 'yup';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { openSnackbar } from 'api/snackbar';
 import { useGetEpisodeCategories } from 'api/episodeCategories';
-import { useGetWorksheets } from 'api/worksheets';
 
 // ==============================|| EPISODE FORM ||============================== //
 
@@ -47,7 +46,6 @@ const validationSchema = Yup.object().shape({
 
 export default function EpisodeForm({ episode = null, onSubmit, isLoading = false, onCancel }) {
   const { categories = [] } = useGetEpisodeCategories();
-  const { worksheets = [] } = useGetWorksheets();
   const [initialValues, setInitialValues] = useState({
     title_ar: '',
     slug: '',
@@ -66,15 +64,11 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
     has_worksheets: false,
     sort_order: 0,
     published_at: '',
-    author: '',
-    worksheet_id: '',
-    prev_worksheet_id: ''
+    author: ''
   });
 
   useEffect(() => {
     if (episode) {
-      const ws = episode.EpisodeWorksheets || episode.episode_worksheets || [];
-      const currentWsId = Array.isArray(ws) && ws.length > 0 ? String(ws[0].Id || ws[0].id) : '';
       setInitialValues({
         title_ar: episode.title_ar || '',
         slug: episode.slug || '',
@@ -93,9 +87,7 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
         has_worksheets: episode.has_worksheets !== undefined ? episode.has_worksheets : episode.HasWorksheets !== undefined ? episode.HasWorksheets : false,
         sort_order: episode.sort_order || 0,
         published_at: episode.published_at || '',
-        author: episode.author || episode.Author || '',
-        worksheet_id: currentWsId,
-        prev_worksheet_id: currentWsId
+        author: episode.author || episode.Author || ''
       });
     }
   }, [episode]);
@@ -187,35 +179,6 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                     {errors.category_id}
                   </FormHelperText>
                 )}
-              </Stack>
-            </Grid>
-
-            {/* Worksheet */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Stack spacing={1}>
-                <InputLabel htmlFor="worksheet_id">ورقة العمل المرتبطة</InputLabel>
-                <TextField
-                  id="worksheet_id"
-                  select
-                  value={values.worksheet_id}
-                  name="worksheet_id"
-                  onBlur={handleBlur}
-                  onChange={(e) => {
-                    handleChange(e);
-                    if (e.target.value) {
-                      setFieldValue('has_worksheets', true);
-                    }
-                  }}
-                  fullWidth
-                  placeholder="اختر ورقة العمل"
-                >
-                  <MenuItem value=""><em>اختر ورقة العمل (اختياري)</em></MenuItem>
-                  {worksheets.map((ws) => (
-                    <MenuItem key={ws.Id || ws.id} value={String(ws.Id || ws.id)}>
-                      {ws.TitleAr || ws.title_ar}
-                    </MenuItem>
-                  ))}
-                </TextField>
               </Stack>
             </Grid>
 
@@ -367,6 +330,8 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                 <Button variant="outlined" component="label" fullWidth sx={{ justifyContent: 'flex-start', px: 2, py: 1.5 }}>
                   {values.thumbnail_image && typeof values.thumbnail_image !== 'string'
                     ? values.thumbnail_image.name
+                    : values.thumbnail_image
+                    ? `الصورة الحالية: ${typeof values.thumbnail_image === 'string' ? values.thumbnail_image.split('/').pop() : ''}`
                     : 'اختر صورة مصغرة...'}
                   <input
                     type="file"
@@ -377,6 +342,16 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                     }}
                   />
                 </Button>
+                {values.thumbnail_image && typeof values.thumbnail_image === 'string' && (
+                  <Box sx={{ mt: 1, width: 100, height: 100, borderRadius: 1.5, overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
+                    <img src={values.thumbnail_image} alt="thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </Box>
+                )}
+                {values.thumbnail_image && typeof values.thumbnail_image !== 'string' && (
+                  <Box sx={{ mt: 1, width: 100, height: 100, borderRadius: 1.5, overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
+                    <img src={URL.createObjectURL(values.thumbnail_image)} alt="thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </Box>
+                )}
                 {touched.thumbnail_image && errors.thumbnail_image && (
                   <FormHelperText error id="helper-text-thumbnail_image">
                     {errors.thumbnail_image}
@@ -392,6 +367,8 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                 <Button variant="outlined" component="label" fullWidth sx={{ justifyContent: 'flex-start', px: 2, py: 1.5 }}>
                   {values.cover_image && typeof values.cover_image !== 'string'
                     ? values.cover_image.name
+                    : values.cover_image
+                    ? `صورة الغلاف الحالية: ${typeof values.cover_image === 'string' ? values.cover_image.split('/').pop() : ''}`
                     : 'اختر صورة الغلاف...'}
                   <input
                     type="file"
@@ -402,6 +379,16 @@ export default function EpisodeForm({ episode = null, onSubmit, isLoading = fals
                     }}
                   />
                 </Button>
+                {values.cover_image && typeof values.cover_image === 'string' && (
+                  <Box sx={{ mt: 1, width: 160, height: 90, borderRadius: 1.5, overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
+                    <img src={values.cover_image} alt="cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </Box>
+                )}
+                {values.cover_image && typeof values.cover_image !== 'string' && (
+                  <Box sx={{ mt: 1, width: 160, height: 90, borderRadius: 1.5, overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
+                    <img src={URL.createObjectURL(values.cover_image)} alt="cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </Box>
+                )}
                 {touched.cover_image && errors.cover_image && (
                   <FormHelperText error id="helper-text-cover_image">
                     {errors.cover_image}

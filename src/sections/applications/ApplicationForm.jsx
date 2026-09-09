@@ -78,7 +78,7 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
         promoVideoUrl: application.promo_video_url || application.promoVideoUrl || application.PromoVideoUrl || ''
       });
 
-      // Thumbnail Preview
+          // Thumbnail Preview
       if (application.thumbnail || application.Thumbnail) {
         setThumbnailPreview(getImageUrl(application.thumbnail || application.Thumbnail));
       } else {
@@ -90,8 +90,9 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
       const currentBanners = application.banner_images || application.bannerImages || application.Banners || [];
       if (currentBanners.length > 0) {
         setBannerPreviews(currentBanners.map((imgObj, idx) => ({
-          id: imgObj.id || idx,
-          url: getImageUrl(imgObj.image_url || imgObj.ImageUrl)
+          id: imgObj.id || imgObj.Id || idx,
+          url: getImageUrl(imgObj.image_url || imgObj.ImageUrl || imgObj.url || imgObj.Url),
+          isExisting: true  // flag to mark as already on server
         })));
       } else {
         setBannerPreviews([]);
@@ -165,18 +166,25 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
       formData.append('Application.Promo_Video_Url', values.promoVideoUrl || '');
       formData.append('Application.Platforms', '[]');
 
-      // Thumbnail file
+            // Thumbnail file
       if (thumbnailFile) {
         formData.append('Thumbnail', thumbnailFile);
       }
 
-      // Banner files
+      // Banner files (new uploads)
       if (bannerFiles.length > 0) {
         bannerFiles.forEach(file => {
           formData.append('BannerImages', file);
         });
       }
 
+      // Existing banner image IDs that were not removed
+      const existingBannerIds = bannerPreviews
+        .filter(p => p.isExisting && typeof p.id !== 'undefined')
+        .map(p => p.id);
+      existingBannerIds.forEach(id => {
+        formData.append('ExistingBannerImageIds', id);
+      });
       await onSubmit(formData);
       setStatus({ success: true });
       setSubmitting(false);

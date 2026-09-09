@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -26,6 +26,7 @@ import MainCard from 'components/MainCard';
 import Loader from 'components/Loader';
 import { IMAGES_URL } from 'config';
 import { useGetApplications, createApplication, updateApplication, deleteApplication } from 'api/applications';
+import { fetcher } from 'utils/axios';
 import { openSnackbar } from 'api/snackbar';
 import ApplicationForm from 'sections/applications/ApplicationForm';
 
@@ -50,6 +51,7 @@ export default function Applications() {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
 
   const { applications = [], applicationsLoading, applicationsMutate } = useGetApplications();
 
@@ -71,10 +73,27 @@ export default function Applications() {
     setFormDialogOpen(true);
   };
 
-  const handleEditClick = (app) => {
-    setSelectedApplication(app);
-    setFormDialogOpen(true);
-  };
+  const handleEditClick = useCallback(async (app) => {
+    const appId = app.id || app.Id;
+    setEditLoading(true);
+    try {
+      // جلب التفاصيل الكاملة للتطبيق (تشمل الصورة ولقطات الشاشة)
+      const fullData = await fetcher(`api/app-full/details/${appId}`);
+      // دمج بيانات category مع application في كائن واحد
+      const merged = {
+        ...fullData.application,
+        category_id: fullData.category?.id || fullData.application?.category_id,
+        banner_images: fullData.application?.banner_images || []
+      };
+      setSelectedApplication(merged);
+    } catch {
+      // في حالة الفشل، نستخدم البيانات المتوفرة في القائمة
+      setSelectedApplication(app);
+    } finally {
+      setEditLoading(false);
+      setFormDialogOpen(true);
+    }
+  }, []);
 
   const handleDeleteClick = (app) => {
     setSelectedApplication(app);
@@ -151,6 +170,13 @@ export default function Applications() {
             إضافة تطبيق
           </Button>
         </Stack>
+        {editLoading && (
+          <Box sx={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'rgba(0,0,0,0.25)' }}>
+            <Box sx={{ bgcolor: 'background.paper', borderRadius: 2, px: 4, py: 3, display: 'flex', alignItems: 'center', gap: 2, boxShadow: 4 }}>
+              <Typography>جاري تحميل بيانات التطبيق...</Typography>
+            </Box>
+          </Box>
+        )}
       </Grid>
 
       <Grid size={{ xs: 12 }}>
