@@ -60,9 +60,17 @@ export default function Worksheets() {
     const titleAr = worksheet.TitleAr || worksheet.title_ar || '';
     const matchesSearch = titleAr.toLowerCase().includes(searchTerm.toLowerCase());
     const epId = worksheet.EpisodeId || worksheet.episode_id;
-    const catId = worksheet.CategoryId || worksheet.category_id;
-    const matchesType =
-      !selectedType || (selectedType === 'linked' && epId) || (selectedType === 'general' && !epId);
+    const catId =
+      worksheet.CategoryId ??
+      worksheet.category_id ??
+      worksheet.worksheet_category_id ??
+      worksheet.WorksheetCategoryId ??
+      worksheet.Category?.Id ??
+      worksheet.Category?.id ??
+      worksheet.WorksheetCategory?.Id ??
+      worksheet.WorksheetCategory?.id;
+
+    const matchesType = !selectedType || (selectedType === 'linked' && epId) || (selectedType === 'general' && !epId);
     const matchesCategory = !selectedCategory || String(catId) === String(selectedCategory);
     return matchesSearch && matchesType && matchesCategory;
   });
@@ -98,12 +106,21 @@ export default function Worksheets() {
     setFormLoading(true);
     try {
       const wsId = selectedWorksheet?.id || selectedWorksheet?.Id;
+      const parsedCategoryId =
+        values.category_id !== '' && values.category_id !== null && values.category_id !== undefined ? Number(values.category_id) : null;
+      const parsedEpisodeId =
+        values.episode_id !== '' && values.episode_id !== null && values.episode_id !== undefined ? Number(values.episode_id) : null;
+
+      const payload = {
+        ...values,
+        category_id: parsedCategoryId,
+        episode_id: parsedEpisodeId
+      };
+
       if (wsId) {
         await updateWorksheet({
           id: wsId,
-          episode_id: values.episode_id || selectedWorksheet.episode_id || selectedWorksheet.EpisodeId || selectedWorksheet.episodeId,
-          category_id: values.category_id || selectedWorksheet.category_id || selectedWorksheet.CategoryId,
-          ...values
+          ...payload
         });
         openSnackbar({
           open: true,
@@ -112,7 +129,7 @@ export default function Worksheets() {
           alert: { color: 'success' }
         });
       } else {
-        await createWorksheet(values);
+        await createWorksheet(payload);
         openSnackbar({
           open: true,
           message: 'تم إنشاء ورقة العمل بنجاح',
@@ -164,11 +181,20 @@ export default function Worksheets() {
     return episode?.title_ar || '-';
   };
 
-  const getCategoryName = (categoryId) => {
-    if (!categoryId) return '-';
-    const wsCategory = worksheetCategories.find((cat) => String(cat.id || cat.Id) === String(categoryId));
-    if (wsCategory) return wsCategory.nameAr || wsCategory.NameAr;
-    const epCategory = categories.find((cat) => String(cat.id || cat.Id) === String(categoryId));
+  const getCategoryName = (worksheet) => {
+    if (worksheet?.Category?.NameAr || worksheet?.Category?.nameAr || worksheet?.Category?.title) {
+      return worksheet.Category.NameAr || worksheet.Category.nameAr || worksheet.Category.title;
+    }
+    if (worksheet?.WorksheetCategory?.NameAr || worksheet?.WorksheetCategory?.nameAr) {
+      return worksheet.WorksheetCategory.NameAr || worksheet.WorksheetCategory.nameAr;
+    }
+    const catId =
+      worksheet?.CategoryId ?? worksheet?.category_id ?? worksheet?.worksheet_category_id ?? worksheet?.WorksheetCategoryId ?? worksheet;
+
+    if (!catId || catId === '-') return '-';
+    const wsCategory = worksheetCategories.find((cat) => String(cat.id || cat.Id) === String(catId));
+    if (wsCategory) return wsCategory.nameAr || wsCategory.NameAr || wsCategory.name_ar;
+    const epCategory = categories.find((cat) => String(cat.id || cat.Id) === String(catId));
     return epCategory?.name_ar || epCategory?.NameAr || '-';
   };
 
@@ -182,7 +208,12 @@ export default function Worksheets() {
       <Grid size={{ xs: 12 }}>
         <Stack direction="row" spacing={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant="h4">أوراق العمل</Typography>
-          <Button variant="contained" startIcon={<Add />} onClick={handleCreateClick} sx={{ bgcolor: '#3ca7b7', '&:hover': { bgcolor: 'primary.dark' } }}>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={handleCreateClick}
+            sx={{ bgcolor: '#3ca7b7', '&:hover': { bgcolor: 'primary.dark' } }}
+          >
             إضافة ورقة عمل
           </Button>
         </Stack>
@@ -264,7 +295,15 @@ export default function Worksheets() {
                     const id = worksheet.Id || worksheet.id;
                     const titleAr = worksheet.TitleAr || worksheet.title_ar;
                     const episodeId = worksheet.EpisodeId || worksheet.episode_id;
-                    const categoryId = worksheet.CategoryId || worksheet.category_id;
+                    const categoryId =
+                      worksheet.CategoryId ??
+                      worksheet.category_id ??
+                      worksheet.worksheet_category_id ??
+                      worksheet.WorksheetCategoryId ??
+                      worksheet.Category?.Id ??
+                      worksheet.Category?.id ??
+                      worksheet.WorksheetCategory?.Id ??
+                      worksheet.WorksheetCategory?.id;
                     const fileType = worksheet.FileType || worksheet.file_type;
                     const isActive = worksheet.IsActive !== undefined ? worksheet.IsActive : worksheet.is_active;
                     const thumbnail = worksheet.ThumbnailImage || worksheet.thumbnail_image;
@@ -283,7 +322,24 @@ export default function Worksheets() {
                         </TableCell>
                         <TableCell>{titleAr}</TableCell>
                         <TableCell>{getEpisodeName(episodeId)}</TableCell>
-                        <TableCell>{getCategoryName(categoryId)}</TableCell>
+                        <TableCell>
+                          {(() => {
+                            const catName = getCategoryName(worksheet);
+                            return catName !== '-' ? (
+                              <Chip
+                                label={catName}
+                                size="small"
+                                color="info"
+                                variant="outlined"
+                                sx={{ fontWeight: 600, borderRadius: '8px' }}
+                              />
+                            ) : (
+                              <Typography variant="body2" color="textSecondary">
+                                -
+                              </Typography>
+                            );
+                          })()}
+                        </TableCell>
                         <TableCell align="center">
                           <Chip label={fileType} size="small" variant="outlined" />
                         </TableCell>
@@ -292,17 +348,24 @@ export default function Worksheets() {
                         </TableCell>
                         <TableCell align="center">
                           <Stack direction="row" spacing={0.5} justifyContent="center">
-                            <Button size="small" variant="outlined" onClick={() => handleEditClick({
-                              id,
-                              title_ar: titleAr,
-                              episode_id: episodeId,
-                              category_id: categoryId,
-                              file_type: fileType,
-                              is_active: isActive,
-                              thumbnail_image: thumbnail,
-                              file_url: worksheet.File || worksheet.file_url,
-                              description_ar: worksheet.DescriptionAr || worksheet.description_ar
-                            })} startIcon={<Edit size={16} />}>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() =>
+                                handleEditClick({
+                                  id,
+                                  title_ar: titleAr,
+                                  episode_id: episodeId,
+                                  category_id: categoryId,
+                                  file_type: fileType,
+                                  is_active: isActive,
+                                  thumbnail_image: thumbnail,
+                                  file_url: worksheet.File || worksheet.file_url,
+                                  description_ar: worksheet.DescriptionAr || worksheet.description_ar
+                                })
+                              }
+                              startIcon={<Edit size={16} />}
+                            >
                               تحرير
                             </Button>
                             <Button
@@ -317,7 +380,7 @@ export default function Worksheets() {
                           </Stack>
                         </TableCell>
                       </TableRow>
-                    )
+                    );
                   })
                 ) : (
                   <TableRow>

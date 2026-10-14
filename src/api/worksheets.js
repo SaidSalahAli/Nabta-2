@@ -12,8 +12,9 @@ import { processImageFields } from 'utils/imageCompressor';
 const endpoints = {
   key: 'api/EpisodeWorksheet',
   list: 'api/EpisodeWorksheet/List',
+  search: 'api/EpisodeWorksheet/Search',
   create: 'api/EpisodeWorksheet/Add',
-  read: (id) => `api/EpisodeWorksheet/GetById?id=${id}`,
+  read: (id) => `api/EpisodeWorksheet/ById?id=${id}`,
   update: 'api/EpisodeWorksheet/Update',
   delete: (id) => `api/EpisodeWorksheet/Delete?id=${id}`
 };
@@ -49,9 +50,7 @@ export const saveWorksheetCategoryLink = (worksheetId, categoryId) => {
 const convertToApiFormat = (worksheetData) => {
   // احسب EpisodeId من كل المصادر الممكنة
   const rawEpisodeId = worksheetData.episode_id ?? worksheetData.EpisodeId ?? worksheetData.episodeId;
-  const episodeId = rawEpisodeId !== '' && rawEpisodeId !== null && rawEpisodeId !== undefined
-    ? Number(rawEpisodeId)
-    : undefined;
+  const episodeId = rawEpisodeId !== '' && rawEpisodeId !== null && rawEpisodeId !== undefined ? Number(rawEpisodeId) : undefined;
 
   const rawCategoryId =
     worksheetData.category_id ??
@@ -59,9 +58,7 @@ const convertToApiFormat = (worksheetData) => {
     worksheetData.categoryId ??
     worksheetData.worksheet_category_id ??
     worksheetData.WorksheetCategoryId;
-  const categoryId = rawCategoryId !== '' && rawCategoryId !== null && rawCategoryId !== undefined
-    ? Number(rawCategoryId)
-    : undefined;
+  const categoryId = rawCategoryId !== '' && rawCategoryId !== null && rawCategoryId !== undefined ? Number(rawCategoryId) : undefined;
 
   const apiData = {
     Id: worksheetData.Id || worksheetData.id,
@@ -71,11 +68,7 @@ const convertToApiFormat = (worksheetData) => {
     DescriptionAr: worksheetData.description_ar || worksheetData.DescriptionAr,
     FileType: worksheetData.file_type || worksheetData.FileType || 'pdf',
     IsActive:
-      worksheetData.is_active !== undefined
-        ? worksheetData.is_active
-        : worksheetData.IsActive !== undefined
-          ? worksheetData.IsActive
-          : true
+      worksheetData.is_active !== undefined ? worksheetData.is_active : worksheetData.IsActive !== undefined ? worksheetData.IsActive : true
   };
 
   if (worksheetData.title_en || worksheetData.TitleEn) {
@@ -94,14 +87,24 @@ const convertToApiFormat = (worksheetData) => {
   return apiData;
 };
 
-// Get all worksheets
+// Get all worksheets or search by categoryId
 export function useGetWorksheets(params = {}) {
+  const isCategoryFilter =
+    params.categoryId !== undefined &&
+    params.categoryId !== null &&
+    params.categoryId !== '' &&
+    params.categoryId !== 'all';
+
+  const fetchTarget = isCategoryFilter
+    ? [endpoints.search, { params: { categoryId: params.categoryId } }]
+    : [endpoints.list, { params }];
+
   const {
     data,
     isLoading,
     error,
     mutate: mutateData
-  } = useSWR([endpoints.key, params], () => fetcher([endpoints.list, { params }]), {
+  } = useSWR([endpoints.key, params], () => fetcher(fetchTarget), {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false
@@ -126,7 +129,9 @@ export function useGetWorksheets(params = {}) {
       const resolvedCatId =
         directCatId !== null && directCatId !== undefined && directCatId !== ''
           ? Number(directCatId)
-          : (storedLinks[String(id)] ? Number(storedLinks[String(id)]) : undefined);
+          : storedLinks[String(id)]
+            ? Number(storedLinks[String(id)])
+            : undefined;
 
       return {
         ...item,
@@ -173,16 +178,14 @@ export function useGetWorksheet(id) {
 
     const storedLinks = getStoredWorksheetCategoryLinks();
     const itemId = rawItem.Id || rawItem.id || id;
-    const directCatId =
-      rawItem.CategoryId ??
-      rawItem.category_id ??
-      rawItem.worksheet_category_id ??
-      rawItem.WorksheetCategoryId;
+    const directCatId = rawItem.CategoryId ?? rawItem.category_id ?? rawItem.worksheet_category_id ?? rawItem.WorksheetCategoryId;
 
     const resolvedCatId =
       directCatId !== null && directCatId !== undefined && directCatId !== ''
         ? Number(directCatId)
-        : (storedLinks[String(itemId)] ? Number(storedLinks[String(itemId)]) : undefined);
+        : storedLinks[String(itemId)]
+          ? Number(storedLinks[String(itemId)])
+          : undefined;
 
     return {
       worksheet: {

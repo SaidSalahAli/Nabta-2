@@ -29,18 +29,18 @@ import { useGetWorksheetCategories } from 'api/worksheetCategories';
 const getValidationSchema = (isEditing) =>
   Yup.object().shape({
     title_ar: Yup.string().required('عنوان ورقة العمل مطلوب'),
-    description_ar: Yup.string(),
+    description_ar: Yup.string().nullable(),
     file: isEditing ? Yup.mixed().nullable() : Yup.mixed().required('الملف مطلوب'),
-    thumbnail: Yup.mixed(),
-    episode_id: Yup.string(),
-    category_id: Yup.number(),
-    sort_order: Yup.number().min(0, 'يجب أن تكون قيمة موجبة'),
+    thumbnail: Yup.mixed().nullable(),
+    episode_id: Yup.mixed().nullable(),
+    category_id: Yup.mixed().nullable(),
+    sort_order: Yup.number().min(0, 'يجب أن تكون قيمة موجبة').nullable(),
     is_active: Yup.boolean()
   });
 
 export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = false, onCancel }) {
   const { episodes = [] } = useGetEpisodes();
-  const { categories: worksheetCategories = [] } = useGetWorksheetCategories();
+  const { categories: worksheetCategories = [], categoriesLoading } = useGetWorksheetCategories();
   const [initialValues, setInitialValues] = useState({
     title_ar: '',
     description_ar: '',
@@ -55,23 +55,42 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
 
   useEffect(() => {
     if (worksheet) {
+      const rawCatId =
+        worksheet.category_id ??
+        worksheet.CategoryId ??
+        worksheet.worksheet_category_id ??
+        worksheet.WorksheetCategoryId ??
+        worksheet.Category?.Id ??
+        worksheet.Category?.id ??
+        worksheet.WorksheetCategory?.Id ??
+        worksheet.WorksheetCategory?.id;
+
+      const rawEpId = worksheet.episode_id ?? worksheet.EpisodeId ?? worksheet.episodeId;
+
       setInitialValues({
         title_ar: worksheet.title_ar || worksheet.TitleAr || '',
         description_ar: worksheet.description_ar || worksheet.DescriptionAr || '',
         file: worksheet.file_url || worksheet.file || null,
         file_type: worksheet.file_type || worksheet.FileType || 'pdf',
         thumbnail: worksheet.thumbnail_image || worksheet.Thumbnail || '',
-        episode_id: (worksheet.episode_id || worksheet.EpisodeId) ? String(worksheet.episode_id || worksheet.EpisodeId) : '',
-        category_id: (worksheet.category_id || worksheet.CategoryId) ? String(worksheet.category_id || worksheet.CategoryId) : '',
+        episode_id: rawEpId !== '' && rawEpId !== null && rawEpId !== undefined ? String(rawEpId) : '',
+        category_id: rawCatId !== '' && rawCatId !== null && rawCatId !== undefined ? String(rawCatId) : '',
         sort_order: worksheet.sort_order || 0,
-        is_active: worksheet.is_active !== undefined ? worksheet.is_active : (worksheet.IsActive !== undefined ? worksheet.IsActive : true)
+        is_active: worksheet.is_active !== undefined ? worksheet.is_active : worksheet.IsActive !== undefined ? worksheet.IsActive : true
       });
     }
   }, [worksheet]);
 
   const handleFormSubmit = async (values, { setStatus, setSubmitting }) => {
     try {
-      await onSubmit(values);
+      const submissionValues = {
+        ...values,
+        category_id:
+          values.category_id !== '' && values.category_id !== null && values.category_id !== undefined ? Number(values.category_id) : null,
+        episode_id:
+          values.episode_id !== '' && values.episode_id !== null && values.episode_id !== undefined ? Number(values.episode_id) : null
+      };
+      await onSubmit(submissionValues);
       setStatus({ success: true });
       setSubmitting(false);
     } catch (err) {
@@ -141,7 +160,11 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
               <Stack spacing={1}>
                 <InputLabel htmlFor="file">الملف (PDF)</InputLabel>
                 <Button variant="outlined" component="label" fullWidth sx={{ justifyContent: 'flex-start', px: 2, py: 1.5 }}>
-                  {values.file ? (typeof values.file === 'string' ? `الملف الحالي: ${values.file.split('/').pop()}` : values.file.name) : 'اختر ملف PDF...'}
+                  {values.file
+                    ? typeof values.file === 'string'
+                      ? `الملف الحالي: ${values.file.split('/').pop()}`
+                      : values.file.name
+                    : 'اختر ملف PDF...'}
                   <input
                     type="file"
                     hidden
@@ -160,13 +183,16 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
               </Stack>
             </Grid>
 
-
             {/* Thumbnail Image */}
             <Grid size={{ xs: 12 }}>
               <Stack spacing={1}>
                 <InputLabel htmlFor="thumbnail">الصورة المصغرة</InputLabel>
                 <Button variant="outlined" component="label" fullWidth sx={{ justifyContent: 'flex-start', px: 2, py: 1.5 }}>
-                  {values.thumbnail ? (typeof values.thumbnail === 'string' ? `الصورة الحالية: ${values.thumbnail.split('/').pop()}` : values.thumbnail.name) : 'اختر الصورة المصغرة...'}
+                  {values.thumbnail
+                    ? typeof values.thumbnail === 'string'
+                      ? `الصورة الحالية: ${values.thumbnail.split('/').pop()}`
+                      : values.thumbnail.name
+                    : 'اختر الصورة المصغرة...'}
                   <input
                     type="file"
                     hidden
@@ -177,7 +203,18 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
                   />
                 </Button>
                 {values.thumbnail && (
-                  <Box sx={{ mt: 1.5, position: 'relative', width: 120, height: 120, borderRadius: 1.5, overflow: 'hidden', border: '1px solid', borderColor: 'divider' }}>
+                  <Box
+                    sx={{
+                      mt: 1.5,
+                      position: 'relative',
+                      width: 120,
+                      height: 120,
+                      borderRadius: 1.5,
+                      overflow: 'hidden',
+                      border: '1px solid',
+                      borderColor: 'divider'
+                    }}
+                  >
                     <img
                       src={typeof values.thumbnail === 'string' ? values.thumbnail : URL.createObjectURL(values.thumbnail)}
                       alt="Preview"
@@ -223,23 +260,26 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
                 <TextField
                   id="category_id"
                   select
-                  value={values.category_id}
+                  value={values.category_id || ''}
                   name="category_id"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   fullWidth
+                  disabled={categoriesLoading}
+                  error={Boolean(touched.category_id && errors.category_id)}
+                  helperText={touched.category_id && errors.category_id}
                 >
-                  <MenuItem value="">بدون تصنيف</MenuItem>
+                  <MenuItem value="">
+                    <em>بدون تصنيف</em>
+                  </MenuItem>
                   {worksheetCategories.map((cat) => (
                     <MenuItem key={cat.id || cat.Id} value={String(cat.id || cat.Id)}>
-                      {cat.nameAr || cat.NameAr}
+                      {cat.nameAr || cat.NameAr || cat.name_ar}
                     </MenuItem>
                   ))}
                 </TextField>
               </Stack>
             </Grid>
-
-
 
             {/* Sort Order */}
             {/* <Grid size={{ xs: 12, md: 6 }}>

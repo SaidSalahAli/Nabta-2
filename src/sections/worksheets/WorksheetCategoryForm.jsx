@@ -76,7 +76,7 @@ export default function WorksheetCategoryForm({ category = null, onSubmit, isLoa
                   name="nameAr"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder="مثال: أوراق عمل الحروف، بازل وأنشطة..."
+                  placeholder="مثال: رياضيات، حروف، بازل..."
                   fullWidth
                   error={Boolean(touched.nameAr && errors.nameAr)}
                 />
@@ -101,7 +101,7 @@ export default function WorksheetCategoryForm({ category = null, onSubmit, isLoa
                   name="description"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder="وصف مختصر لمحتوى ونوعية أوراق العمل ضمن هذا التصنيف..."
+                  placeholder="أوراق عمل الرياضيات..."
                   fullWidth
                   error={Boolean(touched.description && errors.description)}
                 />

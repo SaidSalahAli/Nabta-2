@@ -73,3 +73,47 @@ export const mapEpisodes = (episodes) => {
   if (!Array.isArray(episodes)) return [];
   return episodes.map(mapEpisode);
 };
+
+/**
+ * Maps worksheet data from API to standardized format
+ */
+export const mapWorksheet = (worksheet) => {
+  if (!worksheet) return null;
+
+  const categoryId =
+    worksheet.CategoryId ??
+    worksheet.category_id ??
+    worksheet.worksheet_category_id ??
+    worksheet.WorksheetCategoryId ??
+    worksheet.Category?.Id ??
+    worksheet.Category?.id ??
+    worksheet.WorksheetCategory?.Id ??
+    worksheet.WorksheetCategory?.id;
+
+  const episodeId = worksheet.EpisodeId ?? worksheet.episode_id ?? worksheet.episodeId;
+
+  return {
+    id: worksheet.ID || worksheet.Id || worksheet.id,
+    category_id: categoryId,
+    CategoryId: categoryId,
+    episode_id: episodeId,
+    EpisodeId: episodeId,
+    title_ar: worksheet.TitleAr || worksheet.title_ar || worksheet.titleAr,
+    title_en: worksheet.TitleEn || worksheet.title_en || worksheet.titleEn,
+    description_ar: worksheet.DescriptionAr || worksheet.description_ar || worksheet.descriptionAr,
+    description_en: worksheet.DescriptionEn || worksheet.description_en || worksheet.descriptionEn,
+    file_type: worksheet.FileType || worksheet.file_type || worksheet.fileType || 'pdf',
+    file_url: worksheet.FileUrl || worksheet.file_url || worksheet.file || worksheet.File,
+    thumbnail_image: worksheet.ThumbnailImage || worksheet.thumbnail_image || worksheet.thumbnail || worksheet.Thumbnail,
+    is_active: worksheet.IsActive !== undefined ? worksheet.IsActive : worksheet.is_active !== undefined ? worksheet.is_active : true,
+    ...worksheet
+  };
+};
+
+/**
+ * Maps array of worksheets
+ */
+export const mapWorksheets = (worksheets) => {
+  if (!Array.isArray(worksheets)) return [];
+  return worksheets.map(mapWorksheet);
+};
