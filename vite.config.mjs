@@ -48,6 +48,11 @@ export default defineConfig(({ mode }) => {
       ]
     },
     base: API_URL,
-    plugins: [react(), jsconfigPaths()]
+    plugins: [react(), jsconfigPaths()],
+    build: {
+      target: 'esnext',
+      sourcemap: false,
+      chunkSizeWarningLimit: 2000
+    }
   };
 });

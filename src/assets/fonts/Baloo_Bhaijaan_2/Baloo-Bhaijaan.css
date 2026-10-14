@@ -3,7 +3,7 @@
   font-weight: 400;
   font-display: swap;
   font-style: normal;
-  src: url('static/BalooBhaijaan2-Regular.ttf') format('truetype');
+  src: local('Baloo Bhaijaan 2'), local('BalooBhaijaan2-Regular'), url('static/BalooBhaijaan2-Regular.ttf') format('truetype');
 }
 
 @font-face {
@@ -11,7 +11,7 @@
   font-weight: 500;
   font-display: swap;
   font-style: normal;
-  src: url('static/BalooBhaijaan2-Medium.ttf') format('truetype');
+  src: local('Baloo Bhaijaan 2 Medium'), local('BalooBhaijaan2-Medium'), url('static/BalooBhaijaan2-Medium.ttf') format('truetype');
 }
 
 @font-face {
@@ -19,7 +19,7 @@
   font-weight: 600;
   font-display: swap;
   font-style: normal;
-  src: url('static/BalooBhaijaan2-SemiBold.ttf') format('truetype');
+  src: local('Baloo Bhaijaan 2 SemiBold'), local('BalooBhaijaan2-SemiBold'), url('static/BalooBhaijaan2-SemiBold.ttf') format('truetype');
 }
 
 @font-face {
@@ -27,7 +27,7 @@
   font-weight: 700;
   font-display: swap;
   font-style: normal;
-  src: url('static/BalooBhaijaan2-Bold.ttf') format('truetype');
+  src: local('Baloo Bhaijaan 2 Bold'), local('BalooBhaijaan2-Bold'), url('static/BalooBhaijaan2-Bold.ttf') format('truetype');
 }
 
 @font-face {
@@ -35,5 +35,6 @@
   font-weight: 800;
   font-display: swap;
   font-style: normal;
-  src: url('static/BalooBhaijaan2-ExtraBold.ttf') format('truetype');
+  src: local('Baloo Bhaijaan 2 ExtraBold'), local('BalooBhaijaan2-ExtraBold'), url('static/BalooBhaijaan2-ExtraBold.ttf') format('truetype');
 }
+

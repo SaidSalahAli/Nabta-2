@@ -66,18 +66,29 @@ export default function Hero({ shouldAnimate = false }) {
                 sx={{
                   width: '100%',
                   height: { xs: '250px', sm: '350px', md: '700px' },
-                  backgroundImage: `url(${slide})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-
-                  position: 'relative'
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}
               >
+                <Box
+                  component="img"
+                  src={slide}
+                  alt={`Nabta Slide ${index + 1}`}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  fetchPriority={index === 0 ? 'high' : 'low'}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block'
+                  }}
+                />
                 <Box
                   sx={{
                     position: 'absolute',
                     inset: 0,
-                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    backgroundColor: 'rgba(0,0,0,0.06)',
                     zIndex: 1
                   }}
                 />

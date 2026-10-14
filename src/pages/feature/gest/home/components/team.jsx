@@ -6,7 +6,7 @@ import { FreeMode } from 'swiper/modules';
 import { ArrowLeft, ArrowRight } from 'iconsax-react';
 import img1 from 'assets/Home/ahmed.jpg';
 import img2 from 'assets/Home/hamdy.jpg';
-import img3 from 'assets/Home/magdy.png';
+import img3 from 'assets/Home/magdy.jpg';
 import img4 from 'assets/Home/team0004.png';
 
 export default function Team({ shouldAnimate = false }) {

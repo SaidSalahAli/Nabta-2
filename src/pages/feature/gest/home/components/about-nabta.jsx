@@ -35,46 +35,39 @@ export default function AboutNabta({ shouldAnimate = false }) {
             </Typography>
           </Box>
 
-          {/* Desktop Image */}
+          {/* Responsive Picture: loads only one image based on viewport width */}
           <Box
             sx={{
-              display: { xs: 'none', md: 'flex' },
+              display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
+              width: '100%'
             }}
           >
             <Box
-              component="img"
-              src={bcImg}
-              alt="نبته - نسخة الكمبيوتر"
+              component="picture"
               sx={{
+                display: 'block',
                 width: '100%',
-                // maxWidth: '900px',
-                height: 'auto',
-                objectFit: 'contain'
+                maxWidth: { xs: '420px', md: '900px' },
+                textAlign: 'center'
               }}
-            />
-          </Box>
-
-          {/* Mobile Image */}
-          <Box
-            sx={{
-              display: { xs: 'flex', md: 'none' },
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <Box
-              component="img"
-              src={mobileImg}
-              alt="نبته - نسخة الموبايل"
-              sx={{
-                width: '100%',
-                maxWidth: '420px',
-                height: 'auto',
-                objectFit: 'contain'
-              }}
-            />
+            >
+              <source media="(min-width: 900px)" srcSet={bcImg} />
+              <Box
+                component="img"
+                src={mobileImg}
+                alt="نبته - قصة نبته"
+                loading="lazy"
+                decoding="async"
+                sx={{
+                  width: '100%',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  display: 'inline-block'
+                }}
+              />
+            </Box>
           </Box>
         </Container>
       </Box>

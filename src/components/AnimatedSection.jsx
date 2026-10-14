@@ -1,19 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Fade } from '@mui/material';
 
-const AnimatedSection = ({ children, customPropName = 'shouldAnimate', fade = false, timeout = 800 }) => {
-  const [isVisible, setIsVisible] = useState(false);
+const AnimatedSection = ({
+  children,
+  customPropName = 'shouldAnimate',
+  fade = false,
+  timeout = 600,
+  deferMount = false,
+  minHeight = '120px',
+  rootMargin = '300px 0px'
+}) => {
+  const [isVisible, setIsVisible] = useState(!deferMount);
+  const [shouldAnimate, setShouldAnimate] = useState(!deferMount);
   const ref = useRef(null);
 
   useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsVisible(true);
+      setShouldAnimate(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          setShouldAnimate(true);
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { rootMargin, threshold: 0.05 }
     );
 
     if (ref.current) {
@@ -23,13 +39,28 @@ const AnimatedSection = ({ children, customPropName = 'shouldAnimate', fade = fa
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [rootMargin]);
 
-  const content = fade
-    ? <Fade in={isVisible} timeout={timeout}>{children}</Fade>
-    : React.cloneElement(children, { [customPropName]: isVisible });
+  if (!isVisible) {
+    return <Box ref={ref} sx={{ minHeight, width: '100%' }} />;
+  }
 
-  return <Box ref={ref}>{content}</Box>;
+  const content = fade ? (
+    <Fade in={shouldAnimate} timeout={timeout}>
+      {children}
+    </Fade>
+  ) : React.isValidElement(children) ? (
+    React.cloneElement(children, { [customPropName]: shouldAnimate })
+  ) : (
+    children
+  );
+
+  return (
+    <Box ref={ref} sx={{ width: '100%' }}>
+      {content}
+    </Box>
+  );
 };
 
 export default AnimatedSection;
+

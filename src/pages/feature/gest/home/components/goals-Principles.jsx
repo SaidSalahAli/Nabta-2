@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Container, Typography, Fade } from '@mui/material';
-import principlesImg from 'assets/Home/principles.png';
+import principlesImg from 'assets/Home/principles.jpg';
 import goalsImg from 'assets/Home/goals.jpg';
 
 export default function GoalsPrinciples({ shouldAnimate = false }) {
