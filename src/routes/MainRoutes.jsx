@@ -40,6 +40,7 @@ const EpisodeCategories = Loadable(lazyRetry(() => import('pages/feature/control
 
 // render - worksheets
 const Worksheets = Loadable(lazyRetry(() => import('pages/feature/control-panel/worksheets')));
+const WorksheetCategories = Loadable(lazyRetry(() => import('pages/feature/control-panel/worksheet-categories')));
 
 // render - applications
 const ApplicationsAdmin = Loadable(lazyRetry(() => import('pages/feature/control-panel/applications')));
@@ -143,6 +144,10 @@ const MainRoutes = {
         {
           path: 'dashboard/worksheets',
           element: <Worksheets />
+        },
+        {
+          path: 'dashboard/worksheet-categories',
+          element: <WorksheetCategories />
         },
         {
           path: 'dashboard/applications',

@@ -6,6 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import DialogContentText from '@mui/material/DialogContentText';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
@@ -26,23 +27,44 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import CircularProgress from '@mui/material/CircularProgress';
+import Chip from '@mui/material/Chip';
+import Switch from '@mui/material/Switch';
 
 // project-imports
 import MainCard from 'components/MainCard';
 import { openSnackbar } from 'api/snackbar';
-import { useGetUsers } from 'api/users';
+import {
+  useGetUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+  toggleUserStatus,
+  sendBulkEmail,
+  sendBulkNotification
+} from 'api/users';
+import UserForm from 'sections/users/UserForm';
 
 // assets
-import { Sms, Notification, SearchNormal1, People } from 'iconsax-react';
+import { Sms, Notification, SearchNormal1, People, UserAdd, Edit, Trash } from 'iconsax-react';
 
 // ==============================|| REGISTERED USERS MANAGEMENT ||==============================//
 
 export default function UsersAdmin() {
-  const { users: fetchedUsers = [], usersLoading } = useGetUsers();
+  const { users: fetchedUsers = [], usersLoading, usersMutate } = useGetUsers();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [selected, setSelected] = useState([]);
+
+  // Form Dialog States (Create / Edit)
+  const [userFormOpen, setUserFormOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [formLoading, setFormLoading] = useState(false);
+
+  // Delete Dialog States
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   // Send Email Dialog States
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
@@ -67,20 +89,30 @@ export default function UsersAdmin() {
 
   const mappedUsers = fetchedUsers.map((user) => ({
     id: user.Id ?? user.id,
-    name: `${user.FirstName || ''} ${user.LastName || ''}`.trim() || user.Name || 'مستخدم غير معروف',
-    email: user.Email ?? user.email,
-    phone: user.Mobail ?? user.phone ?? '',
+    firstName: user.FirstName ?? user.firstName ?? '',
+    lastName: user.LastName ?? user.lastName ?? '',
+    name: `${user.FirstName || ''} ${user.LastName || ''}`.trim() || user.Name || user.name || 'مستخدم غير معروف',
+    email: user.Email ?? user.email ?? '',
+    phone: user.Mobail ?? user.mobail ?? user.phone ?? '',
     date: user.DateRecord ?? user.date ?? new Date().toISOString(),
-    status: (user.Status === true || user.status === 'نشط' || String(user.Status) === 'true') ? 'نشط' : 'غير نشط'
+    isActive: Boolean(user.Status === true || user.status === 'نشط' || user.status === true || String(user.Status) === 'true'),
+    raw: user
   }));
 
-  // Search filter
-  const filteredUsers = mappedUsers.filter(
-    (user) =>
+  // Search & Status filter
+  const filteredUsers = mappedUsers.filter((user) => {
+    const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.phone.includes(searchTerm)
-  );
+      user.phone.includes(searchTerm);
+
+    const matchesStatus =
+      statusFilter === 'all' ||
+      (statusFilter === 'active' && user.isActive) ||
+      (statusFilter === 'inactive' && !user.isActive);
+
+    return matchesSearch && matchesStatus;
+  });
 
   const paginatedUsers = filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -91,41 +123,132 @@ export default function UsersAdmin() {
     setPage(0);
   };
 
-  // Checkbox functions
+  // Selection
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = filteredUsers.map((n) => n.id);
-      setSelected(newSelecteds);
+      setSelected(filteredUsers.map((n) => n.id));
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, id) => {
+  const handleSelectUser = (id) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+      newSelected = [...selected, id];
+    } else {
+      newSelected = selected.filter((item) => item !== id);
     }
-
     setSelected(newSelected);
   };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  // Actions trigger
+  // Add / Edit User Actions
+  const handleCreateUserClick = () => {
+    setSelectedUser(null);
+    setUserFormOpen(true);
+  };
+
+  const handleEditUserClick = (user) => {
+    setSelectedUser(user);
+    setUserFormOpen(true);
+  };
+
+  const handleFormSubmit = async (values) => {
+    setFormLoading(true);
+    try {
+      if (selectedUser?.id) {
+        await updateUser(selectedUser.id, values);
+        openSnackbar({
+          open: true,
+          message: 'تم تحديث بيانات المستخدم بنجاح',
+          variant: 'alert',
+          alert: { color: 'success' }
+        });
+      } else {
+        await createUser(values);
+        openSnackbar({
+          open: true,
+          message: 'تم إضافة المستخدم الجديد بنجاح وتفعيل حسابه',
+          variant: 'alert',
+          alert: { color: 'success' }
+        });
+      }
+      usersMutate();
+      setUserFormOpen(false);
+      setSelectedUser(null);
+    } catch (err) {
+      openSnackbar({
+        open: true,
+        message: err?.message || 'حدث خطأ أثناء حفظ بيانات المستخدم',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  // Delete User Action
+  const handleDeleteClick = (user) => {
+    setUserToDelete(user);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!userToDelete) return;
+    try {
+      await deleteUser(userToDelete.id);
+      openSnackbar({
+        open: true,
+        message: 'تم حذف المستخدم بنجاح',
+        variant: 'alert',
+        alert: { color: 'success' }
+      });
+      usersMutate();
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
+    } catch (err) {
+      openSnackbar({
+        open: true,
+        message: err?.message || 'حدث خطأ أثناء حذف المستخدم',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+    }
+  };
+
+  // Toggle user activation status
+  const handleToggleStatus = async (user) => {
+    const newStatus = !user.isActive;
+    try {
+      await toggleUserStatus(user.id, newStatus);
+      openSnackbar({
+        open: true,
+        message: newStatus ? 'تم تفعيل حساب المستخدم بنجاح' : 'تم إيقاف تفعيل حساب المستخدم',
+        variant: 'alert',
+        alert: { color: 'success' }
+      });
+      usersMutate();
+    } catch (err) {
+      openSnackbar({
+        open: true,
+        message: err?.message || 'حدث خطأ أثناء تغيير حالة المستخدم',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+    }
+  };
+
+  // Bulk Email Dialog
   const handleOpenEmailDialog = () => {
     if (selected.length === 0) {
       openSnackbar({
         open: true,
-        message: 'يرجى تحديد مستخدم واحد على الأقل لإرسال الإيميل',
+        message: 'يرجى تحديد مستخدم واحد على الأقل لإرسال البريد',
         variant: 'alert',
         alert: { color: 'warning' }
       });
@@ -136,6 +259,45 @@ export default function UsersAdmin() {
     setEmailDialogOpen(true);
   };
 
+  const handleSendEmailSubmit = async () => {
+    if (!emailSubject.trim() || !emailBody.trim()) {
+      openSnackbar({
+        open: true,
+        message: 'يرجى كتابة عنوان ونص البريد الإلكتروني',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+      return;
+    }
+
+    setEmailLoading(true);
+    try {
+      const res = await sendBulkEmail({
+        userIds: selected,
+        subject: emailSubject,
+        body: emailBody
+      });
+      setEmailDialogOpen(false);
+      setSelected([]);
+      openSnackbar({
+        open: true,
+        message: res?.message || `تم إرسال البريد الإلكتروني إلى ${selected.length} مستخدم بنجاح`,
+        variant: 'alert',
+        alert: { color: 'success' }
+      });
+    } catch (err) {
+      openSnackbar({
+        open: true,
+        message: err?.message || 'حدث خطأ أثناء إرسال البريد',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+    } finally {
+      setEmailLoading(false);
+    }
+  };
+
+  // Bulk Notification Dialog
   const handleOpenNotiDialog = () => {
     if (selected.length === 0) {
       openSnackbar({
@@ -152,39 +314,11 @@ export default function UsersAdmin() {
     setNotiDialogOpen(true);
   };
 
-  // Submit bulk email (Mock call)
-  const handleSendEmailSubmit = () => {
-    if (!emailSubject.trim() || !emailBody.trim()) {
-      openSnackbar({
-        open: true,
-        message: 'يرجى ملء جميع الحقول المطلوبة',
-        variant: 'alert',
-        alert: { color: 'error' }
-      });
-      return;
-    }
-
-    setEmailLoading(true);
-    // Simulate API request
-    setTimeout(() => {
-      setEmailLoading(false);
-      setEmailDialogOpen(false);
-      setSelected([]);
-      openSnackbar({
-        open: true,
-        message: `تم إرسال البريد الإلكتروني الجماعي بنجاح إلى ${selected.length} مستخدم`,
-        variant: 'alert',
-        alert: { color: 'success' }
-      });
-    }, 1500);
-  };
-
-  // Submit bulk notification (Mock call)
-  const handleSendNotiSubmit = () => {
+  const handleSendNotiSubmit = async () => {
     if (!notiTitle.trim() || !notiBody.trim()) {
       openSnackbar({
         open: true,
-        message: 'يرجى ملء جميع الحقول المطلوبة',
+        message: 'يرجى كتابة عنوان ونص الإشعار',
         variant: 'alert',
         alert: { color: 'error' }
       });
@@ -192,39 +326,59 @@ export default function UsersAdmin() {
     }
 
     setNotiLoading(true);
-    // Simulate API request
-    setTimeout(() => {
-      setNotiLoading(false);
+    try {
+      const res = await sendBulkNotification({
+        userIds: selected,
+        title: notiTitle,
+        body: notiBody,
+        platform: notiPlatform
+      });
       setNotiDialogOpen(false);
       setSelected([]);
       openSnackbar({
         open: true,
-        message: `تم إرسال الإشعار الجماعي بنجاح إلى ${selected.length} مستخدم`,
+        message: res?.message || `تم إرسال الإشعار إلى ${selected.length} مستخدم بنجاح`,
         variant: 'alert',
         alert: { color: 'success' }
       });
-    }, 1500);
+    } catch (err) {
+      openSnackbar({
+        open: true,
+        message: err?.message || 'حدث خطأ أثناء إرسال الإشعار',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+    } finally {
+      setNotiLoading(false);
+    }
   };
 
   return (
     <Grid container spacing={3}>
       {/* Header */}
       <Grid size={{ xs: 12 }}>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ alignItems: { xs: 'flex-start', md: 'center' }, justifyContent: 'space-between' }}>
           <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
-            <People size={28} style={{ color: '#3ca7b7' }} />
-            <Typography variant="h4">المستخدمين المسجلين</Typography>
+            <People size={28} color="#3ca7b7" />
+            <Typography variant="h4">إدارة المستخدمين المسجلين</Typography>
           </Stack>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1.5} flexWrap="wrap">
+            <Button
+              variant="contained"
+              startIcon={<UserAdd size={18} />}
+              onClick={handleCreateUserClick}
+              sx={{ bgcolor: '#3ca7b7', '&:hover': { bgcolor: '#2e8996' } }}
+            >
+              إضافة مستخدم جديد
+            </Button>
             <Button
               variant="contained"
               color="primary"
               startIcon={<Sms size={18} />}
               onClick={handleOpenEmailDialog}
               disabled={selected.length === 0}
-              sx={{ bgcolor: '#3ca7b7', '&:hover': { bgcolor: 'primary.dark' } }}
             >
-              إرسال إيميل جماعي ({selected.length})
+              إرسال بريد ({selected.length})
             </Button>
             <Button
               variant="contained"
@@ -232,31 +386,50 @@ export default function UsersAdmin() {
               startIcon={<Notification size={18} />}
               onClick={handleOpenNotiDialog}
               disabled={selected.length === 0}
-              sx={{ bgcolor: '#5b6b79', '&:hover': { bgcolor: '#46535e' } }}
             >
-              إرسال إشعار جماعي ({selected.length})
+              إرسال إشعار ({selected.length})
             </Button>
           </Stack>
         </Stack>
       </Grid>
 
-      {/* Search */}
+      {/* Filter & Search */}
       <Grid size={{ xs: 12 }}>
         <MainCard>
-          <TextField
-            fullWidth
-            placeholder="بحث عن مستخدم بالاسم، البريد الإلكتروني أو الهاتف..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setPage(0);
-            }}
-            slotProps={{
-              input: {
-                startAdornment: <SearchNormal1 size={18} style={{ marginRight: 8, color: '#9e9e9e' }} />
-              }
-            }}
-          />
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 8 }}>
+              <TextField
+                fullWidth
+                placeholder="بحث بالاسم، البريد الإلكتروني أو رقم الهاتف..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setPage(0);
+                }}
+                slotProps={{
+                  input: {
+                    startAdornment: <SearchNormal1 size={18} style={{ marginRight: 8, color: '#9e9e9e' }} />
+                  }
+                }}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <TextField
+                select
+                fullWidth
+                value={statusFilter}
+                onChange={(e) => {
+                  setStatusFilter(e.target.value);
+                  setPage(0);
+                }}
+                label="حالة الحساب"
+              >
+                <MenuItem value="all">جميع الحسابات</MenuItem>
+                <MenuItem value="active">الحسابات النشطة فقط</MenuItem>
+                <MenuItem value="inactive">الحسابات المعطلة فقط</MenuItem>
+              </TextField>
+            </Grid>
+          </Grid>
         </MainCard>
       </Grid>
 
@@ -272,14 +445,15 @@ export default function UsersAdmin() {
                       indeterminate={selected.length > 0 && selected.length < filteredUsers.length}
                       checked={filteredUsers.length > 0 && selected.length === filteredUsers.length}
                       onChange={handleSelectAllClick}
-                      inputProps={{ 'aria-label': 'تحديد جميع المستخدمين' }}
+                      inputProps={{ 'aria-label': 'تحديد الكل' }}
                     />
                   </TableCell>
                   <TableCell>الاسم</TableCell>
                   <TableCell>البريد الإلكتروني</TableCell>
                   <TableCell>رقم الهاتف</TableCell>
                   <TableCell align="center">تاريخ التسجيل</TableCell>
-                  <TableCell align="center">الحالة</TableCell>
+                  <TableCell align="center">تفعيل الحساب</TableCell>
+                  <TableCell align="center">الإجراءات</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -290,14 +464,15 @@ export default function UsersAdmin() {
                       <TableRow
                         key={user.id}
                         hover
-                        onClick={(event) => handleClick(event, user.id)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         selected={isItemSelected}
-                        sx={{ cursor: 'pointer' }}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} />
+                          <Checkbox
+                            checked={isItemSelected}
+                            onClick={() => handleSelectUser(user.id)}
+                          />
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" fontWeight={600}>
@@ -306,7 +481,7 @@ export default function UsersAdmin() {
                         </TableCell>
                         <TableCell>
                           <Typography variant="body2" color="text.secondary">
-                            {user.email}
+                            {user.email || '—'}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -320,29 +495,57 @@ export default function UsersAdmin() {
                           </Typography>
                         </TableCell>
                         <TableCell align="center">
-                          <Box
-                            sx={{
-                              display: 'inline-block',
-                              px: 1.5,
-                              py: 0.5,
-                              borderRadius: '12px',
-                              fontSize: '11px',
-                              fontWeight: 600,
-                              bgcolor: user.status === 'نشط' ? 'success.lighter' : 'error.lighter',
-                              color: user.status === 'نشط' ? 'success.main' : 'error.main'
-                            }}
-                          >
-                            {user.status}
-                          </Box>
+                          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <Tooltip title={user.isActive ? 'تعطيل الحساب' : 'تفعيل الحساب'}>
+                              <Switch
+                                checked={user.isActive}
+                                onChange={() => handleToggleStatus(user)}
+                                color="success"
+                                size="small"
+                              />
+                            </Tooltip>
+                            <Chip
+                              label={user.isActive ? 'نشط' : 'معطل'}
+                              color={user.isActive ? 'success' : 'error'}
+                              size="small"
+                              variant="light"
+                            />
+                          </Stack>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Stack direction="row" spacing={1} sx={{ justifyContent: 'center' }}>
+                            <Tooltip title="تعديل بيانات المستخدم">
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                color="primary"
+                                startIcon={<Edit size={16} />}
+                                onClick={() => handleEditUserClick(user)}
+                              >
+                                تعديل
+                              </Button>
+                            </Tooltip>
+                            <Tooltip title="حذف المستخدم">
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                color="error"
+                                startIcon={<Trash size={16} />}
+                                onClick={() => handleDeleteClick(user)}
+                              >
+                                حذف
+                              </Button>
+                            </Tooltip>
+                          </Stack>
                         </TableCell>
                       </TableRow>
                     );
                   })
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                       <Typography variant="body2" color="textSecondary">
-                        لا توجد نتائج متطابقة للبحث
+                        لا يوجد مستخدمين مطابقين للبحث
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -350,116 +553,140 @@ export default function UsersAdmin() {
               </TableBody>
             </Table>
           </TableContainer>
+
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
             count={filteredUsers.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage="عدد المستخدمين في الصفحة:"
           />
         </MainCard>
       </Grid>
 
-      {/* Send Email Dialog */}
-      <Dialog open={emailDialogOpen} onClose={() => setEmailDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Sms size={22} style={{ color: '#3ca7b7' }} />
-          إرسال بريد إلكتروني جماعي
+      {/* User Form Dialog (Add / Edit) */}
+      <Dialog open={userFormOpen} onClose={() => setUserFormOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          {selectedUser ? 'تعديل بيانات المستخدم' : 'إضافة مستخدم جديد وتفعيل حسابه'}
         </DialogTitle>
-        <DialogContent dividers>
-          <Typography variant="subtitle2" sx={{ mb: 2, color: 'text.secondary' }}>
-            سيتم إرسال هذا البريد إلى <strong style={{ color: '#3ca7b7' }}>{selected.length}</strong> مستخدم تم تحديدهم.
-          </Typography>
-          <Stack spacing={3} sx={{ mt: 1 }}>
+        <DialogContent sx={{ pt: 2 }}>
+          <UserForm
+            user={selectedUser}
+            onSubmit={handleFormSubmit}
+            isLoading={formLoading}
+            onCancel={() => setUserFormOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <DialogTitle>تأكيد حذف المستخدم</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            هل أنت متأكد من رغبتك في حذف حساب المستخدم &quot;{userToDelete?.name}&quot;؟ لن يتمكن المستخدم من تسجيل الدخول مرة أخرى.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="secondary">
+            إلغاء
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            حذف الحساب
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Bulk Email Dialog */}
+      <Dialog open={emailDialogOpen} onClose={() => setEmailDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>إرسال بريد إلكتروني للمستخدمين المحددين ({selected.length})</DialogTitle>
+        <DialogContent sx={{ pt: 2 }}>
+          <Stack spacing={2.5}>
             <TextField
+              label="عنوان البريد الإلكتروني (Subject)"
               fullWidth
-              label="عنوان البريد الإلكتروني (الموضوع)"
               value={emailSubject}
               onChange={(e) => setEmailSubject(e.target.value)}
-              required
+              placeholder="مثال: تحديثات جديدة وتطبيقات تعليمية بانتظارك"
             />
             <TextField
-              fullWidth
-              label="محتوى البريد الإلكتروني"
+              label="محتوى الرسالة (Body)"
               multiline
-              rows={6}
+              rows={5}
+              fullWidth
               value={emailBody}
               onChange={(e) => setEmailBody(e.target.value)}
-              required
+              placeholder="اكتب نص الرسالة البريدية هنا..."
             />
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ p: 2.5 }}>
-          <Button onClick={() => setEmailDialogOpen(false)} color="secondary">
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setEmailDialogOpen(false)} color="secondary" disabled={emailLoading}>
             إلغاء
           </Button>
           <Button
             onClick={handleSendEmailSubmit}
             variant="contained"
             disabled={emailLoading}
-            sx={{ bgcolor: '#3ca7b7', '&:hover': { bgcolor: 'primary.dark' } }}
+            startIcon={emailLoading ? <CircularProgress size={16} color="inherit" /> : <Sms size={18} />}
+            sx={{ bgcolor: '#3ca7b7', '&:hover': { bgcolor: '#2e8996' } }}
           >
-            {emailLoading ? 'جاري الإرسال...' : 'إرسال البريد'}
+            {emailLoading ? 'جاري الإرسال...' : 'إرسال البريد الآن'}
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* Send Notification Dialog */}
+      {/* Bulk Notification Dialog */}
       <Dialog open={notiDialogOpen} onClose={() => setNotiDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Notification size={22} style={{ color: '#5b6b79' }} />
-          إرسال إشعار جماعي
-        </DialogTitle>
-        <DialogContent dividers>
-          <Typography variant="subtitle2" sx={{ mb: 2, color: 'text.secondary' }}>
-            سيتم إرسال هذا الإشعار إلى <strong style={{ color: '#5b6b79' }}>{selected.length}</strong> مستخدم تم تحديدهم.
-          </Typography>
-          <Stack spacing={3} sx={{ mt: 1 }}>
+        <DialogTitle>إرسال إشعار للمستخدمين المحددين ({selected.length})</DialogTitle>
+        <DialogContent sx={{ pt: 2 }}>
+          <Stack spacing={2.5}>
+            <TextField
+              label="عنوان الإشعار (Title)"
+              fullWidth
+              value={notiTitle}
+              onChange={(e) => setNotiTitle(e.target.value)}
+              placeholder="مثال: حلقة جديدة متوفرة الآن!"
+            />
+            <TextField
+              label="نص الإشعار (Body)"
+              multiline
+              rows={4}
+              fullWidth
+              value={notiBody}
+              onChange={(e) => setNotiBody(e.target.value)}
+              placeholder="اكتب نص الإشعار الذي سيظهر للمستخدم..."
+            />
             <FormControl fullWidth>
-              <InputLabel id="noti-platform-label">منصة الإشعار</InputLabel>
+              <InputLabel id="noti-platform-label">المنصة المستهدفة</InputLabel>
               <Select
                 labelId="noti-platform-label"
                 value={notiPlatform}
+                label="المنصة المستهدفة"
                 onChange={(e) => setNotiPlatform(e.target.value)}
-                label="منصة الإشعار"
               >
-                <MenuItem value="all">كل المنصات (All Platforms)</MenuItem>
-                <MenuItem value="ios">تطبيق iOS فقط</MenuItem>
-                <MenuItem value="android">تطبيق أندرويد فقط</MenuItem>
+                <MenuItem value="all">جميع المنصات (تطبيق + ويب)</MenuItem>
+                <MenuItem value="mobile">تطبيق الهاتف فقط</MenuItem>
                 <MenuItem value="web">الموقع الإلكتروني فقط</MenuItem>
               </Select>
             </FormControl>
-            <TextField
-              fullWidth
-              label="عنوان الإشعار"
-              value={notiTitle}
-              onChange={(e) => setNotiTitle(e.target.value)}
-              required
-            />
-            <TextField
-              fullWidth
-              label="محتوى الإشعار"
-              multiline
-              rows={4}
-              value={notiBody}
-              onChange={(e) => setNotiBody(e.target.value)}
-              required
-            />
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ p: 2.5 }}>
-          <Button onClick={() => setNotiDialogOpen(false)} color="secondary">
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={() => setNotiDialogOpen(false)} color="secondary" disabled={notiLoading}>
             إلغاء
           </Button>
           <Button
             onClick={handleSendNotiSubmit}
             variant="contained"
             disabled={notiLoading}
-            sx={{ bgcolor: '#5b6b79', '&:hover': { bgcolor: '#46535e' } }}
+            startIcon={notiLoading ? <CircularProgress size={16} color="inherit" /> : <Notification size={18} />}
+            sx={{ bgcolor: '#3ca7b7', '&:hover': { bgcolor: '#2e8996' } }}
           >
-            {notiLoading ? 'جاري الإرسال...' : 'إرسال الإشعار'}
+            {notiLoading ? 'جاري إرسال الإشعار...' : 'إرسال الإشعار الآن'}
           </Button>
         </DialogActions>
       </Dialog>

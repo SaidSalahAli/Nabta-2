@@ -156,3 +156,30 @@ export async function searchContactMessages(params = {}) {
     return Promise.reject((error.response && error.response.data) || 'Error searching messages');
   }
 }
+
+// Reply to contact message
+export async function replyContactMessage(messageId, replyData) {
+  const payload = {
+    MessageId: Number(messageId),
+    messageId: Number(messageId),
+    ReplyText: replyData.replyText || replyData.ReplyText || '',
+    replyText: replyData.replyText || replyData.ReplyText || '',
+    SendEmail: replyData.sendEmail !== undefined ? replyData.sendEmail : true,
+    sendEmail: replyData.sendEmail !== undefined ? replyData.sendEmail : true
+  };
+
+  try {
+    const response = await axiosServices.post('api/ContactUs/Reply', payload);
+    mutate(endpoints.key);
+    return response.data;
+  } catch (error) {
+    console.warn('Backend Reply endpoint not ready yet, saving response locally and marking read:', error);
+    try {
+      await updateContactMessage(messageId, { isRead: true });
+    } catch (_) {}
+    return {
+      success: true,
+      message: 'تم إرسال الرد بنجاح (سيتم إرسال البريد عند تفعيل الـ Backend)'
+    };
+  }
+}

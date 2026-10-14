@@ -22,6 +22,7 @@ import * as Yup from 'yup';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { openSnackbar } from 'api/snackbar';
 import { useGetEpisodes } from 'api/episodes';
+import { useGetWorksheetCategories } from 'api/worksheetCategories';
 
 // ==============================|| WORKSHEET FORM ||============================== //
 
@@ -30,7 +31,6 @@ const getValidationSchema = (isEditing) =>
     title_ar: Yup.string().required('عنوان ورقة العمل مطلوب'),
     description_ar: Yup.string(),
     file: isEditing ? Yup.mixed().nullable() : Yup.mixed().required('الملف مطلوب'),
-    file_type: Yup.string().required('نوع الملف مطلوب'),
     thumbnail: Yup.mixed(),
     episode_id: Yup.string(),
     category_id: Yup.number(),
@@ -40,6 +40,7 @@ const getValidationSchema = (isEditing) =>
 
 export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = false, onCancel }) {
   const { episodes = [] } = useGetEpisodes();
+  const { categories: worksheetCategories = [] } = useGetWorksheetCategories();
   const [initialValues, setInitialValues] = useState({
     title_ar: '',
     description_ar: '',
@@ -55,15 +56,15 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
   useEffect(() => {
     if (worksheet) {
       setInitialValues({
-        title_ar: worksheet.title_ar || '',
-        description_ar: worksheet.description_ar || '',
-        file: worksheet.file_url || null,
-        file_type: worksheet.file_type || 'pdf',
-        thumbnail: worksheet.thumbnail_image || '',
-        episode_id: worksheet.episode_id ? String(worksheet.episode_id) : '',
-        category_id: worksheet.category_id || '',
+        title_ar: worksheet.title_ar || worksheet.TitleAr || '',
+        description_ar: worksheet.description_ar || worksheet.DescriptionAr || '',
+        file: worksheet.file_url || worksheet.file || null,
+        file_type: worksheet.file_type || worksheet.FileType || 'pdf',
+        thumbnail: worksheet.thumbnail_image || worksheet.Thumbnail || '',
+        episode_id: (worksheet.episode_id || worksheet.EpisodeId) ? String(worksheet.episode_id || worksheet.EpisodeId) : '',
+        category_id: (worksheet.category_id || worksheet.CategoryId) ? String(worksheet.category_id || worksheet.CategoryId) : '',
         sort_order: worksheet.sort_order || 0,
-        is_active: worksheet.is_active !== undefined ? worksheet.is_active : true
+        is_active: worksheet.is_active !== undefined ? worksheet.is_active : (worksheet.IsActive !== undefined ? worksheet.IsActive : true)
       });
     }
   }, [worksheet]);
@@ -135,17 +136,19 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
               </Stack>
             </Grid>
 
-            {/* File Upload */}
-            <Grid size={{ xs: 12, md: 6 }}>
+            {/* File Upload - PDF Only */}
+            <Grid size={{ xs: 12 }}>
               <Stack spacing={1}>
-                <InputLabel htmlFor="file">الملف</InputLabel>
+                <InputLabel htmlFor="file">الملف (PDF)</InputLabel>
                 <Button variant="outlined" component="label" fullWidth sx={{ justifyContent: 'flex-start', px: 2, py: 1.5 }}>
-                  {values.file ? (typeof values.file === 'string' ? `الملف الحالي: ${values.file.split('/').pop()}` : values.file.name) : 'اختر الملف...'}
+                  {values.file ? (typeof values.file === 'string' ? `الملف الحالي: ${values.file.split('/').pop()}` : values.file.name) : 'اختر ملف PDF...'}
                   <input
                     type="file"
                     hidden
+                    accept=".pdf,application/pdf"
                     onChange={(event) => {
                       setFieldValue('file', event.currentTarget.files[0]);
+                      setFieldValue('file_type', 'pdf');
                     }}
                   />
                 </Button>
@@ -157,33 +160,6 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
               </Stack>
             </Grid>
 
-            {/* File Type */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Stack spacing={1}>
-                <InputLabel htmlFor="file_type">نوع الملف</InputLabel>
-                <TextField
-                  id="file_type"
-                  select
-                  value={values.file_type}
-                  name="file_type"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  fullWidth
-                  error={Boolean(touched.file_type && errors.file_type)}
-                >
-                  <MenuItem value="pdf">PDF</MenuItem>
-                  <MenuItem value="doc">DOC</MenuItem>
-                  <MenuItem value="image">صورة</MenuItem>
-                  <MenuItem value="video">فيديو</MenuItem>
-                  <MenuItem value="other">أخرى</MenuItem>
-                </TextField>
-                {touched.file_type && errors.file_type && (
-                  <FormHelperText error id="helper-text-file_type">
-                    {errors.file_type}
-                  </FormHelperText>
-                )}
-              </Stack>
-            </Grid>
 
             {/* Thumbnail Image */}
             <Grid size={{ xs: 12 }}>
@@ -234,6 +210,29 @@ export default function WorksheetForm({ worksheet = null, onSubmit, isLoading = 
                   {episodes.map((ep) => (
                     <MenuItem key={ep.id} value={String(ep.id)}>
                       {ep.title_ar || ep.TitleAr}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Stack>
+            </Grid>
+
+            {/* Category (Optional) */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Stack spacing={1}>
+                <InputLabel htmlFor="category_id">تصنيف ورقة العمل (اختياري)</InputLabel>
+                <TextField
+                  id="category_id"
+                  select
+                  value={values.category_id}
+                  name="category_id"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  fullWidth
+                >
+                  <MenuItem value="">بدون تصنيف</MenuItem>
+                  {worksheetCategories.map((cat) => (
+                    <MenuItem key={cat.id || cat.Id} value={String(cat.id || cat.Id)}>
+                      {cat.nameAr || cat.NameAr}
                     </MenuItem>
                   ))}
                 </TextField>

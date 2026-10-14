@@ -29,6 +29,7 @@ import Loader from 'components/Loader';
 import { useGetWorksheets, deleteWorksheet } from 'api/worksheets';
 import { useGetEpisodes } from 'api/episodes';
 import { useGetEpisodeCategories } from 'api/episodeCategories';
+import { useGetWorksheetCategories } from 'api/worksheetCategories';
 import { openSnackbar } from 'api/snackbar';
 import WorksheetForm from 'sections/episodes/WorksheetForm';
 import { createWorksheet, updateWorksheet } from 'api/worksheets';
@@ -43,6 +44,7 @@ export default function Worksheets() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [formDialogOpen, setFormDialogOpen] = useState(false);
   const [selectedWorksheet, setSelectedWorksheet] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -51,15 +53,18 @@ export default function Worksheets() {
   const { worksheets = [], worksheetsLoading, worksheetsMutate } = useGetWorksheets();
   const { episodes = [] } = useGetEpisodes();
   const { categories = [] } = useGetEpisodeCategories();
+  const { categories: worksheetCategories = [] } = useGetWorksheetCategories();
 
   // Filter worksheets
   const filteredWorksheets = worksheets.filter((worksheet) => {
     const titleAr = worksheet.TitleAr || worksheet.title_ar || '';
     const matchesSearch = titleAr.toLowerCase().includes(searchTerm.toLowerCase());
     const epId = worksheet.EpisodeId || worksheet.episode_id;
+    const catId = worksheet.CategoryId || worksheet.category_id;
     const matchesType =
       !selectedType || (selectedType === 'linked' && epId) || (selectedType === 'general' && !epId);
-    return matchesSearch && matchesType;
+    const matchesCategory = !selectedCategory || String(catId) === String(selectedCategory);
+    return matchesSearch && matchesType && matchesCategory;
   });
 
   // Pagination
@@ -92,8 +97,14 @@ export default function Worksheets() {
   const handleFormSubmit = async (values) => {
     setFormLoading(true);
     try {
-      if (selectedWorksheet?.id) {
-        await updateWorksheet({ id: selectedWorksheet.id, ...values });
+      const wsId = selectedWorksheet?.id || selectedWorksheet?.Id;
+      if (wsId) {
+        await updateWorksheet({
+          id: wsId,
+          episode_id: values.episode_id || selectedWorksheet.episode_id || selectedWorksheet.EpisodeId || selectedWorksheet.episodeId,
+          category_id: values.category_id || selectedWorksheet.category_id || selectedWorksheet.CategoryId,
+          ...values
+        });
         openSnackbar({
           open: true,
           message: 'تم تحديث ورقة العمل بنجاح',
@@ -126,7 +137,8 @@ export default function Worksheets() {
 
   const handleDeleteConfirm = async () => {
     try {
-      await deleteWorksheet(selectedWorksheet.id);
+      const wsId = selectedWorksheet?.id || selectedWorksheet?.Id;
+      await deleteWorksheet(wsId);
       openSnackbar({
         open: true,
         message: 'تم حذف ورقة العمل بنجاح',
@@ -154,8 +166,10 @@ export default function Worksheets() {
 
   const getCategoryName = (categoryId) => {
     if (!categoryId) return '-';
-    const category = categories.find((cat) => String(cat.id) === String(categoryId));
-    return category?.name_ar || '-';
+    const wsCategory = worksheetCategories.find((cat) => String(cat.id || cat.Id) === String(categoryId));
+    if (wsCategory) return wsCategory.nameAr || wsCategory.NameAr;
+    const epCategory = categories.find((cat) => String(cat.id || cat.Id) === String(categoryId));
+    return epCategory?.name_ar || epCategory?.NameAr || '-';
   };
 
   if (worksheetsLoading) {
@@ -168,7 +182,7 @@ export default function Worksheets() {
       <Grid size={{ xs: 12 }}>
         <Stack direction="row" spacing={2} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant="h4">أوراق العمل</Typography>
-          <Button variant="contained" startIcon={<Add />} onClick={handleCreateClick}>
+          <Button variant="contained" startIcon={<Add />} onClick={handleCreateClick} sx={{ bgcolor: '#3ca7b7', '&:hover': { bgcolor: 'primary.dark' } }}>
             إضافة ورقة عمل
           </Button>
         </Stack>
@@ -178,7 +192,7 @@ export default function Worksheets() {
       <Grid size={{ xs: 12 }}>
         <MainCard>
           <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <TextField
                 fullWidth
                 placeholder="بحث عن ورقة عمل..."
@@ -189,7 +203,7 @@ export default function Worksheets() {
                 }}
               />
             </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12, sm: 4 }}>
               <TextField
                 select
                 fullWidth
@@ -202,7 +216,26 @@ export default function Worksheets() {
               >
                 <MenuItem value="">جميع الأوراق</MenuItem>
                 <MenuItem value="linked">مرتبطة بحلقات</MenuItem>
-                <MenuItem value="general">عامة</MenuItem>
+                <MenuItem value="general">عامة (غير مرتبطة)</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 4 }}>
+              <TextField
+                select
+                fullWidth
+                value={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setPage(0);
+                }}
+                placeholder="التصنيف"
+              >
+                <MenuItem value="">جميع التصنيفات</MenuItem>
+                {worksheetCategories.map((cat) => (
+                  <MenuItem key={cat.id || cat.Id} value={String(cat.id || cat.Id)}>
+                    {cat.nameAr || cat.NameAr}
+                  </MenuItem>
+                ))}
               </TextField>
             </Grid>
           </Grid>

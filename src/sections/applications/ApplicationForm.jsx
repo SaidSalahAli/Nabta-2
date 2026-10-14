@@ -53,8 +53,9 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState('');
 
-  const [bannerFiles, setBannerFiles] = useState([]);
-  const [bannerPreviews, setBannerPreviews] = useState([]);
+  // banners: [{file: File, url: string}] - unified state for all images (existing + new)
+  const [banners, setBanners] = useState([]);
+  const [bannersLoading, setBannersLoading] = useState(false);
 
   const [initialValues, setInitialValues] = useState({
     categoryId: '',
@@ -78,7 +79,7 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
         promoVideoUrl: application.promo_video_url || application.promoVideoUrl || application.PromoVideoUrl || ''
       });
 
-          // Thumbnail Preview
+      // Thumbnail Preview
       if (application.thumbnail || application.Thumbnail) {
         setThumbnailPreview(getImageUrl(application.thumbnail || application.Thumbnail));
       } else {
@@ -86,18 +87,34 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
       }
       setThumbnailFile(null);
 
-      // Banner Images Previews
+      // تحويل الصور الموجودة إلى File objects تماماً كأول رفع
       const currentBanners = application.banner_images || application.bannerImages || application.Banners || [];
       if (currentBanners.length > 0) {
-        setBannerPreviews(currentBanners.map((imgObj, idx) => ({
-          id: imgObj.id || imgObj.Id || idx,
-          url: getImageUrl(imgObj.image_url || imgObj.ImageUrl || imgObj.url || imgObj.Url),
-          isExisting: true  // flag to mark as already on server
-        })));
+        setBannersLoading(true);
+        const imageUrls = currentBanners.map((imgObj, idx) => ({
+          url: getImageUrl(imgObj.image_url || imgObj.ImageUrl || imgObj.url || imgObj.Url || ''),
+          name: `banner_${imgObj.id || imgObj.Id || idx}.jpg`
+        }));
+
+        Promise.all(
+          imageUrls.map(async ({ url, name }) => {
+            try {
+              const response = await fetch(url, { mode: 'cors' });
+              const blob = await response.blob();
+              const file = new File([blob], name, { type: blob.type || 'image/jpeg' });
+              return { file, url };
+            } catch {
+              // إذا فشل الـ fetch، نستخدم الـ URL فقط للعرض (بدون file)
+              return { file: null, url };
+            }
+          })
+        ).then((results) => {
+          setBanners(results.filter(r => r.file !== null));
+          setBannersLoading(false);
+        });
       } else {
-        setBannerPreviews([]);
+        setBanners([]);
       }
-      setBannerFiles([]);
     } else {
       setInitialValues({
         categoryId: '',
@@ -110,8 +127,7 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
       });
       setThumbnailPreview('');
       setThumbnailFile(null);
-      setBannerPreviews([]);
-      setBannerFiles([]);
+      setBanners([]);
     }
   }, [application]);
 
@@ -126,23 +142,16 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
   const handleBannerImagesChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
-      const newPreviews = files.map(file => ({
+      const newBanners = files.map(file => ({
         file,
         url: URL.createObjectURL(file)
       }));
-      setBannerFiles(prev => [...prev, ...files]);
-      setBannerPreviews(prev => [...prev, ...newPreviews]);
+      setBanners(prev => [...prev, ...newBanners]);
     }
   };
 
-  const handleRemoveBanner = (index, isExisting) => {
-    if (isExisting) {
-      setBannerPreviews(prev => prev.filter((_, i) => i !== index));
-    } else {
-      const fileToRemove = bannerPreviews[index].file;
-      setBannerFiles(prev => prev.filter(f => f !== fileToRemove));
-      setBannerPreviews(prev => prev.filter((_, i) => i !== index));
-    }
+  const handleRemoveBanner = (index) => {
+    setBanners(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleFormSubmit = async (values, { setStatus, setSubmitting }) => {
@@ -166,25 +175,16 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
       formData.append('Application.Promo_Video_Url', values.promoVideoUrl || '');
       formData.append('Application.Platforms', '[]');
 
-            // Thumbnail file
+      // Thumbnail file
       if (thumbnailFile) {
         formData.append('Thumbnail', thumbnailFile);
       }
 
-      // Banner files (new uploads)
-      if (bannerFiles.length > 0) {
-        bannerFiles.forEach(file => {
-          formData.append('BannerImages', file);
-        });
-      }
-
-      // Existing banner image IDs that were not removed
-      const existingBannerIds = bannerPreviews
-        .filter(p => p.isExisting && typeof p.id !== 'undefined')
-        .map(p => p.id);
-      existingBannerIds.forEach(id => {
-        formData.append('ExistingBannerImageIds', id);
+      // إرسال جميع الصور كـ BannerImages (موجودة + جديدة) تماماً كأول رفع
+      banners.forEach(banner => {
+        formData.append('BannerImages', banner.file);
       });
+
       await onSubmit(formData);
       setStatus({ success: true });
       setSubmitting(false);
@@ -388,9 +388,15 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
                   <input type="file" hidden accept="image/*" multiple onChange={handleBannerImagesChange} />
                 </Button>
 
-                {bannerPreviews.length > 0 && (
+                {bannersLoading && (
+                  <Box sx={{ color: 'text.secondary', fontSize: 13, mt: 0.5 }}>
+                    ⏳ جاري تحميل الصور الموجودة...
+                  </Box>
+                )}
+
+                {!bannersLoading && banners.length > 0 && (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
-                    {bannerPreviews.map((preview, idx) => (
+                    {banners.map((banner, idx) => (
                       <Box
                         key={idx}
                         sx={{
@@ -402,10 +408,10 @@ export default function ApplicationForm({ application = null, onSubmit, isLoadin
                           border: '1px solid #ddd'
                         }}
                       >
-                        <Box component="img" src={preview.url} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <Box component="img" src={banner.url} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         <IconButton
                           size="small"
-                          onClick={() => handleRemoveBanner(idx, !preview.file)}
+                          onClick={() => handleRemoveBanner(idx)}
                           sx={{
                             position: 'absolute',
                             top: 4,

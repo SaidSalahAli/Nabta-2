@@ -18,14 +18,58 @@ const endpoints = {
   delete: (id) => `api/EpisodeWorksheet/Delete?id=${id}`
 };
 
-// Convert local field names to API field names
+// Fallback cache key for category linking in case backend model binding is evolving
+const WORKSHEET_CAT_LINKS_KEY = 'nabta_worksheet_category_links';
+
+export const getStoredWorksheetCategoryLinks = () => {
+  try {
+    const raw = localStorage.getItem(WORKSHEET_CAT_LINKS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    console.error('Error reading worksheet category links from localStorage:', e);
+  }
+  return {};
+};
+
+export const saveWorksheetCategoryLink = (worksheetId, categoryId) => {
+  if (!worksheetId) return;
+  try {
+    const links = getStoredWorksheetCategoryLinks();
+    if (categoryId !== null && categoryId !== undefined && categoryId !== '') {
+      links[String(worksheetId)] = Number(categoryId);
+    } else {
+      delete links[String(worksheetId)];
+    }
+    localStorage.setItem(WORKSHEET_CAT_LINKS_KEY, JSON.stringify(links));
+  } catch (e) {
+    console.error('Error saving worksheet category link to localStorage:', e);
+  }
+};
+
 const convertToApiFormat = (worksheetData) => {
+  // احسب EpisodeId من كل المصادر الممكنة
+  const rawEpisodeId = worksheetData.episode_id ?? worksheetData.EpisodeId ?? worksheetData.episodeId;
+  const episodeId = rawEpisodeId !== '' && rawEpisodeId !== null && rawEpisodeId !== undefined
+    ? Number(rawEpisodeId)
+    : undefined;
+
+  const rawCategoryId =
+    worksheetData.category_id ??
+    worksheetData.CategoryId ??
+    worksheetData.categoryId ??
+    worksheetData.worksheet_category_id ??
+    worksheetData.WorksheetCategoryId;
+  const categoryId = rawCategoryId !== '' && rawCategoryId !== null && rawCategoryId !== undefined
+    ? Number(rawCategoryId)
+    : undefined;
+
   const apiData = {
     Id: worksheetData.Id || worksheetData.id,
-    EpisodeId: worksheetData.episode_id || worksheetData.EpisodeId,
+    EpisodeId: episodeId,
+    CategoryId: categoryId,
     TitleAr: worksheetData.title_ar || worksheetData.TitleAr,
     DescriptionAr: worksheetData.description_ar || worksheetData.DescriptionAr,
-    FileType: worksheetData.file_type || worksheetData.FileType,
+    FileType: worksheetData.file_type || worksheetData.FileType || 'pdf',
     IsActive:
       worksheetData.is_active !== undefined
         ? worksheetData.is_active
@@ -63,15 +107,42 @@ export function useGetWorksheets(params = {}) {
     revalidateOnReconnect: false
   });
 
-  const memoizedValue = useMemo(
-    () => ({
-      worksheets: Array.isArray(data) ? data : data?.Data || data?.data || [],
+  const memoizedValue = useMemo(() => {
+    const rawList = Array.isArray(data) ? data : data?.Data || data?.data || [];
+    const storedLinks = getStoredWorksheetCategoryLinks();
+
+    const enrichedWorksheets = rawList.map((item) => {
+      const id = item.Id || item.id;
+      const directCatId =
+        item.CategoryId ??
+        item.category_id ??
+        item.worksheet_category_id ??
+        item.WorksheetCategoryId ??
+        item.Category?.Id ??
+        item.Category?.id ??
+        item.WorksheetCategory?.Id ??
+        item.WorksheetCategory?.id;
+
+      const resolvedCatId =
+        directCatId !== null && directCatId !== undefined && directCatId !== ''
+          ? Number(directCatId)
+          : (storedLinks[String(id)] ? Number(storedLinks[String(id)]) : undefined);
+
+      return {
+        ...item,
+        CategoryId: resolvedCatId,
+        category_id: resolvedCatId,
+        worksheet_category_id: resolvedCatId
+      };
+    });
+
+    return {
+      worksheets: enrichedWorksheets,
       worksheetsLoading: isLoading,
       worksheetsError: error,
       worksheetsMutate: mutateData
-    }),
-    [data, isLoading, error, mutateData]
-  );
+    };
+  }, [data, isLoading, error, mutateData]);
 
   return memoizedValue;
 }
@@ -89,15 +160,41 @@ export function useGetWorksheet(id) {
     revalidateOnReconnect: false
   });
 
-  const memoizedValue = useMemo(
-    () => ({
-      worksheet: data?.data || data || null,
+  const memoizedValue = useMemo(() => {
+    const rawItem = data?.data || data || null;
+    if (!rawItem) {
+      return {
+        worksheet: null,
+        worksheetLoading: isLoading,
+        worksheetError: error,
+        worksheetMutate: mutateData
+      };
+    }
+
+    const storedLinks = getStoredWorksheetCategoryLinks();
+    const itemId = rawItem.Id || rawItem.id || id;
+    const directCatId =
+      rawItem.CategoryId ??
+      rawItem.category_id ??
+      rawItem.worksheet_category_id ??
+      rawItem.WorksheetCategoryId;
+
+    const resolvedCatId =
+      directCatId !== null && directCatId !== undefined && directCatId !== ''
+        ? Number(directCatId)
+        : (storedLinks[String(itemId)] ? Number(storedLinks[String(itemId)]) : undefined);
+
+    return {
+      worksheet: {
+        ...rawItem,
+        CategoryId: resolvedCatId,
+        category_id: resolvedCatId
+      },
       worksheetLoading: isLoading,
       worksheetError: error,
       worksheetMutate: mutateData
-    }),
-    [data, isLoading, error, mutateData]
-  );
+    };
+  }, [data, id, isLoading, error, mutateData]);
 
   return memoizedValue;
 }
@@ -118,6 +215,13 @@ export async function createWorksheet(worksheetData) {
         'Content-Type': 'multipart/form-data'
       }
     });
+
+    const createdId = response?.data?.Id || response?.data?.id || response?.data?.Data?.Id || response?.data?.Data?.id;
+    const catId = worksheetData.category_id ?? worksheetData.CategoryId;
+    if (createdId && catId !== undefined && catId !== null && catId !== '') {
+      saveWorksheetCategoryLink(createdId, catId);
+    }
+
     mutate(endpoints.key);
     return response.data;
   } catch (error) {
@@ -146,6 +250,11 @@ export async function updateWorksheet(worksheetData) {
         'Content-Type': 'multipart/form-data'
       }
     });
+
+    const targetId = apiData.Id || worksheetData.id || worksheetData.Id;
+    const catId = worksheetData.category_id ?? worksheetData.CategoryId;
+    saveWorksheetCategoryLink(targetId, catId);
+
     mutate(endpoints.key);
     mutate(endpoints.read(apiData.Id));
     return response.data;
@@ -158,6 +267,7 @@ export async function updateWorksheet(worksheetData) {
 export async function deleteWorksheet(id) {
   try {
     const response = await axiosServices.delete(endpoints.delete(id));
+    saveWorksheetCategoryLink(id, null);
     mutate(endpoints.key);
     return response.data;
   } catch (error) {

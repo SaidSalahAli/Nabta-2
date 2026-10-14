@@ -24,7 +24,7 @@ import Chip from '@mui/material/Chip';
 // project-imports
 import MainCard from 'components/MainCard';
 import Loader from 'components/Loader';
-import { useGetContactMessages, updateContactMessage, deleteContactMessage } from 'api/contactMessages';
+import { useGetContactMessages, updateContactMessage, deleteContactMessage, replyContactMessage } from 'api/contactMessages';
 import { openSnackbar } from 'api/snackbar';
 import MessageForm from 'sections/contact-messages/MessageForm';
 
@@ -115,10 +115,33 @@ export default function ContactMessages() {
     }
   };
 
-  const getStatusChip = (isRead) => {
-    let label = isRead ? 'مقروءة' : 'جديدة';
-    let color = isRead ? 'success' : 'info';
-    return <Chip label={label} color={color} size="small" />;
+  const handleReplySubmit = async (messageId, replyData) => {
+    try {
+      await replyContactMessage(messageId, replyData);
+      contactMessagesMutate();
+      setFormDialogOpen(false);
+      setSelectedMessage(null);
+    } catch (error) {
+      openSnackbar({
+        open: true,
+        message: error?.message || 'حدث خطأ في إرسال الرد',
+        variant: 'alert',
+        alert: { color: 'error' }
+      });
+    }
+  };
+
+  const getStatusChip = (msg) => {
+    const isReplied = Boolean(msg?.replyText || msg?.ReplyText || msg?.isReplied || msg?.IsReplied);
+    const isRead = msg?.isRead !== undefined ? msg?.isRead : msg?.IsRead;
+
+    if (isReplied) {
+      return <Chip label="تم الرد" color="success" size="small" variant="light" />;
+    }
+    if (isRead) {
+      return <Chip label="مقروءة" color="primary" size="small" variant="light" />;
+    }
+    return <Chip label="جديدة" color="warning" size="small" variant="combined" />;
   };
 
   if (contactMessagesLoading) {
@@ -169,11 +192,11 @@ export default function ContactMessages() {
                       <TableCell sx={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {msg.subject || msg.Subject}
                       </TableCell>
-                      <TableCell>{getStatusChip(msg.isRead !== undefined ? msg.isRead : msg.IsRead)}</TableCell>
+                      <TableCell>{getStatusChip(msg)}</TableCell>
                       <TableCell align="center">
                         <Stack direction="row" spacing={0.5} justifyContent="center">
                           <Button size="small" variant="outlined" onClick={() => handleViewClick(msg)} startIcon={<Eye size={16} />}>
-                            عرض
+                            عرض والرد
                           </Button>
                           <Button
                             size="small"
@@ -212,12 +235,13 @@ export default function ContactMessages() {
         </MainCard>
       </Grid>
 
-      <Dialog open={formDialogOpen} onClose={() => setFormDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>تفاصيل الرسالة</DialogTitle>
+      <Dialog open={formDialogOpen} onClose={() => setFormDialogOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>تفاصيل الرسالة والرد</DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
           <MessageForm
             message={selectedMessage}
             onSubmit={handleFormSubmit}
+            onReply={handleReplySubmit}
             isLoading={formLoading}
             onCancel={() => setFormDialogOpen(false)}
           />

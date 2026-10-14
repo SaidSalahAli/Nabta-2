@@ -305,7 +305,7 @@ export default function EpisodesList() {
                           <Button
                             size="small"
                             variant="outlined"
-                            onClick={() => handleEditClick(episode.Id)}
+                            onClick={() => handleEditClick(episode.id || episode.Id || episode.ID)}
                             startIcon={<Edit size={16} />}
                           >
                             تحرير

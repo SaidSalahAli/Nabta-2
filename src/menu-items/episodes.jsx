@@ -35,6 +35,13 @@ const episodes = {
       type: 'item',
       url: '/dashboard/worksheets',
       icon: icons.worksheets
+    },
+    {
+      id: 'dashboard/worksheet-categories',
+      title: 'تصنيفات أوراق العمل',
+      type: 'item',
+      url: '/dashboard/worksheet-categories',
+      icon: icons.categories
     }
   ]
 };

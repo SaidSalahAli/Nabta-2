@@ -83,7 +83,7 @@ export default function Applications() {
       const merged = {
         ...fullData.application,
         category_id: fullData.category?.id || fullData.application?.category_id,
-        banner_images: fullData.application?.banner_images || []
+        banner_images: fullData.application?.banner_images || fullData.application?.BannerImages || fullData.banner_images || []
       };
       setSelectedApplication(merged);
     } catch {
