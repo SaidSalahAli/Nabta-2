@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Container, Fade, Typography, Divider, Link } from '@mui/material';
+import React from 'react';
+import { Box, Container, Typography, Link } from '@mui/material';
 import SEO from 'components/SEO';
-
+import { PageHero, crayon, kidColors, kidFont } from 'components/kids';
 
 /* ── Shared styles (must be before sections array) ── */
 const bodyStyle = {
-  color: 'text.secondary',
+  color: '#56607A',
+  fontFamily: kidFont,
   lineHeight: 2,
-  fontSize: { xs: '0.95rem', md: '1rem' }
+  fontSize: { xs: '1rem', md: '1.08rem' }
 };
 
 const linkStyle = {
@@ -23,14 +24,13 @@ const sections = [
     title: 'سياسة الخصوصية لمنصة نبتة للأطفال',
     content: (
       <Typography variant="body1" sx={bodyStyle}>
-        أهلًا بك في منصة نبتة لصناعة المحتوى التربوي التعليمي للأطفال، ودعم الأمهات والآباء. في هذه الوثيقة، ستُشير
-        التعبيرات "نحن" و"لنا" إلى منصة نبتة. ومن خلال التفاعل مع هذه المنصّة، بما في ذلك جميع المعلومات والأدوات
-        والخدمات المُقدَّمة، فإنك توافق على الإلتزام بالشروط المبينة في وثيقة سياسة الخصوصية هذه.{' '}
+        أهلًا بك في منصة نبتة لصناعة المحتوى التربوي التعليمي للأطفال، ودعم الأمهات والآباء. في هذه الوثيقة، ستُشير التعبيرات "نحن" و"لنا"
+        إلى منصة نبتة. ومن خلال التفاعل مع هذه المنصّة، بما في ذلك جميع المعلومات والأدوات والخدمات المُقدَّمة، فإنك توافق على الإلتزام
+        بالشروط المبينة في وثيقة سياسة الخصوصية هذه. <br />
         <br />
-        <br />
-        تتم الموافقة على سياسة الخصوصية هذه عندما يقوم المستخدم أو إن أمكن الوالد أو مقدم الرعاية المعني، باستخدام منصتنا
-        ويوافق على معالجة بياناته الشخصية. إذا كنت لا توافق على وثيقة سياسة الخصوصية هذه، يرجى عدم إستخدام المنصّة مرةً
-        أخرى. يرجى مراسلتنا عبر البريد الإلكتروني{' '}
+        تتم الموافقة على سياسة الخصوصية هذه عندما يقوم المستخدم أو إن أمكن الوالد أو مقدم الرعاية المعني، باستخدام منصتنا ويوافق على معالجة
+        بياناته الشخصية. إذا كنت لا توافق على وثيقة سياسة الخصوصية هذه، يرجى عدم إستخدام المنصّة مرةً أخرى. يرجى مراسلتنا عبر البريد
+        الإلكتروني{' '}
         <Link href="mailto:contact@nabtastudio.com" sx={linkStyle}>
           contact@nabtastudio.com
         </Link>
@@ -42,8 +42,8 @@ const sections = [
     title: 'الالتزام بخصوصية البيانات',
     content: (
       <Typography variant="body1" sx={bodyStyle}>
-        منصة نبتة تولي اهتمامًا كبيرًا بخصوصية مستخدميها. نحن لا نقوم بجمع أو تخزين أو معالجة بيانات المستخدمين
-        الشخصية خارج نطاق الأغراض المعبّر عنها هُنا، إلا إذا كان ذلك مطلوبًا بموجب القانون.
+        منصة نبتة تولي اهتمامًا كبيرًا بخصوصية مستخدميها. نحن لا نقوم بجمع أو تخزين أو معالجة بيانات المستخدمين الشخصية خارج نطاق الأغراض
+        المعبّر عنها هُنا، إلا إذا كان ذلك مطلوبًا بموجب القانون.
       </Typography>
     )
   },
@@ -52,8 +52,8 @@ const sections = [
     title: 'ما الذي تتضمنه البيانات الشخصية؟',
     content: (
       <Typography variant="body1" sx={bodyStyle}>
-        تشير البيانات الشخصية إلى أي معلومات يمكنها تحديد هوية الفرد بشكلٍ مباشر أو غير مباشر، مثل الإسم وعنوان البريد
-        الإلكتروني وعنوان IP والدولة.
+        تشير البيانات الشخصية إلى أي معلومات يمكنها تحديد هوية الفرد بشكلٍ مباشر أو غير مباشر، مثل الإسم وعنوان البريد الإلكتروني وعنوان IP
+        والدولة.
       </Typography>
     )
   },
@@ -63,9 +63,9 @@ const sections = [
     content: (
       <>
         <Typography variant="body1" sx={bodyStyle}>
-          <strong>أثناء استخدام المنصّة:</strong> يجوز للمستخدمين الكشف طوعًا عن بياناتهم الشخصية، على سبيل المثال، عند
-          إجراء عملية شراء عبر منصة نبتة. بالإضافة إلى ذلك، قد يتم جمع بيانات بشكلٍ غير مباشر مثل إحصائيات
-          إستخدام المنصّة، وعدد المستخدمين وأكثر الميزات إستخدامًا.
+          <strong>أثناء استخدام المنصّة:</strong> يجوز للمستخدمين الكشف طوعًا عن بياناتهم الشخصية، على سبيل المثال، عند إجراء عملية شراء عبر
+          منصة نبتة. بالإضافة إلى ذلك، قد يتم جمع بيانات بشكلٍ غير مباشر مثل إحصائيات إستخدام المنصّة، وعدد المستخدمين وأكثر الميزات
+          إستخدامًا.
         </Typography>
         <Typography variant="body1" sx={{ ...bodyStyle, mt: 1 }}>
           <strong>الغرض والأساس القانوني:</strong> نقوم بمعالجة البيانات الشخصية بكل شفافية.
@@ -78,9 +78,8 @@ const sections = [
     title: 'مشاركة البيانات الشخصية',
     content: (
       <Typography variant="body1" sx={bodyStyle}>
-        قد تقوم منصة نبتة بمشاركة البيانات الشخصية مع مقدّمي الخدمات والشركاء الخارجيين لأغراض مثل تخزين البيانات،
-        والتحليلات، وتسليم الاتصالات. نحن نضمن أن هؤلاء الأطراف يتمتّعون بمستوى مماثل من حماية البيانات والخصوصية كما هو
-        الحال مع منصة نبتة.
+        قد تقوم منصة نبتة بمشاركة البيانات الشخصية مع مقدّمي الخدمات والشركاء الخارجيين لأغراض مثل تخزين البيانات، والتحليلات، وتسليم
+        الاتصالات. نحن نضمن أن هؤلاء الأطراف يتمتّعون بمستوى مماثل من حماية البيانات والخصوصية كما هو الحال مع منصة نبتة.
       </Typography>
     )
   },
@@ -89,8 +88,8 @@ const sections = [
     title: 'نقل البيانات',
     content: (
       <Typography variant="body1" sx={bodyStyle}>
-        قد يتم نقل بياناتك الشخصية دوليًا، بما في ذلك إلى الدول التي تخضع لقوانين مختلفة لحماية البيانات. ومن خلال تقديم
-        بياناتك، فإنك توافق على هذا النقل.
+        قد يتم نقل بياناتك الشخصية دوليًا، بما في ذلك إلى الدول التي تخضع لقوانين مختلفة لحماية البيانات. ومن خلال تقديم بياناتك، فإنك توافق
+        على هذا النقل.
       </Typography>
     )
   },
@@ -99,8 +98,8 @@ const sections = [
     title: 'حقوق المستخدم',
     content: (
       <Typography variant="body1" sx={bodyStyle}>
-        يحق للمستخدمين ممارسة حقوقهم فيما يتعلَّق ببياناتهم الشخصية، بما في ذلك الحق في الوصول إليها، وتصحيحها، وحذفها،
-        أو نقلها. لأي طلبات أو استفسارات، يرجى التواصل معنا على البريد الإلكتروني{' '}
+        يحق للمستخدمين ممارسة حقوقهم فيما يتعلَّق ببياناتهم الشخصية، بما في ذلك الحق في الوصول إليها، وتصحيحها، وحذفها، أو نقلها. لأي طلبات
+        أو استفسارات، يرجى التواصل معنا على البريد الإلكتروني{' '}
         <Link href="mailto:contact@nabtastudio.com" sx={linkStyle}>
           contact@nabtastudio.com
         </Link>
@@ -112,8 +111,8 @@ const sections = [
     title: 'الاحتفاظ بالبيانات وحمايتها',
     content: (
       <Typography variant="body1" sx={bodyStyle}>
-        تحتفظ منصة نبتة بالبيانات الشخصية فقط في حال كان ذلك ضروريًا. وتتَّخذ احتياطاتٍ صارمةٍ لحمايتها من الوصول غير
-        المُصرَّح به، أو فقدانها أو سوء استخدامها.
+        تحتفظ منصة نبتة بالبيانات الشخصية فقط في حال كان ذلك ضروريًا. وتتَّخذ احتياطاتٍ صارمةٍ لحمايتها من الوصول غير المُصرَّح به، أو
+        فقدانها أو سوء استخدامها.
       </Typography>
     )
   },
@@ -140,7 +139,9 @@ const sections = [
                   {value}
                 </Link>
               ) : (
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>{value}</Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  {value}
+                </Typography>
               )}
             </Box>
           ))}
@@ -153,8 +154,7 @@ const sections = [
     title: 'التغييرات في سياسة الخصوصية',
     content: (
       <Typography variant="body1" sx={bodyStyle}>
-        تحتفظ منصة نبتة بحق تحديث سياسة الخصوصية هذه. سيتم إبلاغ المستخدمين بالتغييرات المهمة وقد تتطلَّب هذه التغييرات
-        موافقة جديدة.
+        تحتفظ منصة نبتة بحق تحديث سياسة الخصوصية هذه. سيتم إبلاغ المستخدمين بالتغييرات المهمة وقد تتطلَّب هذه التغييرات موافقة جديدة.
       </Typography>
     )
   },
@@ -172,8 +172,10 @@ const sections = [
           'نقبل الدفع عبر الإنترنت باستخدام فيزا وماستر كارد.'
         ].map((item, i) => (
           <Box key={i} component="li" sx={{ display: 'flex', gap: 1.5, mb: 1.5 }}>
-            <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'primary.main', mt: '10px', flexShrink: 0 }} />
-            <Typography variant="body1" sx={bodyStyle}>{item}</Typography>
+            <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#5DBB63', mt: '10px', flexShrink: 0 }} />
+            <Typography variant="body1" sx={bodyStyle}>
+              {item}
+            </Typography>
           </Box>
         ))}
       </Box>
@@ -182,75 +184,85 @@ const sections = [
 ];
 
 export default function Privacy() {
-  const [checked, setChecked] = useState(false);
-
-  useEffect(() => {
-    setChecked(true);
-  }, []);
-
   return (
-    <Fade in={checked} timeout={800}>
-      <Box sx={{ py: 8, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
-        <SEO 
-          title="سياسة الخصوصية" 
-          description="وثيقة سياسة الخصوصية وحماية بيانات المستخدمين والأطفال في منصة نبتة للأطفال."
-          keywords="سياسة الخصوصية منصة نبتة, حماية بيانات الأطفال, أمن المعلومات منصة نبتة"
-          url="/privacy"
-        />
-        <Container maxWidth="md">
-          {/* Header */}
-          <Box sx={{ mb: 8, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 800, color: 'text.primary', mb: 2, fontSize: { xs: '2.2rem', md: '3rem' } }}>
-              سياسة الخصوصية
-            </Typography>
+    <Box sx={{ backgroundColor: kidColors.cloud }}>
+      <SEO
+        title="سياسة الخصوصية"
+        description="وثيقة سياسة الخصوصية وحماية بيانات المستخدمين والأطفال في منصة نبتة للأطفال."
+        keywords="سياسة الخصوصية منصة نبتة, حماية بيانات الأطفال, أمن المعلومات منصة نبتة"
+        url="/privacy"
+      />
 
-            <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: 15 }}>
-              آخر تحديث: {new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </Typography>
-          </Box>
+      <PageHero tone="leaf" title="سياسة الخصوصية" description="نحمي خصوصيتك وخصوصية طفلك. هنا نوضح كيف نتعامل مع البيانات.">
+        <Box
+          component="span"
+          sx={{
+            display: 'inline-block',
+            fontFamily: kidFont,
+            fontWeight: 700,
+            fontSize: '0.95rem',
+            px: 2,
+            py: 0.5,
+            borderRadius: '999px',
+            backgroundColor: 'rgba(255,255,255,.18)'
+          }}
+        >
+          آخر تحديث: {new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </Box>
+      </PageHero>
 
-          {/* Sections */}
-          <Box
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '24px',
-              border: '1px solid',
-              borderColor: 'divider',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
-              overflow: 'hidden'
-            }}
-          >
-            {sections.map((section, index) => (
-              <Box key={section.id}>
-                <Box sx={{ px: { xs: 3, md: 5 }, py: { xs: 3, md: 4 } }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <Box
-                      sx={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: '10px',
-                        backgroundColor: '#FFF8E1',
-                        border: '1.5px solid #FFD666',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
-                      }}
-                    >
-                      <Typography sx={{ fontWeight: 800, fontSize: 14, color: '#b27b00' }}>{index + 1}</Typography>
-                    </Box>
-                    <Typography variant="h5" sx={{ fontWeight: 800, color: '#2E2A39', fontSize: { xs: '1.1rem', md: '1.3rem' } }}>
-                      {section.title}
-                    </Typography>
+      <Container maxWidth="md" sx={{ pt: { xs: 3, md: 4 }, pb: { xs: 6, md: 8 } }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+          {sections.map((section, index) => {
+            const c = crayon(index);
+            return (
+              <Box
+                key={section.id}
+                component="section"
+                id={section.id}
+                sx={{
+                  backgroundColor: '#fff',
+                  borderRadius: '28px',
+                  borderInlineStart: `8px solid ${c.main}`,
+                  boxShadow: `0 6px 0 ${kidColors.ink}0F`,
+                  px: { xs: 3, md: 4.5 },
+                  py: { xs: 3, md: 3.5 }
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.75, mb: 1.75 }}>
+                  <Box
+                    aria-hidden="true"
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: '14px',
+                      backgroundColor: c.main,
+                      color: c.text,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      fontFamily: kidFont,
+                      fontWeight: 800,
+                      fontSize: 17,
+                      boxShadow: `0 3px 0 ${c.deep}`
+                    }}
+                  >
+                    {index + 1}
                   </Box>
-                  <Box sx={{ pr: { md: 6 } }}>{section.content}</Box>
+                  <Typography
+                    component="h2"
+                    sx={{ fontFamily: kidFont, fontWeight: 800, color: kidColors.ink, fontSize: { xs: '1.2rem', md: '1.4rem' } }}
+                  >
+                    {section.title}
+                  </Typography>
                 </Box>
-                {index < sections.length - 1 && <Divider sx={{ borderColor: 'divider' }} />}
+                <Box>{section.content}</Box>
               </Box>
-            ))}
-          </Box>
-        </Container>
-      </Box>
-    </Fade>
+            );
+          })}
+        </Box>
+      </Container>
+    </Box>
   );
 }

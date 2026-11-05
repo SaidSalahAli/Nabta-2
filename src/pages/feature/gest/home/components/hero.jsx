@@ -1,101 +1,86 @@
 import React, { useState, useEffect } from 'react';
-import { Box, useTheme, Fade } from '@mui/material';
+import { Box, Fade } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-import { Pagination, Navigation, Autoplay } from 'swiper/modules';
+import { Pagination, Autoplay } from 'swiper/modules';
 import slider1 from 'assets/Home/slider_1.svg';
 import slider2 from 'assets/Home/slider_2.svg';
 import slider3 from 'assets/Home/slider_3.svg';
 import slider4 from 'assets/Home/slider_4.svg';
+import { Wave, kidColors } from 'components/kids';
+
+const heroSlides = [slider1, slider2, slider3, slider4];
 
 export default function Hero({ shouldAnimate = false }) {
-  const theme = useTheme();
   const [checked, setChecked] = useState(false);
-
-  const heroSlides = [slider1, slider2, slider3, slider4];
 
   useEffect(() => {
     if (shouldAnimate) setChecked(true);
   }, [shouldAnimate]);
 
   return (
-    <Fade in={checked} timeout={800}>
+    <Fade in={checked} timeout={700}>
       <Box
         sx={{
           position: 'relative',
           width: '100%',
+          backgroundColor: kidColors.sky,
 
-          // ── Pagination bullets ──────────────────────────────
-          '& .swiper-pagination-bullet': {
-            backgroundColor: theme.palette.grey[400],
-            width: 10,
-            height: 10,
-            borderRadius: '50%',
-            opacity: 1,
-            margin: '0 4px !important',
-            transition: 'width 0.35s ease, background-color 0.35s ease, border-radius 0.35s ease'
-          },
-          '& .swiper-pagination-bullet-active': {
-            backgroundColor: theme.palette.primary.main,
-            width: 28,
-            height: 10,
-            borderRadius: '5px',
-            opacity: 1
-          },
           '& .swiper-pagination': {
-            bottom: '16px !important',
+            bottom: { xs: '34px !important', md: '78px !important' },
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            gap: '6px'
+          },
+          '& .swiper-pagination-bullet': {
+            backgroundColor: '#fff',
+            width: 14,
+            height: 14,
+            borderRadius: '999px',
+            opacity: 1,
+            margin: '0 !important',
+            border: `3px solid ${kidColors.ink}26`,
+            transition: 'width .35s ease, background-color .35s ease'
+          },
+          '& .swiper-pagination-bullet-active': {
+            backgroundColor: kidColors.sun,
+            width: 40,
+            borderColor: kidColors.sunDeep
           }
         }}
       >
         <Swiper
           slidesPerView={1}
           spaceBetween={0}
+          loop
           pagination={{ clickable: true }}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
-          modules={[Pagination, Navigation, Autoplay]}
-          style={{ width: '100%', borderRadius: '0px', overflow: 'hidden' }}
+          autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+          modules={[Pagination, Autoplay]}
+          style={{ width: '100%' }}
         >
           {heroSlides.map((slide, index) => (
             <SwiperSlide key={index}>
-              <Box
-                sx={{
-                  width: '100%',
-                  height: { xs: '250px', sm: '350px', md: '700px' },
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
-              >
+              <Box sx={{ width: '100%', height: { xs: 250, sm: 380, md: 680 }, overflow: 'hidden' }}>
                 <Box
                   component="img"
                   src={slide}
-                  alt={`Nabta Slide ${index + 1}`}
+                  alt={`منصة نبتة - شريحة ${index + 1}`}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                   fetchPriority={index === 0 ? 'high' : 'low'}
-                  sx={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block'
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    inset: 0,
-                    backgroundColor: 'rgba(0,0,0,0.06)',
-                    zIndex: 1
-                  }}
+                  sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
               </Box>
             </SwiperSlide>
           ))}
         </Swiper>
+
+        {/* hills melting into the page */}
+        <Box sx={{ position: 'absolute', left: 0, right: 0, bottom: -1, zIndex: 2, pointerEvents: 'none' }}>
+          <Wave color={kidColors.cloud} variant="hills" height={{ xs: 28, md: 64 }} />
+        </Box>
       </Box>
     </Fade>
   );

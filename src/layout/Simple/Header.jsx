@@ -1,24 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useTheme } from '@mui/material/styles';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 // material-ui
-import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
@@ -26,118 +17,16 @@ import Divider from '@mui/material/Divider';
 import GooglePlay from 'assets/images/google-play-button.png';
 import logo1 from 'assets/images/LogoNoon.png';
 import Logo from 'components/logo';
+import { HambergerMenu, CloseCircle } from 'iconsax-react';
 
-import { HambergerMenu } from 'iconsax-react';
+// kids kit
+import { KidButton, Wave, Star, kidColors, kidFont } from 'components/kids';
 
 // auth
 import useAuth from 'hooks/useAuth';
 
-// ==============================|| HEADER - TOP BAR ||============================== //
-
-function TopBar({ primaryColor, onClose, isVisible }) {
-  if (!isVisible) return null;
-
-  return (
-    <Box
-      sx={{
-        px: { xs: 1.5, md: 3 },
-        py: { xs: 1.5, md: 1.25 },
-        display: 'flex',
-        alignItems: 'center',
-        backgroundColor: '#FFD666',
-        justifyContent: 'space-between',
-        position: 'relative'
-      }}
-    >
-      <IconButton
-        size="small"
-        onClick={onClose}
-        sx={{
-          color: 'text.primary',
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: '50%',
-          flexShrink: 0,
-          '&:hover': { color: primaryColor, borderColor: primaryColor, bgcolor: 'action.hover' }
-        }}
-      >
-        X
-      </IconButton>
-
-      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1.2, minWidth: 0 }}>
-        <Typography sx={{ fontWeight: 600, fontSize: { xs: 13, md: 20 }, color: 'text.primary', lineHeight: 1.3, textAlign: 'center' }}>
-          تم إطلاق تطبيق لغتي العربية , ابدأ مع طفلك اليوم وحمّله الآن
-        </Typography>
-        <Button
-          component="a"
-          href="https://play.google.com/store/apps/details?id=air.ARABICMYLANGUAGE"
-          target="_blank"
-          sx={{ p: 0, minWidth: 0, ':hover': { color: '#000' } }}
-        >
-          <img src={GooglePlay} alt="Google Play" style={{ height: '40px', width: 'auto', flexShrink: 0 }} />
-        </Button>
-      </Box>
-
-      <Box sx={{ width: 40, flexShrink: 0 }} />
-    </Box>
-  );
-}
-
-// ==============================|| USER MENU ||============================== //
-
-function UserMenu({ user, primaryColor, onLogout }) {
-  const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const initials = `${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toUpperCase();
-
-  return (
-    <>
-      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} sx={{ p: 0 }}>
-        <Avatar sx={{ width: 34, height: 34, bgcolor: primaryColor, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>{initials}</Avatar>
-      </IconButton>
-
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={() => setAnchorEl(null)}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        slotProps={{ paper: { sx: { mt: 1, minWidth: 180, borderRadius: 2, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' } } }}
-      >
-        <Box sx={{ px: 2, py: 1.5, borderBottom: '1px solid', borderColor: 'divider' }}>
-          <Typography sx={{ fontWeight: 700, fontSize: 14, color: 'text.primary' }}>
-            {user?.firstName} {user?.lastName}
-          </Typography>
-          <Typography sx={{ fontSize: 12, color: 'text.secondary', mt: 0.25 }}>{user?.email}</Typography>
-        </Box>
-        {user?.role === 'Admin' && (
-          <MenuItem
-            onClick={() => {
-              setAnchorEl(null);
-              navigate('/dashboard/episodes');
-            }}
-            sx={{ fontSize: 14, py: 1.25 }}
-          >
-            لوحة التحكم
-          </MenuItem>
-        )}
-        <Divider />
-        <MenuItem
-          onClick={() => {
-            setAnchorEl(null);
-            onLogout();
-          }}
-          sx={{ fontSize: 14, py: 1.25, color: 'error.main' }}
-        >
-          تسجيل الخروج
-        </MenuItem>
-      </Menu>
-    </>
-  );
-}
-
-// ==============================|| HEADER - BOTTOM BAR ||============================== //
+const STORE_URL = 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live';
+const LOGO_WIDTH = 116;
 
 const navLinks = [
   { label: 'الصفحة الرئيسية', path: '/' },
@@ -147,183 +36,277 @@ const navLinks = [
   { label: 'قصتنا', path: '/', scrollTo: 'about-nabta' }
 ];
 
-const LOGO_WIDTH = 110;
-
-function BottomBar({ primaryColor }) {
+function useScrollNav() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState(false);
-  const { isLoggedIn, user, logout } = useAuth();
-
-  useEffect(() => {
-    const currentIndex = navLinks.findIndex((link) => !link.scrollTo && link.path !== '#' && location.pathname === link.path);
-    setActiveTab(currentIndex !== -1 ? currentIndex : false);
-  }, [location]);
-
-  const handleNavClick = (link, index) => {
-    if (link.scrollTo) {
-      setActiveTab(index);
-      if (location.pathname !== '/') {
-        navigate('/', { state: { scrollTo: link.scrollTo } });
-        setTimeout(() => {
-          const el = document.getElementById(link.scrollTo);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 300);
-      } else {
-        const el = document.getElementById(link.scrollTo);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+  return (sectionId) => {
+    const scroll = () => {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: sectionId } });
+      setTimeout(scroll, 300);
+    } else {
+      scroll();
     }
   };
+}
+
+// ==============================|| HEADER - ANNOUNCEMENT ||============================== //
+
+function TopBar({ onClose, isVisible }) {
+  if (!isVisible) return null;
 
   return (
     <Box
       sx={{
+        position: 'relative',
         px: { xs: 1.5, md: 3 },
+        py: { xs: 1, md: 0.75 },
         display: 'flex',
-        height: 90,
         alignItems: 'center',
-        justifyContent: 'space-between',
-        '&::-webkit-scrollbar': { height: '4px' },
-        '&::-webkit-scrollbar-thumb': { bgcolor: primaryColor, borderRadius: '2px' }
+        gap: 1,
+        backgroundColor: kidColors.sun
       }}
     >
-      {/* ← Placeholder فارغ بيحجز مكان اللوجو */}
+      <IconButton
+        size="small"
+        onClick={onClose}
+        aria-label="إغلاق الإعلان"
+        sx={{ color: kidColors.ink, flexShrink: 0, '&:hover': { backgroundColor: 'rgba(31,42,68,.08)' } }}
+      >
+        <CloseCircle size={22} color={kidColors.ink} />
+      </IconButton>
+
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: { xs: 1, md: 1.5 },
+          minWidth: 0,
+          flexWrap: 'wrap'
+        }}
+      >
+        <Star size={22} alwaysShow sx={{ position: 'static', display: { xs: 'none', sm: 'block' } }} color={kidColors.coral} />
+        <Typography
+          sx={{
+            fontFamily: kidFont,
+            fontWeight: 800,
+            fontSize: { xs: 13, md: 18 },
+            color: kidColors.ink,
+            lineHeight: 1.4,
+            textAlign: 'center'
+          }}
+        >
+          تم إطلاق تطبيق لغتي العربية، ابدأ مع طفلك اليوم وحمّله الآن
+        </Typography>
+        <Box
+          component="a"
+          href="https://play.google.com/store/apps/details?id=air.ARABICMYLANGUAGE"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="تحميل تطبيق لغتي العربية من Google Play"
+          sx={{ display: 'flex', transition: 'transform .2s ease', '&:hover': { transform: 'scale(1.05) rotate(-2deg)' } }}
+        >
+          <img src={GooglePlay} alt="Google Play" style={{ height: 36, width: 'auto' }} />
+        </Box>
+      </Box>
+
+      <Box sx={{ width: 34, flexShrink: 0 }} />
+    </Box>
+  );
+}
+
+// ==============================|| USER MENU ||============================== //
+
+function UserMenu({ user, onLogout }) {
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const initials = `${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toUpperCase();
+
+  return (
+    <>
+      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} sx={{ p: 0 }} aria-label="قائمة الحساب">
+        <Avatar
+          sx={{
+            width: 42,
+            height: 42,
+            bgcolor: kidColors.sun,
+            color: kidColors.ink,
+            fontFamily: kidFont,
+            fontSize: 15,
+            fontWeight: 800,
+            border: '3px solid #fff'
+          }}
+        >
+          {initials}
+        </Avatar>
+      </IconButton>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        slotProps={{
+          paper: {
+            sx: {
+              mt: 1.5,
+              minWidth: 200,
+              borderRadius: '20px',
+              border: `3px solid ${kidColors.ink}14`,
+              boxShadow: `0 8px 0 ${kidColors.ink}14`
+            }
+          }
+        }}
+      >
+        <Box sx={{ px: 2, py: 1.5 }}>
+          <Typography sx={{ fontFamily: kidFont, fontWeight: 800, fontSize: 15, color: kidColors.ink }}>
+            {user?.firstName} {user?.lastName}
+          </Typography>
+          <Typography sx={{ fontSize: 12, color: kidColors.inkSoft, mt: 0.25 }}>{user?.email}</Typography>
+        </Box>
+        <Divider />
+        {user?.role === 'Admin' && (
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              navigate('/dashboard/episodes');
+            }}
+            sx={{ fontFamily: kidFont, fontWeight: 700, py: 1.25 }}
+          >
+            لوحة التحكم
+          </MenuItem>
+        )}
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            onLogout();
+          }}
+          sx={{ fontFamily: kidFont, fontWeight: 700, py: 1.25, color: 'error.main' }}
+        >
+          تسجيل الخروج
+        </MenuItem>
+      </Menu>
+    </>
+  );
+}
+
+// ==============================|| DESKTOP BAR ||============================== //
+
+const navPillSx = (active) => ({
+  fontFamily: kidFont,
+  fontSize: { md: 16, lg: 18 },
+  fontWeight: 800,
+  px: { md: 1.75, lg: 2.25 },
+  py: 0.75,
+  borderRadius: '999px',
+  textTransform: 'none',
+  whiteSpace: 'nowrap',
+  minWidth: 0,
+  color: active ? `${kidColors.ink} !important` : '#fff !important',
+  backgroundColor: active ? kidColors.sun : 'transparent',
+  boxShadow: active ? `0 4px 0 ${kidColors.sunDeep}` : 'none',
+  transition: 'background-color .2s ease, transform .2s ease',
+  '&:hover': {
+    backgroundColor: active ? kidColors.sun : 'rgba(255,255,255,.18)',
+    transform: 'translateY(-2px)'
+  },
+  '&.Mui-focusVisible': { outline: '3px solid #fff', outlineOffset: 2 }
+});
+
+const ghostBtnSx = {
+  fontFamily: kidFont,
+  fontSize: 15,
+  fontWeight: 800,
+  color: '#fff !important',
+  borderRadius: '999px',
+  border: '2.5px solid rgba(255,255,255,.75)',
+  px: 2,
+  py: 0.5,
+  textTransform: 'none',
+  whiteSpace: 'nowrap',
+  '&:hover': { backgroundColor: 'rgba(255,255,255,.16)', borderColor: '#fff' }
+};
+
+function BottomBar() {
+  const location = useLocation();
+  const goToSection = useScrollNav();
+  const { isLoggedIn, user, logout } = useAuth();
+  const [scrollActive, setScrollActive] = useState(null);
+
+  useEffect(() => {
+    setScrollActive(null);
+  }, [location.pathname]);
+
+  const isActive = (link, i) => {
+    if (link.scrollTo) return scrollActive === i;
+    return scrollActive === null && location.pathname === link.path;
+  };
+
+  return (
+    <Box sx={{ px: { md: 2, lg: 3 }, display: 'flex', height: 84, alignItems: 'center', gap: 2 }}>
+      {/* space reserved for the floating logo */}
       <Box sx={{ width: LOGO_WIDTH, flexShrink: 0 }} />
 
-      {/* Tabs */}
-      <Tabs
-        value={activeTab}
-        onChange={(_, val) => setActiveTab(val)}
-        textColor="inherit"
-        TabIndicatorProps={{ style: { display: 'none' } }}
-        sx={{
-          minHeight: 56,
-          flex: 1,
-          '& .MuiTab-root': { opacity: 1 }
-        }}
-        variant="scrollable"
-        scrollButtons="auto"
+      <Box
+        component="nav"
+        aria-label="القائمة الرئيسية"
+        sx={{ flex: 1, display: 'flex', justifyContent: 'center', gap: { md: 0.5, lg: 1 } }}
       >
-        {navLinks.map((link, i) => (
-          <Tab
-            key={link.label}
-            label={link.label}
-            component={link.scrollTo ? 'div' : (link.path !== '#' ? Link : 'div')}
-            to={!link.scrollTo && link.path !== '#' ? link.path : undefined}
-            onClick={link.scrollTo ? () => handleNavClick(link, i) : undefined}
-            disableRipple
-            sx={{
-              position: 'relative',
-              overflow: 'visible',
-              fontSize: { xs: 14, md: 18 },
-              fontWeight: activeTab === i ? 700 : 500,
-              color: '#fff !important',
-              minHeight: 56,
-              px: { xs: 1.5, md: 2 },
-              textTransform: 'none',
-              minWidth: 'auto',
-              cursor: 'pointer',
-              backgroundColor: 'transparent !important',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: 8,
-                left: '50%',
-                width: '70%',
-                height: '4px',
-                backgroundColor: '#FFD666',
-                borderRadius: '20px',
-                transform: activeTab === i ? 'translateX(-50%) scaleX(1)' : 'translateX(-50%) scaleX(0)',
-                transformOrigin: 'center',
-                transition: 'transform 0.35s ease'
-              },
+        {navLinks.map((link, i) =>
+          link.scrollTo ? (
+            <Button
+              key={link.label}
+              disableRipple
+              onClick={() => {
+                setScrollActive(i);
+                goToSection(link.scrollTo);
+              }}
+              sx={navPillSx(isActive(link, i))}
+            >
+              {link.label}
+            </Button>
+          ) : (
+            <Button
+              key={link.label}
+              component={Link}
+              to={link.path}
+              disableRipple
+              onClick={() => setScrollActive(null)}
+              aria-current={isActive(link, i) ? 'page' : undefined}
+              sx={navPillSx(isActive(link, i))}
+            >
+              {link.label}
+            </Button>
+          )
+        )}
+      </Box>
 
-              '&:hover::after': { transform: 'translateX(-50%) scaleX(1)' },
-              '&:hover': { color: '#fff', backgroundColor: 'transparent' },
-              '&.Mui-selected': { color: '#fff !important' }
-            }}
-          />
-        ))}
-      </Tabs>
+      <Stack direction="row" alignItems="center" gap={1} sx={{ flexShrink: 0 }}>
+        <Button component="a" href={STORE_URL} target="_blank" rel="noopener noreferrer" sx={ghostBtnSx}>
+          المتجر
+        </Button>
+        <Button component={Link} to="/support" sx={ghostBtnSx}>
+          ادعمنا
+        </Button>
 
-      {/* Action Buttons */}
-      <Stack direction="row" alignItems="center" gap={1} sx={{ display: { xs: 'none', md: 'flex' }, flexShrink: 0 }}>
-        {[
-          { label: 'المتجر', path: 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live', external: true },
-          { label: 'ادعمنا', path: '/support', external: false }
-        ].map((btn) => (
-          <Button
-            key={btn.label}
-            {...(btn.external ? {
-              component: 'a',
-              href: btn.path,
-              target: '_blank',
-              rel: 'noopener noreferrer'
-            } : {
-              component: btn.path !== '#' ? Link : 'button',
-              to: btn.path !== '#' ? btn.path : undefined
-            })}
-            variant="text"
-            sx={{
-              fontSize: 13,
-              fontWeight: 500,
-              color: 'white',
-              borderRadius: 1,
-              border: '1px solid white',
-              px: 1.75,
-              py: 0.75,
-              ':hover': { color: '#000' },
-              textTransform: 'none'
-            }}
-          >
-            {btn.label}
-          </Button>
-        ))}
-
-        <Box sx={{ width: '0.5px', height: 20, bgcolor: 'white', mx: 0.5 }} />
+        <Box sx={{ width: '2px', height: 26, borderRadius: 2, bgcolor: 'rgba(255,255,255,.4)', mx: 0.5 }} />
 
         {isLoggedIn ? (
-          <UserMenu user={user} primaryColor={primaryColor} onLogout={logout} />
+          <UserMenu user={user} onLogout={logout} />
         ) : (
           <>
-            <Button
-              variant="text"
-              component={Link}
-              to="/auth/login"
-              sx={{
-                fontSize: 13,
-                fontWeight: 500,
-                color: 'white',
-                borderRadius: 1,
-                border: '1px solid white',
-                px: 1.75,
-                py: 0.75,
-                textTransform: 'none',
-                ':hover': { color: '#000' }
-              }}
-            >
+            <KidButton component={Link} to="/auth/login" color="white" size="small">
               دخول
-            </Button>
-            <Button
-              variant="contained"
-              component={Link}
-              to="/auth/register"
-              sx={{
-                fontSize: 13,
-                fontWeight: 600,
-                bgcolor: '#FFD666',
-                color: '#000',
-                borderRadius: 1,
-                px: 1.75,
-                py: 0.75,
-                textTransform: 'none',
-                boxShadow: 'none',
-                '&:hover': { bgcolor: '#FFD666', boxShadow: 'none', opacity: 0.85 }
-              }}
-            >
+            </KidButton>
+            <KidButton component={Link} to="/auth/register" color="sun" size="small">
               تسجيل
-            </Button>
+            </KidButton>
           </>
         )}
       </Stack>
@@ -331,241 +314,194 @@ function BottomBar({ primaryColor }) {
   );
 }
 
-// ==============================|| HEADER - MOBILE DRAWER ||============================== //
+// ==============================|| MOBILE DRAWER ||============================== //
 
-function MobileDrawer({ open, onClose, primaryColor }) {
+function MobileDrawer({ open, onClose }) {
   const { isLoggedIn, user, logout } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
+  const goToSection = useScrollNav();
 
-  const handleLinkClick = (link) => {
-    onClose();
-    if (link.scrollTo) {
-      if (location.pathname !== '/') {
-        navigate('/', { state: { scrollTo: link.scrollTo } });
-        setTimeout(() => {
-          const el = document.getElementById(link.scrollTo);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 300);
-      } else {
-        const el = document.getElementById(link.scrollTo);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-  };
+  const drawerLinkSx = (active) => ({
+    display: 'block',
+    fontFamily: kidFont,
+    fontWeight: 800,
+    fontSize: 19,
+    px: 2.5,
+    py: 1.25,
+    borderRadius: '18px',
+    textDecoration: 'none',
+    color: kidColors.ink,
+    backgroundColor: active ? kidColors.sunSoft : 'transparent',
+    border: `3px solid ${active ? kidColors.sun : 'transparent'}`,
+    cursor: 'pointer',
+    '&:hover': { backgroundColor: kidColors.skySoft }
+  });
 
   return (
-    <Drawer anchor="top" open={open} onClose={onClose} sx={{ '& .MuiDrawer-paper': { backgroundImage: 'none' } }}>
-      <Box sx={{ p: 3 }}>
+    <Drawer
+      anchor="top"
+      open={open}
+      onClose={onClose}
+      sx={{ '& .MuiDrawer-paper': { backgroundImage: 'none', borderRadius: '0 0 32px 32px', backgroundColor: '#fff' } }}
+    >
+      <Box sx={{ p: 2.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Logo width={70} to="/" />
+          <IconButton onClick={onClose} aria-label="إغلاق القائمة">
+            <CloseCircle size={30} color={kidColors.ink} />
+          </IconButton>
+        </Box>
+
         {isLoggedIn && user && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2, pb: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
-            <Avatar sx={{ bgcolor: primaryColor, width: 40, height: 40, fontSize: 14, fontWeight: 700 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2, p: 1.5, borderRadius: '20px', backgroundColor: kidColors.cloud }}
+          >
+            <Avatar sx={{ bgcolor: kidColors.sun, color: kidColors.ink, width: 44, height: 44, fontWeight: 800 }}>
               {`${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toUpperCase()}
             </Avatar>
             <Box>
-              <Typography sx={{ fontWeight: 700, fontSize: 14 }}>
+              <Typography sx={{ fontFamily: kidFont, fontWeight: 800, fontSize: 15 }}>
                 {user?.firstName} {user?.lastName}
               </Typography>
-              <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>{user?.email}</Typography>
+              <Typography sx={{ fontSize: 12, color: kidColors.inkSoft }}>{user?.email}</Typography>
             </Box>
           </Box>
         )}
 
-        <List sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {navLinks.map((link) => (
-            <ListItemButton
-              key={link.label}
-              component={link.scrollTo ? 'div' : link.path !== '#' ? Link : 'div'}
-              to={!link.scrollTo && link.path !== '#' ? link.path : undefined}
-              onClick={() => {
-                if (link.scrollTo) {
-                  handleLinkClick(link);
-                } else if (link.path !== '#') {
+        <Box component="nav" aria-label="القائمة الرئيسية" sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
+          {navLinks.map((link) =>
+            link.scrollTo ? (
+              <Box
+                key={link.label}
+                component="button"
+                type="button"
+                onClick={() => {
                   onClose();
-                }
-              }}
-              sx={{ px: 0, borderRadius: 1 }}
-            >
-              <ListItemText primary={link.label} slotProps={{ primary: { sx: { fontWeight: 500, fontSize: 16 } } }} />
-            </ListItemButton>
-          ))}
-        </List>
+                  goToSection(link.scrollTo);
+                }}
+                sx={{ ...drawerLinkSx(false), background: 'none', textAlign: 'start', width: '100%' }}
+              >
+                {link.label}
+              </Box>
+            ) : (
+              <Box key={link.label} component={Link} to={link.path} onClick={onClose} sx={drawerLinkSx(location.pathname === link.path)}>
+                {link.label}
+              </Box>
+            )
+          )}
+        </Box>
 
-        <Stack gap={1} mt={2}>
-          {[
-            { label: 'المتجر', path: 'https://checkouts.kashier.io/ar/prepaymenpages?ppLink=PP-4195682401,live', external: true },
-            { label: 'ادعمنا', path: '/support', external: false }
-          ].map((btn) => (
-            <Button
-              key={btn.label}
-              {...(btn.external ? {
-                component: 'a',
-                href: btn.path,
-                target: '_blank',
-                rel: 'noopener noreferrer'
-              } : {
-                component: btn.path !== '#' ? Link : 'button',
-                to: btn.path !== '#' ? btn.path : undefined
-              })}
-              onClick={() => {
-                if (btn.path !== '#') onClose();
-              }}
-              variant="outlined"
-              fullWidth
-              sx={{ textTransform: 'none', borderColor: 'divider', color: 'text.primary' }}
-            >
-              {btn.label}
-            </Button>
-          ))}
+        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5, mt: 3 }}>
+          <KidButton component="a" href={STORE_URL} target="_blank" rel="noopener noreferrer" color="white" onClick={onClose}>
+            المتجر
+          </KidButton>
+          <KidButton component={Link} to="/support" color="berry" onClick={onClose}>
+            ادعمنا
+          </KidButton>
 
           {isLoggedIn ? (
-            <Button
-              variant="contained"
-              fullWidth
+            <KidButton
+              color="coral"
               onClick={() => {
                 logout();
                 onClose();
               }}
-              sx={{ textTransform: 'none', bgcolor: 'error.main', '&:hover': { bgcolor: 'error.dark' } }}
+              sx={{ gridColumn: '1 / -1' }}
             >
               تسجيل الخروج
-            </Button>
+            </KidButton>
           ) : (
             <>
-              <Button
-                variant="outlined"
-                fullWidth
-                component={Link}
-                to="/auth/login"
-                sx={{ textTransform: 'none', borderColor: 'divider', color: 'text.primary' }}
-              >
+              <KidButton component={Link} to="/auth/login" color="sky" onClick={onClose}>
                 دخول
-              </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                component={Link}
-                to="/auth/register"
-                sx={{ textTransform: 'none', bgcolor: primaryColor, '&:hover': { bgcolor: primaryColor, opacity: 0.85 } }}
-              >
+              </KidButton>
+              <KidButton component={Link} to="/auth/register" color="sun" onClick={onClose}>
                 تسجيل
-              </Button>
+              </KidButton>
             </>
           )}
-        </Stack>
+        </Box>
       </Box>
     </Drawer>
   );
 }
 
-// ==============================|| HEADER HEIGHT HOOK ||============================== //
-
-/**
- * استخدم الـ hook ده في الـ Layout عشان تحسب ارتفاع الهيدر ديناميكياً
- * وتضيف paddingTop على المحتوى:
- *
- * const { headerRef, headerHeight } = useHeaderHeight();
- * ...
- * <Header ref={headerRef} />
- * <Box sx={{ pt: `${headerHeight}px` }}>...</Box>
- */
-
-// ==============================|| MAIN HEADER EXPORT ||============================== //
-
-const LOGO_OVERFLOW = 30;
+// ==============================|| MAIN HEADER ||============================== //
 
 export default function Header() {
-  const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isTopBarVisible, setIsTopBarVisible] = useState(true);
-  const primaryColor = theme.palette.primary.main;
-
-  // حساب ارتفاع الهيدر ديناميكياً عشان نحط padding مناسب على المحتوى
   const [headerHeight, setHeaderHeight] = useState(0);
-  const headerRef = useState(null);
 
+  // measure the fixed header so the layout can pad the content below it
   useEffect(() => {
-    const el = document.getElementById('main-header');
-    if (!el) return;
-
-    const observer = new ResizeObserver(() => {
-      setHeaderHeight(el.offsetHeight);
-    });
-
+    const el = document.getElementById('main-header-bar');
+    if (!el) return undefined;
+    const observer = new ResizeObserver(() => setHeaderHeight(el.offsetHeight));
     observer.observe(el);
     setHeaderHeight(el.offsetHeight);
-
     return () => observer.disconnect();
   }, [isTopBarVisible]);
 
-  // نحط الـ paddingTop على أول عنصر بعد الهيدر عن طريق CSS variable
   useEffect(() => {
     document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
   }, [headerHeight]);
 
   return (
-    /*
-     * الـ wrapper الخارجي — position: relative عشان اللوجو الطافي يتحدد موقعه منه
-     * لكن الـ AppBar نفسه fixed عشان يتثبت عند السكرول
-     */
-    <Box id="main-header" sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1100 }}>
-      <AppBar
-        position="static"   // ← static هنا لأن الـ Box الأب هو اللي بيعمل fixed
-        elevation={0}
-        sx={{
-          bgcolor: primaryColor,
-          boxShadow: 'none',
-          color: 'text.primary'
-        }}
-      >
+    <Box id="main-header" component="header" sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1100 }}>
+      <Box id="main-header-bar" sx={{ backgroundColor: kidColors.sky }}>
+        <TopBar onClose={() => setIsTopBarVisible(false)} isVisible={isTopBarVisible} />
+
         {/* Desktop */}
-        <Box sx={{ display: { xs: 'none', md: 'block' }, bgcolor: primaryColor }}>
-          <TopBar primaryColor={primaryColor} onClose={() => setIsTopBarVisible(false)} isVisible={isTopBarVisible} />
-          <BottomBar primaryColor={primaryColor} />
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <BottomBar />
         </Box>
 
         {/* Mobile */}
-        <Box sx={{ display: { xs: 'block', md: 'none' }, bgcolor: primaryColor }}>
-          <TopBar primaryColor={primaryColor} onClose={() => setIsTopBarVisible(false)} isVisible={isTopBarVisible} />
-          <Container disableGutters>
-            <Toolbar sx={{ justifyContent: 'space-between' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0, height: 24 }}>
-                <Logo width={60} to="/" />
-              </Box>
-              <Typography sx={{ fontWeight: 600, fontSize: 14, color: 'white', flex: 1, textAlign: 'center' }}>لغتي العربية</Typography>
-              <IconButton size="large" color="inherit" onClick={() => setDrawerOpen(true)} sx={{ flexShrink: 0 }}>
-                <HambergerMenu />
-              </IconButton>
-            </Toolbar>
-          </Container>
-          <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} primaryColor={primaryColor} />
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', justifyContent: 'space-between', px: 1.5, height: 64 }}>
+          <Logo width={58} to="/" />
+          <Typography sx={{ fontFamily: kidFont, fontWeight: 800, fontSize: 17, color: '#fff' }}>لغتي العربية</Typography>
+          <IconButton
+            onClick={() => setDrawerOpen(true)}
+            aria-label="فتح القائمة"
+            sx={{
+              backgroundColor: kidColors.sun,
+              borderRadius: '14px',
+              boxShadow: `0 4px 0 ${kidColors.sunDeep}`,
+              '&:hover': { backgroundColor: kidColors.sun }
+            }}
+          >
+            <HambergerMenu size={24} color={kidColors.ink} />
+          </IconButton>
         </Box>
-      </AppBar>
+      </Box>
 
-      {/* اللوجو الطافي — desktop فقط */}
+      {/* scalloped hill edge hanging under the bar */}
+      <Wave color={kidColors.sky} variant="bumpy" flip height={{ xs: 12, md: 18 }} sx={{ mt: '-1px', pointerEvents: 'none' }} />
+
+      <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
+
+      {/* floating logo — desktop only */}
       <Box
+        component={Link}
+        to="/"
+        aria-label="الصفحة الرئيسية"
         sx={{
           display: { xs: 'none', md: 'flex' },
           position: 'absolute',
-          bottom: '-20px',
-          left: { md: 24, lg: 32 },
+          bottom: '-6px',
+          left: { md: 20, lg: 32 },
           zIndex: 1200,
-          alignItems: 'flex-start'
+          width: LOGO_WIDTH,
+          transition: 'transform .3s cubic-bezier(.34,1.56,.64,1)',
+          '&:hover': { transform: 'rotate(-4deg) scale(1.04)' }
         }}
       >
-        <Box
-          component={Link}
-          to="/"
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            width: LOGO_WIDTH
-          }}
-        >
-          <img src={logo1} alt="لغتي العربية" style={{ width: 110, display: 'block' }} />
-        </Box>
+        <img
+          src={logo1}
+          alt="لغتي العربية"
+          style={{ width: LOGO_WIDTH, display: 'block', filter: 'drop-shadow(0 6px 0 rgba(0,0,0,.12))' }}
+        />
       </Box>
     </Box>
   );

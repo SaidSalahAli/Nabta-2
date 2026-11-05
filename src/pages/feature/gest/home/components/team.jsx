@@ -1,13 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Container, Typography, IconButton, Fade } from '@mui/material';
+import { Box, Typography, Fade } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { FreeMode } from 'swiper/modules';
-import { ArrowLeft, ArrowRight } from 'iconsax-react';
 import img1 from 'assets/Home/ahmed.jpg';
 import img2 from 'assets/Home/hamdy.jpg';
 import img3 from 'assets/Home/magdy.jpg';
 import img4 from 'assets/Home/team0004.png';
+import { KidSection, SectionHeading, NavArrow, Star, crayon, kidColors, kidFont } from 'components/kids';
+
+const members = [
+  { id: 1, name: 'حمدي محمود', role: 'مؤسس منصة نبتة', image: img2 },
+  { id: 2, name: 'أحمد سمير', role: 'مطور تطبيقات', image: img1 },
+  { id: 3, name: 'مجدي غباشي', role: 'مطور باك اند', image: img3 },
+  { id: 4, name: 'مروة خيري', role: 'محركة', image: img4 }
+];
+
+const blobs = [
+  '58% 42% 48% 52% / 52% 48% 52% 48%',
+  '45% 55% 60% 40% / 50% 45% 55% 50%',
+  '50% 50% 42% 58% / 58% 50% 50% 42%',
+  '42% 58% 52% 48% / 46% 54% 46% 54%'
+];
 
 export default function Team({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
@@ -16,38 +30,8 @@ export default function Team({ shouldAnimate = false }) {
   const [isAtEnd, setIsAtEnd] = useState(false);
 
   useEffect(() => {
-    if (shouldAnimate) {
-      setChecked(true);
-    }
+    if (shouldAnimate) setChecked(true);
   }, [shouldAnimate]);
-
-  const members = [
-    {
-      id: 1,
-      name: 'حمدي محمود',
-      role: 'مؤسس منصة نبتة',
-      image: img2
-    },
-    {
-      id: 2,
-      name: 'أحمد سمير',
-      role: 'مطور تطبيقات',
-      image: img1
-    },
-
-    {
-      id: 3,
-      name: 'مجدي غباشي',
-      role: 'مطور باك اند',
-      image: img3
-    },
-    {
-      id: 4,
-      name: 'مروة خيري',
-      role: 'محركة',
-      image: img4
-    }
-  ];
 
   const handleSlideChange = () => {
     if (!swiperRef.current) return;
@@ -55,184 +39,109 @@ export default function Team({ shouldAnimate = false }) {
     setIsAtEnd(swiperRef.current.isEnd);
   };
 
-  const handleNextSlide = () => {
-    if (!isAtEnd) {
-      swiperRef.current?.slideNext();
-    }
-  };
-
-  const handlePrevSlide = () => {
-    if (!isAtStart) {
-      swiperRef.current?.slidePrev();
-    }
-  };
-
   return (
-    <Fade in={checked} timeout={800}>
-      <Box
-        sx={{
-          py: { xs: 6, md: 9 },
-          backgroundColor: '#fcfcfc'
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', mb: 5 }}>
-            <Typography
-              variant="h1"
-              sx={{
-                fontWeight: 700,
-                color: 'primary.main',
-                mb: 2
-              }}
-            >
-              فريق منصة نبتة
-            </Typography>
+    <KidSection bg={kidColors.cloud} wave decorations={<Star size={28} sx={{ top: 70, insetInlineEnd: '12%' }} />}>
+      <SectionHeading
+        title="فريق منصة نبتة"
+        subtitle="فريق منصة نبتة يعمل بحُب لإيمانه بأنه أساس لنجاح نفخر به، وبينه تجانس وشعور بالمسؤولية تجاه أطفالنا الأحباء، لذلك يسعى بكل جهد ومثابرة لإخراج محتوى مفيد ونافع يحبه الأطفال."
+      />
 
-            <Typography
-              sx={{
-                maxWidth: '900px',
-                mx: 'auto',
-                color: '#000',
-                fontSize: { xs: '18px', md: '18px' },
-                lineHeight: 1.9
-              }}
-            >
-              فريق منصة نبتة يعمل بحُب لإيمانه بأنه أساس لنجاح نفخر به، وبينه تجانس وشعور بالمسؤولية تجاه أطفالنا الأحباء، لذلك يسعى بكل جهد
-              ومثابرة لإخراج محتوى مفيد ونافع يحبه الأطفال.
-            </Typography>
-          </Box>
-
-          <Box sx={{ position: 'relative' }}>
-            <Swiper
-              onSwiper={(swiper) => {
-                swiperRef.current = swiper;
-                handleSlideChange();
-              }}
-              onSlideChange={handleSlideChange}
-              slidesPerView={1}
-              spaceBetween={20}
-              freeMode={true}
-              breakpoints={{
-                640: { slidesPerView: 2, spaceBetween: 20 },
-                1024: { slidesPerView: 3, spaceBetween: 24 },
-                1280: { slidesPerView: 4, spaceBetween: 24 }
-              }}
-              modules={[FreeMode]}
-              style={{ padding: '10px 0' }}
-            >
-              {members.map((member, index) => (
-                <SwiperSlide key={member.id}>
-                  <Fade in={checked} timeout={800} style={{ transitionDelay: checked ? `${index * 100}ms` : '0ms' }}>
+      <Fade in={checked} timeout={700}>
+        <Box>
+          <Swiper
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+              handleSlideChange();
+            }}
+            onSlideChange={handleSlideChange}
+            slidesPerView={1.2}
+            spaceBetween={20}
+            freeMode
+            breakpoints={{
+              640: { slidesPerView: 2, spaceBetween: 24 },
+              1024: { slidesPerView: 3, spaceBetween: 28 },
+              1280: { slidesPerView: 4, spaceBetween: 28 }
+            }}
+            modules={[FreeMode]}
+            style={{ padding: '8px 6px 20px' }}
+          >
+            {members.map((member, index) => {
+              const c = crayon(index);
+              return (
+                <SwiperSlide key={member.id} style={{ height: 'auto' }}>
+                  <Box
+                    sx={{
+                      height: '100%',
+                      backgroundColor: '#fff',
+                      borderRadius: '30px',
+                      boxShadow: `0 8px 0 ${c.main}40`,
+                      border: `3px solid ${kidColors.ink}10`,
+                      p: 2.5,
+                      textAlign: 'center',
+                      '&:hover .member-photo': { transform: 'rotate(-3deg) scale(1.03)' }
+                    }}
+                  >
                     <Box
                       sx={{
-                        borderRadius: '12px',
-                        backgroundColor: '#fff',
-                        border: '1px solid #ececec',
-                        p: 2,
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-6px)',
-                          boxShadow: '0 12px 30px rgba(0,0,0,0.06)'
-                        }
+                        width: { xs: 170, md: 180 },
+                        height: { xs: 170, md: 180 },
+                        mx: 'auto',
+                        mb: 2,
+                        p: '6px',
+                        backgroundColor: c.main,
+                        borderRadius: blobs[index % blobs.length]
                       }}
                     >
                       <Box
+                        className="member-photo"
+                        component="img"
+                        src={member.image}
+                        alt={member.name}
+                        loading="lazy"
                         sx={{
                           width: '100%',
-                          height: 240,
-                          borderRadius: '12px',
-                          overflow: 'hidden',
-                          backgroundColor: '#f7f7f7',
-                          mb: 2
+                          height: '100%',
+                          objectFit: 'cover',
+                          borderRadius: blobs[index % blobs.length],
+                          display: 'block',
+                          transition: 'transform .35s cubic-bezier(.34,1.56,.64,1)'
                         }}
-                      >
-                        <Box
-                          component="img"
-                          src={member.image}
-                          alt={member.name}
-                          sx={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover'
-                          }}
-                        />
-                      </Box>
-
-                      <Typography
-                        sx={{
-                          fontWeight: 700,
-                          fontSize: '22px',
-                          color: '#1f1f1f',
-                          textAlign: 'center',
-                          mb: 1
-                        }}
-                      >
-                        {member.name}
-                      </Typography>
-
-                      <Typography
-                        sx={{
-                          fontWeight: 500,
-                          fontSize: '16px',
-                          color: '#6b7280',
-                          textAlign: 'center'
-                        }}
-                      >
-                        {member.role}
-                      </Typography>
+                      />
                     </Box>
-                  </Fade>
+                    <Typography
+                      component="h3"
+                      sx={{ fontFamily: kidFont, fontWeight: 800, fontSize: '1.35rem', color: kidColors.ink, mb: 0.75 }}
+                    >
+                      {member.name}
+                    </Typography>
+                    <Box
+                      component="span"
+                      sx={{
+                        display: 'inline-block',
+                        fontFamily: kidFont,
+                        fontWeight: 700,
+                        fontSize: '0.98rem',
+                        color: kidColors.ink,
+                        backgroundColor: c.soft,
+                        borderRadius: '999px',
+                        px: 1.75,
+                        py: 0.25
+                      }}
+                    >
+                      {member.role}
+                    </Box>
+                  </Box>
                 </SwiperSlide>
-              ))}
-            </Swiper>
+              );
+            })}
+          </Swiper>
 
-            {/* Bottom Center Arrows */}
-            <Box
-              sx={{
-                mt: 4,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 2
-              }}
-            >
-              <IconButton
-                onClick={handlePrevSlide}
-                disabled={isAtStart}
-                sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: '50%',
-                  border: '1px solid',
-                  borderColor: isAtStart ? '#e0e0e0' : '#d0d5dd',
-                  backgroundColor: isAtStart ? '#f5f5f5' : '#fff',
-                  opacity: isAtStart ? 0.5 : 1,
-                  boxShadow: isAtStart ? 'none' : '0 4px 14px rgba(0,0,0,0.08)'
-                }}
-              >
-                <ArrowRight size={20} color={isAtStart ? '#bdbdbd' : '#0088CC'} />
-              </IconButton>
-
-              <IconButton
-                onClick={handleNextSlide}
-                disabled={isAtEnd}
-                sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: '50%',
-                  border: '1px solid',
-                  borderColor: isAtEnd ? '#e0e0e0' : '#d0d5dd',
-                  backgroundColor: isAtEnd ? '#f5f5f5' : '#fff',
-                  opacity: isAtEnd ? 0.5 : 1,
-                  boxShadow: isAtEnd ? 'none' : '0 4px 14px rgba(0,0,0,0.08)'
-                }}
-              >
-                <ArrowLeft size={20} color={isAtEnd ? '#bdbdbd' : '#0088CC'} />
-              </IconButton>
-            </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+            <NavArrow direction="prev" onClick={() => swiperRef.current?.slidePrev()} disabled={isAtStart} />
+            <NavArrow direction="next" onClick={() => swiperRef.current?.slideNext()} disabled={isAtEnd} />
           </Box>
-        </Container>
-      </Box>
-    </Fade>
+        </Box>
+      </Fade>
+    </KidSection>
   );
 }

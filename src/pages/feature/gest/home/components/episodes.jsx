@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Container, Fade, Button, CircularProgress } from '@mui/material';
+import { Box, Fade, CircularProgress } from '@mui/material';
 import img from 'assets/images/test.jpeg';
-import EpisodeSwiper from '../../../../../components/EpisodeSwiper';
+import EpisodeSwiper from 'components/EpisodeSwiper';
 import { useGetEpisodes } from 'api/episodes';
+import { KidSection, SectionHeading, KidButton, Star, Cloud, kidColors } from 'components/kids';
 
 export default function Episodes({ shouldAnimate = false }) {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    if (shouldAnimate) {
-      setChecked(true);
-    }
+    if (shouldAnimate) setChecked(true);
   }, [shouldAnimate]);
 
   const { episodes: apiEpisodes, episodesLoading } = useGetEpisodes();
@@ -21,64 +20,40 @@ export default function Episodes({ shouldAnimate = false }) {
     apiEpisodes?.slice(0, 5).map((ep) => ({
       id: ep.Id,
       title: ep.TitleAr,
-      image: ep.CoverImage || ep.CoverImage || img,
+      image: ep.CoverImage || img,
       watch: 'شاهد'
     })) || [];
 
-  if (episodesLoading) {
-    return (
-      <Box sx={{ py: 4, width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
-    <Fade in={checked} timeout={800}>
-      <Box sx={{ py: 4, width: '100%' }}>
-        <Container maxWidth="lg">
-          {/* Title Section */}
-          <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
-              الحلقات
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#000', fontSize: '18px' }}>
-              حلقات توعوية لأولياء الأمور الأمهات والآباء والمعلمين، وحلقات تربوية تعليمية للأطفال.
-            </Typography>
+    <KidSection
+      bg={kidColors.cloud}
+      py={{ xs: 5, md: 7 }}
+      decorations={
+        <>
+          <Star size={34} sx={{ top: 50, insetInlineStart: '8%' }} />
+          <Cloud size={150} color="#fff" sx={{ top: 30, insetInlineEnd: '4%' }} />
+        </>
+      }
+    >
+      <SectionHeading title="الحلقات" subtitle="حلقات توعوية لأولياء الأمور الأمهات والآباء والمعلمين، وحلقات تربوية تعليمية للأطفال." />
+
+      {episodesLoading ? (
+        <Box sx={{ py: 6, display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress sx={{ color: kidColors.sky }} />
+        </Box>
+      ) : (
+        <Fade in={checked} timeout={700}>
+          <Box>
+            <EpisodeSwiper episodes={episodes} isAnimating={checked} onCardClick={(ep) => navigate(`/episodes/${ep.id}`)} />
           </Box>
-          {/* Episodes Swiper */}
-          <EpisodeSwiper episodes={episodes} isAnimating={checked} onCardClick={(ep) => navigate(`/episodes/${ep.id}`)} />
-          {/* View All Link */}
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              '&:hover': { '& .view-all-text': { color: '#006699' } }
-            }}
-          >
-            <Button
-              variant="contained"
-              onClick={() => navigate('/episodes')}
-              sx={{
-                px: 5,
-                py: 1,
-                borderRadius: '10px',
-                fontSize: { xs: '18px', md: '15px' },
-                fontWeight: 700,
-                backgroundColor: '#FFD666',
-                color: '#2E2A39',
-                boxShadow: '0 10px 25px rgba(255, 214, 102, 0.35)',
-                '&:hover': {
-                  backgroundColor: '#ffcf4d'
-                }
-              }}
-            >
-              المزيد
-            </Button>
-          </Box>
-        </Container>
+        </Fade>
+      )}
+
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <KidButton color="sun" size="large" onClick={() => navigate('/episodes')}>
+          كل الحلقات
+        </KidButton>
       </Box>
-    </Fade>
+    </KidSection>
   );
 }

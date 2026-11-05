@@ -1,19 +1,16 @@
 import React, { useRef } from 'react';
-import { Box, IconButton } from '@mui/material';
+import { Box } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination, FreeMode } from 'swiper/modules';
-import { ArrowLeft, ArrowRight } from 'iconsax-react';
 import EpisodeCard from './EpisodeCard';
+import { NavArrow } from 'components/kids';
 
 export default function EpisodeSwiper({ episodes, isAnimating, onCardClick }) {
   const swiperRef = useRef(null);
   const [isAtStart, setIsAtStart] = React.useState(true);
   const [isAtEnd, setIsAtEnd] = React.useState(false);
-
-  // Card image height + half card total height ≈ centers arrow on image area
-  const CARD_IMAGE_HEIGHT = 250;
 
   const handleSlideChange = () => {
     if (!swiperRef.current) return;
@@ -21,144 +18,39 @@ export default function EpisodeSwiper({ episodes, isAnimating, onCardClick }) {
     setIsAtEnd(swiperRef.current.isEnd);
   };
 
-  const handleNextSlide = () => {
-    if (!isAtEnd) {
-      swiperRef.current?.slideNext();
-    }
-  };
-
-  const handlePrevSlide = () => {
-    if (!isAtStart) {
-      swiperRef.current?.slidePrev();
-    }
-  };
-
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        px: '48px', // make room for arrows on both sides
-        '& .swiper-pagination-bullet': {
-          backgroundColor: 'rgba(0, 0, 0, 0.3)',
-          width: 8,
-          height: 8,
-          opacity: 0.5,
-          borderRadius: '50%'
-        },
-        '& .swiper-pagination-bullet-active': {
-          backgroundColor: '#0088CC',
-          opacity: 1
-        },
-        '& .swiper-pagination': {
-          bottom: '-35px !important',
-          position: 'relative'
-        }
-      }}
-    >
-      {/* LEFT arrow — goes to next (in RTL this is "forward") */}
-      <IconButton
-        onClick={handleNextSlide}
-        disabled={isAtEnd}
-        sx={{
-          position: 'absolute',
-          right: 0,
-          top: `${CARD_IMAGE_HEIGHT / 2}px`,
-          transform: 'translateY(-50%)',
-          zIndex: 10,
-          width: 40,
-          height: 40,
-          bgcolor: '#fff',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-          borderRadius: '50%',
-          border: 'none',
-          cursor: isAtEnd ? 'not-allowed' : 'pointer',
-          '&:hover': {
-            backgroundColor: '#fff',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-          },
-          '&.Mui-disabled': {
-            bgcolor: '#fff !important',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.12) !important',
-            opacity: '1 !important',
-            '& svg': {
-              opacity: 0.4
-            }
-          },
-          '& svg path': {
-            strokeWidth: '3.5px !important'
-          },
-          transition: 'all 0.2s ease'
-        }}
-      >
-        <ArrowLeft size={30} color="#0088CC" />
-      </IconButton>
-
-      {/* RIGHT arrow — goes to prev */}
-      <IconButton
-        onClick={handlePrevSlide}
-        disabled={isAtStart}
-        sx={{
-          position: 'absolute',
-          left: 0,
-          top: `${CARD_IMAGE_HEIGHT / 2}px`,
-          transform: 'translateY(-50%)',
-          zIndex: 10,
-          width: 40,
-          height: 40,
-          borderRadius: '50%',
-          bgcolor: '#fff',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-          border: 'none',
-          cursor: isAtStart ? 'not-allowed' : 'pointer',
-          '&:hover': {
-            backgroundColor: '#fff',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-          },
-          '&.Mui-disabled': {
-            bgcolor: '#fff !important',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.12) !important',
-            opacity: '1 !important',
-            '& svg': {
-              opacity: 0.4
-            }
-          },
-          '& svg path': {
-            strokeWidth: '3.5px !important'
-          },
-          transition: 'all 0.2s ease'
-        }}
-      >
-        <ArrowRight size={30} color="#0088CC" />
-      </IconButton>
-
+    <Box>
       <Swiper
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
           handleSlideChange();
         }}
         onSlideChange={handleSlideChange}
-        slidesPerView={1}
+        onReachEnd={handleSlideChange}
+        onReachBeginning={handleSlideChange}
+        slidesPerView={1.1}
         spaceBetween={20}
         freeMode={true}
         breakpoints={{
-          640: { slidesPerView: 2, spaceBetween: 20 },
-          1024: { slidesPerView: 3, spaceBetween: 20 },
-          1280: { slidesPerView: 3, spaceBetween: 20 }
+          640: { slidesPerView: 2, spaceBetween: 24 },
+          1024: { slidesPerView: 3, spaceBetween: 28 }
         }}
         modules={[Pagination, FreeMode]}
-        style={{ padding: '10px 0 20px 0' }}
+        style={{ padding: '6px 6px 22px' }}
       >
         {episodes.map((episode, index) => (
-          <SwiperSlide key={episode.id}>
-            <EpisodeCard
-              episode={episode}
-              isAnimating={isAnimating}
-              index={index}
-              onClick={() => onCardClick && onCardClick(episode)}
-            />
+          <SwiperSlide key={episode.id} style={{ height: 'auto' }}>
+            <EpisodeCard episode={episode} isAnimating={isAnimating} index={index} onClick={() => onCardClick && onCardClick(episode)} />
           </SwiperSlide>
         ))}
       </Swiper>
+
+      {episodes.length > 1 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+          <NavArrow direction="prev" onClick={() => swiperRef.current?.slidePrev()} disabled={isAtStart} />
+          <NavArrow direction="next" onClick={() => swiperRef.current?.slideNext()} disabled={isAtEnd} />
+        </Box>
+      )}
     </Box>
   );
 }

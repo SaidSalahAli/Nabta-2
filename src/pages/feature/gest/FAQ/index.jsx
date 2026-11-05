@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, Container, Fade, Divider, Collapse, IconButton } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Container, Collapse } from '@mui/material';
 import { ArrowDown2 } from 'iconsax-react';
+import { Link as RouterLink } from 'react-router-dom';
 import SEO from 'components/SEO';
+import { PageHero, KidButton, crayon, kidColors, kidFont } from 'components/kids';
 
 const faqs = [
   {
@@ -12,8 +14,7 @@ const faqs = [
   },
   {
     id: 2,
-    question: 'ما المحتوى الذي يقدمه تطبيق لغتي العربية؟'
-    ,
+    question: 'ما المحتوى الذي يقدمه تطبيق لغتي العربية؟',
     answer:
       'يقدم تطبيق لغتي العربية محتوى تعليمي تربوي تفاعلي للأطفال، وبه شئ من المرح يتناسب مع أعمارهم، وهو عبارة عن تعليم الحروف العربية للأطفال، بأشكال متعددة بالطريقة الصوتية، وهذه هي الطريقة المناسبة والأصح في تعليم اللغة العربية، وأيضًا يقدم التطبيق إمكانية طباعة أوراق المذاكرة مع كل مرحلة تعليمية، بحيث يتمكن الطفل من إتقان المرحلة التعليمية الحالية بشكل عملي وجيد.'
   },
@@ -80,7 +81,7 @@ const faqs = [
                 mt: 0.2
               }}
             >
-              <Typography sx={{ fontSize: '12px', fontWeight: 700, color: '#2E2A39' }}>{i + 1}</Typography>
+              <Typography sx={{ fontSize: '12px', fontWeight: 700, color: '#1F2A44' }}>{i + 1}</Typography>
             </Box>
             <Typography variant="body2" sx={{ lineHeight: 1.8, color: 'text.primary' }}>
               {step}
@@ -113,7 +114,7 @@ const faqs = [
                   mt: 0.2
                 }}
               >
-                <Typography sx={{ fontSize: '12px', fontWeight: 700, color: '#2E2A39' }}>{i + 1}</Typography>
+                <Typography sx={{ fontSize: '12px', fontWeight: 700, color: '#1F2A44' }}>{i + 1}</Typography>
               </Box>
               <Typography variant="body2" sx={{ lineHeight: 1.8, color: 'text.primary' }}>
                 {step}
@@ -156,7 +157,7 @@ const faqs = [
                 mt: 0.2
               }}
             >
-              <Typography sx={{ fontSize: '12px', fontWeight: 700, color: '#2E2A39' }}>{i + 1}</Typography>
+              <Typography sx={{ fontSize: '12px', fontWeight: 700, color: '#1F2A44' }}>{i + 1}</Typography>
             </Box>
             <Typography variant="body2" sx={{ lineHeight: 1.8, color: 'text.primary' }}>
               {step}
@@ -196,7 +197,7 @@ const faqs = [
                 mt: 0.2
               }}
             >
-              <Typography sx={{ fontSize: '12px', fontWeight: 700, color: '#2E2A39' }}>{i + 1}</Typography>
+              <Typography sx={{ fontSize: '12px', fontWeight: 700, color: '#1F2A44' }}>{i + 1}</Typography>
             </Box>
             <Typography variant="body2" sx={{ lineHeight: 1.8, color: 'text.primary' }}>
               {step}
@@ -219,128 +220,155 @@ const faqs = [
   }
 ];
 
-function FAQItem({ faq, isLast }) {
+function FAQItem({ faq, index }) {
   const [open, setOpen] = useState(false);
+  const c = crayon(index);
+  const panelId = `faq-panel-${faq.id}`;
 
   return (
-    <Box>
+    <Box
+      sx={{
+        backgroundColor: '#fff',
+        borderRadius: '26px',
+        border: `3px solid ${open ? c.main : `${kidColors.ink}12`}`,
+        boxShadow: `0 6px 0 ${open ? `${c.main}55` : `${kidColors.ink}0F`}`,
+        overflow: 'hidden',
+        transition: 'border-color .2s ease, box-shadow .2s ease'
+      }}
+    >
       <Box
+        component="button"
+        type="button"
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
+        aria-controls={panelId}
         sx={{
+          width: '100%',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          py: 2.5,
+          gap: 2,
+          py: 2,
           px: { xs: 2, md: 3 },
+          border: 0,
+          background: 'none',
           cursor: 'pointer',
-          transition: 'background 0.2s',
-          borderRadius: open ? '16px 16px 0 0' : '16px',
-          backgroundColor: open ? '#fffdf5' : 'transparent',
-          '&:hover': { backgroundColor: '#fffdf5' }
+          textAlign: 'start',
+          fontFamily: kidFont,
+          '&:hover': { backgroundColor: c.soft },
+          '&:focus-visible': { outline: `4px solid ${kidColors.sky}66`, outlineOffset: -4 }
         }}
       >
-        <Typography
-          variant="h6"
+        <Box
+          aria-hidden="true"
           sx={{
-            fontWeight: 700,
-            color: open ? '#2E2A39' : '#2E2A39',
-            fontSize: { xs: '16px', md: '18px' },
-            lineHeight: 1.5,
+            width: 42,
+            height: 42,
+            flexShrink: 0,
+            borderRadius: '14px',
+            backgroundColor: c.main,
+            color: c.text,
+            fontWeight: 800,
+            fontSize: 22,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: `0 3px 0 ${c.deep}`,
+            transform: index % 2 ? 'rotate(5deg)' : 'rotate(-5deg)'
+          }}
+        >
+          ؟
+        </Box>
+        <Typography
+          component="span"
+          sx={{
             flex: 1,
-            pr: 2
+            fontFamily: kidFont,
+            fontWeight: 800,
+            color: kidColors.ink,
+            fontSize: { xs: '1.08rem', md: '1.2rem' },
+            lineHeight: 1.5
           }}
         >
           {faq.question}
         </Typography>
         <Box
+          aria-hidden="true"
           sx={{
-            minWidth: 36,
+            width: 36,
             height: 36,
+            flexShrink: 0,
             borderRadius: '50%',
-            border: '1.5px solid',
-            borderColor: open ? '#FFD666' : 'divider',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            transition: 'all 0.3s ease',
-            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            backgroundColor: open ? '#FFD666' : 'transparent'
+            backgroundColor: open ? c.main : kidColors.cloud,
+            transform: open ? 'rotate(180deg)' : 'none',
+            transition: 'transform .3s cubic-bezier(.34,1.56,.64,1), background-color .2s ease'
           }}
         >
-          <ArrowDown2 size="16" color={open ? '#2E2A39' : '#888'} variant="Bold" />
+          <ArrowDown2 size={18} color={open ? c.text : kidColors.ink} variant="Bold" />
         </Box>
       </Box>
 
-      <Collapse in={open}>
+      <Collapse in={open} id={panelId}>
         <Box
           sx={{
-            px: { xs: 2, md: 3 },
-            pb: 2.5,
+            px: { xs: 2.5, md: 3 },
+            pb: 3,
             pt: 0.5,
-            backgroundColor: '#fffdf5',
-            borderRadius: '0 0 16px 16px',
-            borderTop: '1px dashed',
-            borderColor: '#FFD66640'
+            fontFamily: kidFont,
+            color: kidColors.inkSoft,
+            '& .MuiTypography-root': { fontFamily: kidFont }
           }}
         >
           {typeof faq.answer === 'string' ? (
-            <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.9, fontWeight: 400 }}>
-              {faq.answer}
-            </Typography>
+            <Typography sx={{ color: kidColors.inkSoft, lineHeight: 1.9, fontSize: '1.05rem' }}>{faq.answer}</Typography>
           ) : (
             faq.answer
           )}
         </Box>
       </Collapse>
-
-      {!isLast && <Divider sx={{ borderColor: 'divider', mx: { xs: 2, md: 3 } }} />}
     </Box>
   );
 }
 
 export default function FAQ() {
-  const [checked, setChecked] = useState(false);
-
-  useEffect(() => {
-    setChecked(true);
-  }, []);
-
   return (
-    <Fade in={checked} timeout={800}>
-      <Box sx={{ py: 6, width: '100%', minHeight: '100vh', backgroundColor: '#fcfcfc' }}>
-        <SEO
-          title="الأسئلة الشائعة"
-          description="إجابات على الأسئلة الشائعة حول منصة نبتة وتطبيق لغتي العربية والاشتراكات وطرق التحميل والاستخدام الآمن للأطفال."
-          keywords="الأسئلة الشائعة منصة نبتة, استفسارات منصة نبتة, كيفية الاشتراك في منصة نبتة"
-          url="/faq"
-        />
-        <Container maxWidth="lg">
-          {/* Main Title */}
-          <Box sx={{ mb: 6, textAlign: 'center' }}>
-            <Typography variant="h1" sx={{ fontWeight: 800, color: 'primary.main', mb: 2, fontSize: { xs: '2.5rem', md: '3.5rem' } }}>
-              الأسئلة الشائعة
-            </Typography>
-          </Box>
+    <Box sx={{ backgroundColor: kidColors.cloud }}>
+      <SEO
+        title="الأسئلة الشائعة"
+        description="إجابات على الأسئلة الشائعة حول منصة نبتة وتطبيق لغتي العربية والاشتراكات وطرق التحميل والاستخدام الآمن للأطفال."
+        keywords="الأسئلة الشائعة منصة نبتة, استفسارات منصة نبتة, كيفية الاشتراك في منصة نبتة"
+        url="/faq"
+      />
 
-          {/* FAQ List */}
-          <Box
-            sx={{
-              backgroundColor: '#fff',
-              borderRadius: '24px',
-              border: '1px solid',
-              borderColor: 'divider',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
-              overflow: 'hidden',
-              px: { xs: 1, md: 2 },
-              py: 1
-            }}
-          >
-            {faqs.map((faq, index) => (
-              <FAQItem key={faq.id} faq={faq} isLast={index === faqs.length - 1} />
-            ))}
-          </Box>
-        </Container>
-      </Box>
-    </Fade>
+      <PageHero title="الأسئلة الشائعة" description="كل ما تريد معرفته عن منصة نبتة وتطبيق لغتي العربية والاشتراكات." />
+
+      <Container maxWidth="md" sx={{ pt: { xs: 3, md: 4 }, pb: { xs: 6, md: 8 } }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {faqs.map((faq, index) => (
+            <FAQItem key={faq.id} faq={faq} index={index} />
+          ))}
+        </Box>
+
+        <Box
+          sx={{
+            mt: { xs: 6, md: 8 },
+            textAlign: 'center',
+            p: { xs: 3, md: 4 },
+            borderRadius: '30px',
+            backgroundColor: kidColors.sunSoft,
+            border: `3px dashed ${kidColors.sunDeep}`
+          }}
+        >
+          <Typography sx={{ fontFamily: kidFont, fontWeight: 800, fontSize: '1.35rem', color: kidColors.ink, mb: 2 }}>
+            لم تجد إجابة سؤالك؟
+          </Typography>
+          <KidButton component={RouterLink} to="/contact" color="sky">
+            تواصل معنا
+          </KidButton>
+        </Box>
+      </Container>
+    </Box>
   );
 }

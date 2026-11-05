@@ -1,193 +1,59 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Box, Container, Typography, IconButton, Fade } from '@mui/material';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import { FreeMode } from 'swiper/modules';
-import { ArrowLeft, ArrowRight } from 'iconsax-react';
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, Fade } from '@mui/material';
 import img1 from 'assets/Home/dar heraa.png';
 import img2 from 'assets/Home/dar rttel.png';
+import { KidSection, SectionHeading, crayon, kidColors, kidFont } from 'components/kids';
+
+const partners = [
+  { id: 1, name: 'دار حراء', logo: img1 },
+  { id: 2, name: 'دار رتل', logo: img2 }
+];
+
 export default function Partners({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
-  const swiperRef = useRef(null);
-  const [isAtStart, setIsAtStart] = useState(true);
-  const [isAtEnd, setIsAtEnd] = useState(false);
 
   useEffect(() => {
-    if (shouldAnimate) {
-      setChecked(true);
-    }
+    if (shouldAnimate) setChecked(true);
   }, [shouldAnimate]);
 
-  const partners = [
-    { id: 1, name: 'دار حراء', logo: img1 },
-    { id: 2, name: 'دار رتل', logo: img2 }
-  ];
-
-  const handleSlideChange = () => {
-    if (!swiperRef.current) return;
-    setIsAtStart(swiperRef.current.isBeginning);
-    setIsAtEnd(swiperRef.current.isEnd);
-  };
-
-  const handleNextSlide = () => {
-    if (!isAtEnd) {
-      swiperRef.current?.slideNext();
-    }
-  };
-
-  const handlePrevSlide = () => {
-    if (!isAtStart) {
-      swiperRef.current?.slidePrev();
-    }
-  };
-
   return (
-    <Fade in={checked} timeout={800}>
-      <Box
-        sx={{
-          py: { xs: 6, md: 9 },
-          backgroundColor: '#a4257b'
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', mb: 5 }}>
-            <Typography
-              variant="h1"
-              sx={{
-                fontWeight: 700,
-                color: '#fff',
-                mb: 1
-              }}
-            >
-              شركاء منصة نبتة
-            </Typography>
+    <KidSection bg="#fff" wave waveVariant="gentle">
+      <SectionHeading title="شركاء منصة نبتة" subtitle="نسير معًا جنبًا إلى جنب مع شركائنا في النجاح." />
 
-            <Typography
-              sx={{
-                maxWidth: '760px',
-                mx: 'auto',
-                color: '#fff',
-                fontSize: { xs: '18px', md: '18px' },
-                lineHeight: 1.9
-              }}
-            >
-              نحن في منصة نبتة نسير معًا جنبًا إلى جنب مع شركائنا في النجاح.
-            </Typography>
-          </Box>
-
-          <Box sx={{ position: 'relative' }}>
-            <Swiper
-              onSwiper={(swiper) => {
-                swiperRef.current = swiper;
-                handleSlideChange();
-              }}
-              onSlideChange={handleSlideChange}
-              slidesPerView={1}
-              spaceBetween={20}
-              freeMode={true}
-              breakpoints={{
-                640: { slidesPerView: 2, spaceBetween: 20 },
-                900: { slidesPerView: 3, spaceBetween: 20 },
-                1200: { slidesPerView: 4, spaceBetween: 24 }
-              }}
-              modules={[FreeMode]}
-              style={{ padding: '10px 0' }}
-            >
-              {partners.map((partner, index) => (
-                <SwiperSlide key={partner.id}>
-                  <Fade in={checked} timeout={800} style={{ transitionDelay: checked ? `${index * 100}ms` : '0ms' }}>
-                    <Box
-                      sx={{
-                        height: 'auto',
-                        border: '1.5px solid #e8e8e8',
-                        borderRadius: '12px',
-                        backgroundColor: '#fff',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        p: 1,
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          transform: 'translateY(-6px)',
-                          boxShadow: '0 10px 30px rgba(0,0,0,0.06)'
-                        }
-                      }}
-                    >
-                      <Box
-                        component="img"
-                        src={partner.logo}
-                        alt={partner.name}
-                        sx={{
-                          borderRadius: '12px',
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'contain'
-                        }}
-                      />
-                    </Box>
-                  </Fade>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      mt: 1,
-                      textAlign: 'center',
-                      color: '#fff',
-                      fontSize: '18px'
-                    }}
-                  >
-                    {partner.name}
-                  </Typography>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-
-            {/* Bottom Center Arrows */}
-            <Box
-              sx={{
-                mt: 4,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 2
-              }}
-            >
-              <IconButton
-                onClick={handlePrevSlide}
-                disabled={isAtStart}
-                sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: '50%',
-                  border: '1px solid',
-                  borderColor: isAtStart ? '#e0e0e0' : '#d0d5dd',
-                  backgroundColor: isAtStart ? '#f5f5f5' : '#fff',
-                  opacity: isAtStart ? 0.5 : 1,
-                  boxShadow: isAtStart ? 'none' : '0 4px 14px rgba(0,0,0,0.08)'
-                }}
-              >
-                <ArrowRight size={20} color={isAtStart ? '#bdbdbd' : '#0088CC'} />
-              </IconButton>
-
-              <IconButton
-                onClick={handleNextSlide}
-                disabled={isAtEnd}
-                sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: '50%',
-                  border: '1px solid',
-                  borderColor: isAtEnd ? '#e0e0e0' : '#d0d5dd',
-                  backgroundColor: isAtEnd ? '#f5f5f5' : '#fff',
-                  opacity: isAtEnd ? 0.5 : 1,
-                  boxShadow: isAtEnd ? 'none' : '0 4px 14px rgba(0,0,0,0.08)'
-                }}
-              >
-                <ArrowLeft size={20} color={isAtEnd ? '#bdbdbd' : '#0088CC'} />
-              </IconButton>
-            </Box>
-          </Box>
-        </Container>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: { xs: 3, md: 5 } }}>
+        {partners.map((partner, index) => {
+          const c = crayon(index + 1);
+          return (
+            <Fade key={partner.id} in={checked} timeout={700} style={{ transitionDelay: checked ? `${index * 120}ms` : '0ms' }}>
+              <Box sx={{ width: { xs: '100%', sm: 280 }, maxWidth: 320, textAlign: 'center' }}>
+                <Box
+                  sx={{
+                    p: 1.5,
+                    backgroundColor: '#fff',
+                    borderRadius: '28px',
+                    border: `3px solid ${c.main}`,
+                    boxShadow: `0 8px 0 ${c.main}40`,
+                    transform: `rotate(${index % 2 ? 2 : -2}deg)`,
+                    transition: 'transform .3s cubic-bezier(.34,1.56,.64,1)',
+                    '&:hover': { transform: 'rotate(0deg) translateY(-4px)' }
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={partner.logo}
+                    alt={partner.name}
+                    loading="lazy"
+                    sx={{ width: '100%', display: 'block', borderRadius: '18px', objectFit: 'contain' }}
+                  />
+                </Box>
+                <Typography sx={{ fontFamily: kidFont, fontWeight: 800, fontSize: '1.25rem', color: kidColors.ink, mt: 2.5 }}>
+                  {partner.name}
+                </Typography>
+              </Box>
+            </Fade>
+          );
+        })}
       </Box>
-    </Fade>
+    </KidSection>
   );
 }

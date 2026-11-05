@@ -44,20 +44,44 @@ export default function Home() {
       />
 
       {/* Above-the-fold: Loaded immediately */}
-      <AnimatedSection deferMount={false}><Hero /></AnimatedSection>
-      <AnimatedSection deferMount={false}><Episodes /></AnimatedSection>
+      <AnimatedSection deferMount={false}>
+        <Hero />
+      </AnimatedSection>
+      <AnimatedSection deferMount={false}>
+        <Episodes />
+      </AnimatedSection>
 
       {/* Below-the-fold: Deferred mounting on scroll with generous 350px rootMargin */}
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px"><Applications /></AnimatedSection>
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px"><Worksheets /></AnimatedSection>
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px"><AboutNabta /></AnimatedSection>
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px"><Characters /></AnimatedSection>
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px"><GoalsPrinciples /></AnimatedSection>
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="300px"><WhyNabta /></AnimatedSection>
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px"><PartnersReviews /></AnimatedSection>
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="250px"><NabtaNumbers /></AnimatedSection>
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="200px"><Partners /></AnimatedSection>
-      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px"><Team /></AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px">
+        <Applications />
+      </AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px">
+        <Worksheets />
+      </AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px">
+        <AboutNabta />
+      </AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px">
+        <Characters />
+      </AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px">
+        <GoalsPrinciples />
+      </AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="300px">
+        <WhyNabta />
+      </AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px">
+        <PartnersReviews />
+      </AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="250px">
+        <NabtaNumbers />
+      </AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="200px">
+        <Partners />
+      </AnimatedSection>
+      <AnimatedSection deferMount={!hasScrollTarget} minHeight="350px">
+        <Team />
+      </AnimatedSection>
     </Box>
   );
 }

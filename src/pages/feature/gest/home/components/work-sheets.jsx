@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Container, Fade, Typography } from '@mui/material';
+import { Box, Fade, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import img from 'assets/Home/worksheets.png';
+import { KidSection, SectionHeading, KidButton, Star, Sprout, kidColors, kidType } from 'components/kids';
+
+const perks = ['تلوين', 'كتابة الحروف', 'أنشطة حركية', 'مجانًا للطباعة'];
+
 export default function Worksheets({ shouldAnimate = false }) {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
@@ -11,93 +15,87 @@ export default function Worksheets({ shouldAnimate = false }) {
   }, [shouldAnimate]);
 
   return (
-    <Fade in={checked} timeout={800}>
-      <Box
-        sx={{
-          py: { xs: 1, md: 1 },
-          position: 'relative',
-          overflow: 'hidden',
-          backgroundColor: '#cccccc29'
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1.1fr 0.9fr' },
-              alignItems: 'center',
-              gap: { xs: 5, md: 6 }
-            }}
-          >
-            {/* LEFT CONTENT */}
-            <Box sx={{ textAlign: { xs: 'center', md: 'start' } }}>
-              <Box sx={{ display: 'flex', justifyContent: 'start' }}>
-                <Typography variant="h1" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
-                  أوراق عمل
-                </Typography>
-              </Box>
-              <Typography
-                sx={{
-                  fontSize: { xs: '18px', md: '18px' },
-                  color: '#000',
-                  lineHeight: 2,
-                  maxWidth: { xs: '100%', md: '700px' },
-                  mx: { xs: 'auto', md: 0 },
-                  mb: 4
-                }}
-              >
-                اطبع أوراق مذاكرة وتلوين، واجعل طفلك يتفاعل بنفسه مع الورقة والقلم والألوان، لتنمّي قدراته الحركية ومهاراته الإبداعية.
-              </Typography>
+    <KidSection
+      bg={kidColors.sunSoft}
+      wave
+      decorations={
+        <>
+          <Star size={28} color={kidColors.coral} sx={{ top: 50, insetInlineStart: '45%' }} />
+          <Sprout size={60} sx={{ bottom: 30, insetInlineStart: '3%' }} />
+        </>
+      }
+    >
+      <Fade in={checked} timeout={700}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1.05fr 0.95fr' },
+            alignItems: 'center',
+            gap: { xs: 5, md: 8 }
+          }}
+        >
+          <Box sx={{ textAlign: { xs: 'center', md: 'start' } }}>
+            <SectionHeading
+              title="أوراق عمل"
+              align="inherit"
+              lineColor={kidColors.leaf}
+              mb={3}
+              sx={{ '& svg': { mx: { xs: 'auto', md: 0 } } }}
+            />
 
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: { xs: 'center', md: 'flex-start' },
-                  mb: 3
-                }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={() => navigate('/worksheets')}
+            <Typography sx={{ ...kidType.body, color: kidColors.inkSoft, maxWidth: 560, mx: { xs: 'auto', md: 0 }, mb: 3 }}>
+              اطبع أوراق مذاكرة وتلوين، واجعل طفلك يتفاعل بنفسه مع الورقة والقلم والألوان، لتنمّي قدراته الحركية ومهاراته الإبداعية.
+            </Typography>
+
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: { xs: 'center', md: 'flex-start' }, mb: 4 }}>
+              {perks.map((p, i) => (
+                <Box
+                  key={p}
                   sx={{
-                    px: 10,
-                    py: 1.6,
-                    borderRadius: '10px',
-                    fontSize: { xs: '18px', md: '18px' },
-                    fontWeight: 700,
-                    backgroundColor: '#FFD666',
-                    color: '#2E2A39',
-                    boxShadow: '0 10px 25px rgba(255, 214, 102, 0.35)',
-                    '&:hover': {
-                      backgroundColor: '#ffcf4d'
-                    }
+                    fontWeight: 800,
+                    fontSize: '1rem',
+                    px: 2,
+                    py: 0.5,
+                    borderRadius: '999px',
+                    backgroundColor: '#fff',
+                    border: `3px solid ${[kidColors.sky, kidColors.leaf, kidColors.coral, kidColors.berry][i]}`,
+                    color: kidColors.ink
                   }}
                 >
-                  حمِّل الآن مجاني
-                </Button>
-              </Box>
-
+                  {p}
+                </Box>
+              ))}
             </Box>
 
-            {/* RIGHT ILLUSTRATION */}
+            <KidButton color="leaf" size="large" onClick={() => navigate('/worksheets')}>
+              حمِّل أوراق العمل مجانًا
+            </KidButton>
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Box
               sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
+                position: 'relative',
+                width: '100%',
+                maxWidth: 480,
+                p: 1.5,
+                backgroundColor: '#fff',
+                borderRadius: '32px',
+                transform: 'rotate(2.5deg)',
+                boxShadow: `0 12px 0 ${kidColors.sunDeep}55`
               }}
             >
               <Box
-                sx={{
-                  position: 'relative'
-                }}
-              >
-                <img src={img} alt="Worksheets" style={{ width: '100%', height: '100%' }} />
-              </Box>
+                component="img"
+                src={img}
+                alt="نماذج من أوراق العمل"
+                loading="lazy"
+                sx={{ width: '100%', display: 'block', borderRadius: '22px' }}
+              />
             </Box>
           </Box>
-        </Container>
-      </Box>
-    </Fade>
+        </Box>
+      </Fade>
+    </KidSection>
   );
 }

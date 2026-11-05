@@ -1,8 +1,29 @@
-import { Box, Container, Typography } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { Fade } from '@mui/material';
+import { Box, Typography, Fade } from '@mui/material';
 import character_1 from 'assets/Home/moslem.svg';
 import character_2 from 'assets/Home/moslema.svg';
+import { KidSection, SectionHeading, Star, Cloud, kidColors, kidFont, kidType } from 'components/kids';
+
+const characters = [
+  {
+    id: 1,
+    name: 'مسلم',
+    image: character_1,
+    accent: kidColors.sun,
+    accentDeep: kidColors.sunDeep,
+    description:
+      'الطفل مُسلم هو طفل ذكي ومُحب للاستكشاف والتعلم لكل جديد ومفيد، ويحافظ على الصلاة في أوقاتها، ويعتني بصحته ويمارس الرياضة وله مواقف ملهمة أثناء تعلمه الحروف العربية.'
+  },
+  {
+    id: 2,
+    name: 'مسلمة',
+    image: character_2,
+    accent: kidColors.coral,
+    accentDeep: kidColors.coralDeep,
+    description:
+      'الطفلة مُسلمة هي طفلة جميلة ومهذبة وتحب الجلوس بالبيت والاعتناء به، تتعلم من أمها أشياء كثيرة مثل ترتيب المنزل وتحضير الطعام ومع ذلك هي مجتهدة في دراستها ومذاكرتها، ولها مواقف رائعة مع أخوها مُسلم أثناء تعلمها معه الحروف العربية.'
+  }
+];
 
 export default function Characters({ shouldAnimate = false }) {
   const [checked, setChecked] = useState(false);
@@ -11,155 +32,102 @@ export default function Characters({ shouldAnimate = false }) {
     if (shouldAnimate) setChecked(true);
   }, [shouldAnimate]);
 
-  const characters = [
-    {
-      id: 1,
-      name: 'مسلم',
-      image: character_1,
-      description:
-        'الطفل مُسلم هو طفل ذكي ومُحب للاستكشاف والتعلم لكل جديد ومفيد، ويحافظ على الصلاة في أوقاتها، ويعتني بصحته ويمارس الرياضة وله مواقف ملهمة أثناء تعلمه الحروف العربية.',
-      reverse: false
-    },
-    {
-      id: 2,
-      name: 'مسلمة',
-      image: character_2,
-      description:
-        'الطفلة مُسلمة هي طفلة جميلة ومهذبة وتحب الجلوس بالبيت والاعتناء به، تتعلم من أمها أشياء كثيرة مثل ترتيب المنزل وتحضير الطعام ومع ذلك هي مجتهدة في دراستها ومذاكرتها، ولها مواقف رائعة مع أخوها مُسلم أثناء تعلمها معه الحروف العربية.',
-      reverse: true
-    }
-  ];
-
   return (
-    <Fade in={checked} timeout={800}>
-      <Box
-        sx={{
-          py: 6,
-          width: '100%',
-          backgroundColor: '#a4257b'
-        }}
-      >
-        <Container maxWidth="lg">
-          <Typography variant="h1" sx={{ fontWeight: 700, color: '#fff', mb: 1, textAlign: 'center' }}>
-            شخصيات منصة نبتة
-          </Typography>
+    <KidSection
+      bg={kidColors.sky}
+      wave
+      decorations={
+        <>
+          <Cloud size={160} color="rgba(255,255,255,.14)" sx={{ top: 40, insetInlineStart: '3%' }} />
+          <Cloud size={110} color="rgba(255,255,255,.12)" sx={{ bottom: 60, insetInlineEnd: '4%' }} />
+          <Star size={26} sx={{ top: 70, insetInlineEnd: '20%' }} />
+        </>
+      }
+    >
+      <SectionHeading tone="light" title="شخصيات منصة نبتة" subtitle="تعرّف على أصدقاء طفلك في رحلة تعلّم الحروف العربية." />
 
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              gap: 5,
-              alignItems: 'stretch'
-            }}
-          >
-            {characters.map((character, index) => (
-              <Fade key={character.id} in={checked} timeout={800} style={{ transitionDelay: checked ? `${index * 200}ms` : '0ms' }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 8, md: 5 }, pt: { xs: 6, md: 8 } }}>
+        {characters.map((character, index) => (
+          <Fade key={character.id} in={checked} timeout={700} style={{ transitionDelay: checked ? `${index * 180}ms` : '0ms' }}>
+            <Box
+              sx={{
+                position: 'relative',
+                backgroundColor: '#fff',
+                borderRadius: '36px',
+                boxShadow: `0 10px 0 ${kidColors.skyDeep}`,
+                pt: { xs: 15, md: 16 },
+                px: { xs: 3, md: 4 },
+                pb: 4,
+                textAlign: 'center',
+                '&:hover .char-img': { transform: 'translateY(-8px) rotate(-3deg)' }
+              }}
+            >
+              {/* colourful blob + character, centred with insets so RTL flipping can't skew it */}
+              <Box
+                aria-hidden="true"
+                sx={{
+                  position: 'absolute',
+                  top: { xs: -56, md: -64 },
+                  left: 0,
+                  right: 0,
+                  mx: 'auto',
+                  width: { xs: 180, md: 200 },
+                  height: { xs: 180, md: 200 },
+                  borderRadius: '46% 54% 50% 50% / 55% 45% 55% 45%',
+                  backgroundColor: character.accent
+                }}
+              />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: { xs: -70, md: -80 },
+                  left: 0,
+                  right: 0,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  pointerEvents: 'none'
+                }}
+              >
                 <Box
+                  className="char-img"
+                  component="img"
+                  src={character.image}
+                  alt={`شخصية ${character.name}`}
+                  loading="lazy"
                   sx={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: character.reverse ? { xs: 'column', md: 'row-reverse' } : { xs: 'column', md: 'row' },
-                    alignItems: 'stretch',
-                    gap: 2,
-                    minWidth: 0
+                    height: { xs: 210, md: 230 },
+                    width: 'auto',
+                    maxWidth: '80%',
+                    objectFit: 'contain',
+                    transition: 'transform .35s cubic-bezier(.34,1.56,.64,1)'
                   }}
-                >
-                  {/* Image */}
-                  <Box
-                    sx={{
-                      flexShrink: 0,
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      transition: 'transform 0.3s ease',
-                      '&:hover': { transform: 'scale(1.05)' }
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={character.image}
-                      alt={character.name}
-                      sx={{
-                        maxHeight: '250px',
-                        width: '100%',
-                        maxWidth: { xs: '220px', md: '250px' },
-                        objectFit: 'contain'
-                      }}
-                    />
-                  </Box>
+                />
+              </Box>
 
-                  {/* Text Box with Name Badge */}
-                  <Box
-                    sx={{
-                      flex: 1,
-                      position: 'relative',
-                      pt: 2,
-                      display: 'flex'
-                    }}
-                  >
-                    {/* Name badge */}
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        zIndex: 2,
-                        backgroundColor: 'background.paper',
-                        border: '2px solid',
-                        borderColor: '#fff',
-                        borderRadius: '20px',
-                        px: 2,
-                        py: 0.5
-                      }}
-                    >
-                      <Typography
-                        sx={{
-                          fontWeight: 700,
-                          fontSize: '20px',
-                          color: '#000'
-                        }}
-                      >
-                        {character.name}
-                      </Typography>
-                    </Box>
+              <Box
+                sx={{
+                  display: 'inline-block',
+                  fontFamily: kidFont,
+                  fontWeight: 800,
+                  fontSize: '1.6rem',
+                  color: kidColors.ink,
+                  backgroundColor: character.accent,
+                  px: 3,
+                  py: 0.25,
+                  borderRadius: '999px',
+                  boxShadow: `0 5px 0 ${character.accentDeep}`,
+                  mb: 2.5,
+                  transform: index % 2 ? 'rotate(2deg)' : 'rotate(-2deg)'
+                }}
+              >
+                {character.name}
+              </Box>
 
-                    {/* Description box */}
-                    <Box
-                      sx={{
-                        border: '2.5px solid',
-                        borderColor: '#fff',
-                        borderRadius: '12px',
-                        p: 3,
-                        pt: 4,
-                        mt: 1.5,
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          boxShadow: '0 8px 24px rgba(0, 136, 204, 0.15)',
-                          transform: 'translateY(-4px)'
-                        }
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          color: '#fff',
-                          lineHeight: 1.9,
-                          fontSize: '18px',
-                          // textAlign: 'right'
-                        }}
-                      >
-                        {character.description}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              </Fade>
-            ))}
-          </Box>
-        </Container>
+              <Typography sx={{ ...kidType.body, color: kidColors.inkSoft, m: 0 }}>{character.description}</Typography>
+            </Box>
+          </Fade>
+        ))}
       </Box>
-    </Fade>
+    </KidSection>
   );
 }

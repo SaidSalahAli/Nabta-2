@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Card, CardMedia, CardContent, Typography, Fade } from '@mui/material';
+import { Box, Typography, Fade } from '@mui/material';
+import { crayon, kidColors, kidFont, stickerCard } from 'components/kids';
 
-export default function EpisodeCard({ episode, isAnimating, index, onClick }) {
-  const [isHovered, setIsHovered] = useState(false);
+export default function EpisodeCard({ episode, isAnimating, index = 0, onClick }) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
+  const c = crayon(index);
 
   useEffect(() => {
-    // If the parent explicitly sets isAnimating, we can still use it, otherwise we rely on scroll
     if (isAnimating) {
+      setIsVisible(true);
+      return;
+    }
+
+    if (typeof IntersectionObserver === 'undefined') {
       setIsVisible(true);
       return;
     }
@@ -23,108 +28,120 @@ export default function EpisodeCard({ episode, isAnimating, index, onClick }) {
       { threshold: 0.1 }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
+    if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [isAnimating]);
 
-  return (
-    <Box ref={ref} sx={{ height: '100%' }}>
-      <Fade in={isVisible} timeout={800} style={{ transitionDelay: isVisible ? `${(index % 10) * 100}ms` : '0ms' }}>
-      <Card
-        onClick={onClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        sx={{
-          borderRadius: '12px',
-          overflow: 'hidden',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          transition: 'all 0.3s ease',
-          cursor: 'pointer',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          '&:hover': {
-            boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-            transform: 'translateY(-4px)'
-          }
-        }}
-      >
-        <Box
-          sx={{
-            position: 'relative',
-            overflow: 'hidden',
-            width: '100%',
-            aspectRatio: '16 / 9',
-            backgroundColor: '#f5f5f5'
-          }}
-        >
-          <CardMedia
-            component="img"
-            image={episode.image}
-            alt={episode.title}
-            sx={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              transition: 'transform 0.3s ease',
-              '&:hover': { transform: 'scale(1.05)' }
-            }}
-          />
-        </Box>
+  const handleKey = (e) => {
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick();
+    }
+  };
 
-        <CardContent
+  return (
+    <Box ref={ref} sx={{ height: '100%', pt: 1 }}>
+      <Fade in={isVisible} timeout={600} style={{ transitionDelay: isVisible ? `${(index % 6) * 70}ms` : '0ms' }}>
+        <Box
+          role="button"
+          tabIndex={0}
+          aria-label={`${episode.watch || 'افتح'}: ${episode.title}`}
+          onClick={onClick}
+          onKeyDown={handleKey}
           sx={{
-            flex: 1,
+            ...stickerCard(c.main),
+            cursor: 'pointer',
+            height: '100%',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            p: 2
+            p: 1.25,
+            outline: 'none',
+            '&:focus-visible': { boxShadow: `0 0 0 4px ${kidColors.sky}66, 0 8px 0 ${c.main}33` },
+            '&:hover .ep-thumb img': { transform: 'scale(1.05)' },
+            '&:hover .ep-action': { transform: 'scale(1.06) rotate(-3deg)' }
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography
-              variant="subtitle2"
+          <Box
+            className="ep-thumb"
+            sx={{
+              position: 'relative',
+              overflow: 'hidden',
+              width: '100%',
+              aspectRatio: '16 / 9',
+              borderRadius: '20px',
+              backgroundColor: c.soft
+            }}
+          >
+            <Box
+              component="img"
+              src={episode.image}
+              alt=""
+              loading="lazy"
+              decoding="async"
               sx={{
-                fontWeight: 600,
-                color: 'primary.main',
-                lineHeight: 1.4,
-                minHeight: '40px',
-                fontSize: '18px',
-                display: 'flex',
-                alignItems: 'center'
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                display: 'block',
+                transition: 'transform .4s ease'
+              }}
+            />
+          </Box>
+
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 1.5,
+              px: 1,
+              pt: 1.75,
+              pb: 0.75
+            }}
+          >
+            <Typography
+              component="h3"
+              sx={{
+                fontFamily: kidFont,
+                fontWeight: 800,
+                color: kidColors.ink,
+                fontSize: { xs: '1.15rem', md: '1.25rem' },
+                lineHeight: 1.45,
+                m: 0,
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical'
               }}
             >
               {episode.title}
             </Typography>
+
             {episode.watch && (
-              <Typography
-                variant="subtitle2"
+              <Box
+                className="ep-action"
+                aria-hidden="true"
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'end',
-                  fontSize: '18px',
-                  fontWeight: 600,
-                  color: 'white',
-                  textAlign: 'center',
-                  width: 'fit-content',
+                  flexShrink: 0,
+                  fontFamily: kidFont,
+                  fontWeight: 800,
+                  fontSize: '1rem',
+                  color: c.text,
+                  backgroundColor: c.main,
+                  borderRadius: '999px',
                   px: 2,
-                  backgroundColor: 'primary.main',
-                  borderRadius: '10px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  // '&:hover': { color: '#006699' }
+                  py: 0.5,
+                  boxShadow: `0 4px 0 ${c.deep}`,
+                  transition: 'transform .2s cubic-bezier(.34,1.56,.64,1)',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {episode.watch}
-              </Typography>
+              </Box>
             )}
           </Box>
-        </CardContent>
-      </Card>
+        </Box>
       </Fade>
     </Box>
   );
