@@ -20,4 +20,3 @@ export default function LogoSection({ isIcon, sx, to, width = 100 }) {
 }
 
 LogoSection.propTypes = { isIcon: PropTypes.bool, sx: PropTypes.any, to: PropTypes.any, width: PropTypes.number };
-

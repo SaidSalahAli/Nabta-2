@@ -1,6 +1,6 @@
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import logoIcon from 'assets/images/logo.png';
+import logoIcon from 'assets/images/LogoNoon.png';
 
 // ==============================|| LOGO ICON SVG ||============================== //
 

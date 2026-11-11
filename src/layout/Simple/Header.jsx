@@ -39,18 +39,8 @@ const navLinks = [
 function useScrollNav() {
   const navigate = useNavigate();
   const location = useLocation();
-  return (sectionId) => {
-    const scroll = () => {
-      const el = document.getElementById(sectionId);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-    if (location.pathname !== '/') {
-      navigate('/', { state: { scrollTo: sectionId } });
-      setTimeout(scroll, 300);
-    } else {
-      scroll();
-    }
-  };
+  // Home mounts its deferred sections and scrolls when it sees state.scrollTo, so route through it even when already on '/'.
+  return (sectionId) => navigate('/', { state: { scrollTo: sectionId }, replace: location.pathname === '/' });
 }
 
 // ==============================|| HEADER - ANNOUNCEMENT ||============================== //
@@ -489,7 +479,7 @@ export default function Header() {
         sx={{
           display: { xs: 'none', md: 'flex' },
           position: 'absolute',
-          bottom: '-6px',
+          bottom: '-14px',
           left: { md: 20, lg: 32 },
           zIndex: 1200,
           width: LOGO_WIDTH,

@@ -28,7 +28,7 @@ export default function Hero({ shouldAnimate = false }) {
           backgroundColor: kidColors.sky,
 
           '& .swiper-pagination': {
-            bottom: { xs: '34px !important', md: '78px !important' },
+            bottom: { xs: '16px !important', md: '30px !important' },
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -78,7 +78,8 @@ export default function Hero({ shouldAnimate = false }) {
         </Swiper>
 
         {/* hills melting into the page */}
-        <Box sx={{ position: 'absolute', left: 0, right: 0, bottom: -1, zIndex: 2, pointerEvents: 'none' }}>
+        {/* pushed below the slide (into the same-colored next section) so it doesn't cover text in the images */}
+        <Box sx={{ position: 'absolute', left: 0, right: 0, bottom: { xs: -16, md: -40 }, zIndex: 2, pointerEvents: 'none' }}>
           <Wave color={kidColors.cloud} variant="hills" height={{ xs: 28, md: 64 }} />
         </Box>
       </Box>

@@ -28,7 +28,15 @@ const episodes = {
       type: 'item',
       url: '/dashboard/episode-categories',
       icon: icons.categories
-    },
+    }
+  ]
+};
+
+export const worksheets = {
+  id: 'group-worksheets',
+  title: 'أوراق العمل',
+  type: 'group',
+  children: [
     {
       id: 'dashboard/worksheets',
       title: 'أوراق العمل',

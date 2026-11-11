@@ -14,6 +14,14 @@ const AnimatedSection = ({
   const [shouldAnimate, setShouldAnimate] = useState(!deferMount);
   const ref = useRef(null);
 
+  // Mount right away when deferMount turns off later (e.g. a nav link asks Home to scroll to a section).
+  useEffect(() => {
+    if (!deferMount) {
+      setIsVisible(true);
+      setShouldAnimate(true);
+    }
+  }, [deferMount]);
+
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') {
       setIsVisible(true);

@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Logo from 'components/logo';
 import { Youtube, Facebook, Instagram, ArrowUp } from 'iconsax-react';
-import { Wave, Sprout, Flower, Star, crayon, kidColors, kidFont } from 'components/kids';
+import { Wave, Sprout, Flower, Star, kidColors, kidFont } from 'components/kids';
 
 const TelegramIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -56,10 +56,10 @@ export default function FooterBlock({ isFull }) {
   };
 
   const socialLinks = [
-    { icon: <Youtube variant="Bold" size={20} />, label: 'YouTube', href: 'https://www.youtube.com/@NabtaStudio' },
-    { icon: <Instagram variant="Bold" size={20} />, label: 'Instagram', href: 'https://www.instagram.com/NabtaStudio' },
-    { icon: <Facebook variant="Bold" size={20} />, label: 'Facebook', href: 'https://www.facebook.com/NabtaStudio' },
-    { icon: <TelegramIcon />, label: 'Telegram', href: 'https://t.me/+201007560466' }
+    { icon: <Youtube variant="Bold" size={20} />, label: 'YouTube', href: 'https://www.youtube.com/@NabtaStudio', main: '#FF0000', deep: '#B30000' },
+    { icon: <Instagram variant="Bold" size={20} />, label: 'Instagram', href: 'https://www.instagram.com/NabtaStudio', main: '#E1306C', deep: '#A0204D' },
+    { icon: <Facebook variant="Bold" size={20} />, label: 'Facebook', href: 'https://www.facebook.com/NabtaStudio', main: '#1877F2', deep: '#0F52A8' },
+    { icon: <TelegramIcon />, label: 'Telegram', href: 'https://t.me/+201007560466', main: '#29A9EB', deep: '#1B7AAB' }
   ];
 
   const col1 = [
@@ -145,8 +145,8 @@ export default function FooterBlock({ isFull }) {
                   تربية تعلّم... وتعليم يربّي. محتوى تربوي تعليمي للأطفال، ودعم للأمهات والآباء.
                 </Typography>
                 <Stack direction="row" gap={1.25} flexWrap="wrap" justifyContent={{ xs: 'center', md: 'flex-start' }}>
-                  {socialLinks.map(({ icon, label, href }, i) => {
-                    const c = crayon(i);
+                  {socialLinks.map(({ icon, label, href, main, deep }) => {
+                    const c = { main, deep, text: '#fff' };
                     return (
                       <Tooltip key={label} title={label}>
                         <IconButton
